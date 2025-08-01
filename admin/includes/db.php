@@ -1,10 +1,10 @@
 <?php
 
 global $pdo;
- $host = 'localhost';
-    $db = 'rpecommerce';
-    $user = 'root';
-    $pass = 'root';
+$host = 'localhost';
+$db = 'rpecommerce';
+$user = 'root';
+$pass = 'root';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -19,4 +19,3 @@ try {
 } catch (\PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
-

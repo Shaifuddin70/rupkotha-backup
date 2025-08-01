@@ -22,38 +22,40 @@ $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <h4 class="mb-3">Slider Items</h4>
 <table class="table table-bordered table-hover align-middle">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Image</th>
-        <th>Title</th>
-        <th>Product Linked</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Product Linked</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
-    <?php if (empty($hero_items)): ?>
-        <tr><td colspan="6" class="text-center">No slider items found.</td></tr>
-    <?php else: ?>
-        <?php foreach ($hero_items as $item): ?>
-            <tr id="hero-item-row-<?= $item['id'] ?>">
-                <td><?= esc_html($item['id']) ?></td>
-                <td><img src="assets/uploads/<?= esc_html($item['image']) ?>" width="100" class="img-thumbnail"></td>
-                <td><?= esc_html($item['title']) ?></td>
-                <td><?= esc_html($item['product_name']) ?></td>
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox" role="switch" data-id="<?= $item['id'] ?>" <?= $item['is_active'] ? 'checked' : '' ?>>
-                        <span class="badge <?= $item['is_active'] ? 'bg-success' : 'bg-secondary' ?>"><?= $item['is_active'] ? 'Active' : 'Inactive' ?></span>
-                    </div>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-warning edit-btn" data-id="<?= $item['id'] ?>">Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $item['id'] ?>">Delete</button>
-                </td>
+        <?php if (empty($hero_items)): ?>
+            <tr>
+                <td colspan="6" class="text-center">No slider items found.</td>
             </tr>
-        <?php endforeach; ?>
-    <?php endif; ?>
+        <?php else: ?>
+            <?php foreach ($hero_items as $item): ?>
+                <tr id="hero-item-row-<?= $item['id'] ?>">
+                    <td><?= esc_html($item['id']) ?></td>
+                    <td><img src="assets/uploads/<?= esc_html($item['image']) ?>" width="100" class="img-thumbnail"></td>
+                    <td><?= esc_html($item['title']) ?></td>
+                    <td><?= esc_html($item['product_name']) ?></td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input status-toggle" type="checkbox" role="switch" data-id="<?= $item['id'] ?>" <?= $item['is_active'] ? 'checked' : '' ?>>
+                            <span class="badge <?= $item['is_active'] ? 'bg-success' : 'bg-secondary' ?>"><?= $item['is_active'] ? 'Active' : 'Inactive' ?></span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning edit-btn" data-id="<?= $item['id'] ?>">Edit</button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $item['id'] ?>">Delete</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </tbody>
 </table>
 
