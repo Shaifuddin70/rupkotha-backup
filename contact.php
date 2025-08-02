@@ -45,17 +45,7 @@ $companyAddress = $settings['address'] ?? 'Dhaka, Bangladesh';
 
 ?>
 
-<div class="page-header" style="background-color: #f8f9fa; padding: 2rem 0; margin-bottom: 3rem;">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold mt-2">Get In Touch</h1>
-    </div>
-</div>
+
 
 <main class="container my-5">
     <div class="row g-5">

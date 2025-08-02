@@ -15,33 +15,26 @@ $companyName = $settings['company_name'] ?? 'Rupkotha';
         padding: 2rem 0;
         margin-bottom: 3rem;
     }
+
     .about-section {
         padding: 3rem 0;
     }
+
     .icon-box {
         font-size: 2.5rem;
         color: #0d6efd;
     }
+
     .team-member img {
         width: 150px;
         height: 150px;
         object-fit: cover;
         border: 5px solid #fff;
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
     }
 </style>
 
-<div class="page-header">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">About Us</li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold mt-2">About <?= esc_html($companyName) ?></h1>
-    </div>
-</div>
+
 
 <main class="container my-5">
 

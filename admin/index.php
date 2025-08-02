@@ -166,12 +166,12 @@ $chart_values = array_values($sales_map);
 
     <div class="row">
         <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
+            <div class="card shadow mb-4 ">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Sales Overview (Last 7 Days)</h6>
                 </div>
                 <div class="card-body">
-                    <div class="chart-area" style="height: 320px;">
+                    <div class="chart-area" style="height: 335px;">
                         <canvas id="salesChart"></canvas>
                     </div>
                 </div>
@@ -191,8 +191,8 @@ $chart_values = array_values($sales_map);
                             <?php foreach ($top_products as $product): ?>
                                 <li class="list-group-item d-flex align-items-center">
                                     <img src="assets/uploads/<?= esc_html($product['image']) ?>"
-                                         alt="<?= esc_html($product['name']) ?>" class="rounded me-3"
-                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                        alt="<?= esc_html($product['name']) ?>" class="rounded me-3"
+                                        style="width: 50px; height: 50px; object-fit: cover;">
                                     <div>
                                         <h6 class="mb-0"><?= esc_html($product['name']) ?></h6>
                                         <small class="text-muted"><?= esc_html($product['total_sold']) ?> units
@@ -215,37 +215,37 @@ $chart_values = array_values($sales_map);
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <?php if (empty($recent_orders)): ?>
-                        <tr>
-                            <td colspan="5" class="text-center">No recent orders found.</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach ($recent_orders as $order): ?>
+                        <?php if (empty($recent_orders)): ?>
                             <tr>
-                                <td>#<?= esc_html($order['id']) ?></td>
-                                <td><?= esc_html($order['username'] ?? 'Guest') ?></td>
-                                <td><?= formatPrice($order['total_amount']) ?></td>
-                                <td>
+                                <td colspan="5" class="text-center">No recent orders found.</td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($recent_orders as $order): ?>
+                                <tr>
+                                    <td>#<?= esc_html($order['id']) ?></td>
+                                    <td><?= esc_html($order['username'] ?? 'Guest') ?></td>
+                                    <td><?= formatPrice($order['total_amount']) ?></td>
+                                    <td>
                                         <span class="badge
                                             <?= $order['status'] === 'Completed' ? 'bg-success' : '' ?>
                                             <?= $order['status'] === 'Pending' ? 'bg-warning text-dark' : '' ?>
                                             <?= $order['status'] === 'Cancelled' ? 'bg-danger' : '' ?>">
                                             <?= esc_html($order['status']) ?>
                                         </span>
-                                </td>
-                                <td><?= format_date($order['created_at']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                                    </td>
+                                    <td><?= format_date($order['created_at']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -255,7 +255,7 @@ $chart_values = array_values($sales_map);
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         // Chart.js Configuration
         const ctx = document.getElementById('salesChart').getContext('2d');
         const salesChart = new Chart(ctx, {
@@ -282,7 +282,7 @@ $chart_values = array_values($sales_map);
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function (value) {
+                            callback: function(value) {
                                 return '৳' + new Intl.NumberFormat('en-IN').format(value);
                             }
                         }
@@ -294,7 +294,7 @@ $chart_values = array_values($sales_map);
                     },
                     tooltip: {
                         callbacks: {
-                            label: function (context) {
+                            label: function(context) {
                                 return `Sales: ${formatPrice(context.parsed.y)}`;
                             }
                         }

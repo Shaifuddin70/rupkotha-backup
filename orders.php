@@ -26,18 +26,7 @@ $orders = $orders_stmt->fetchAll(PDO::FETCH_ASSOC);
 include 'includes/header.php';
 ?>
 
-<div class="page-header" style="background-color: #f8f9fa; padding: 2rem 0; margin-bottom: 3rem;">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                <li class="breadcrumb-item"><a href="profile.php">My Account</a></li>
-                <li class="breadcrumb-item active" aria-current="page">My Orders</li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold mt-2">My Orders</h1>
-    </div>
-</div>
+
 
 <main class="container my-5">
     <div class="card shadow-sm">
@@ -54,54 +43,54 @@ include 'includes/header.php';
                 <div class="table-responsive">
                     <table id="orders-table" class="table table-hover align-middle">
                         <thead class="table-light">
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th class="text-end">Action</th>
-                        </tr>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($orders as $order): ?>
-                            <tr id="order-row-<?= $order['id'] ?>">
-                                <td class="fw-bold">#<?= esc_html($order['id']) ?></td>
-                                <td><?= format_date($order['created_at']) ?></td>
-                                <td><?= formatPrice($order['total_amount']) ?></td>
-                                <td>
-                                    <span class="badge status-badge
+                            <?php foreach ($orders as $order): ?>
+                                <tr id="order-row-<?= $order['id'] ?>">
+                                    <td class="fw-bold">#<?= esc_html($order['id']) ?></td>
+                                    <td><?= format_date($order['created_at']) ?></td>
+                                    <td><?= formatPrice($order['total_amount']) ?></td>
+                                    <td>
+                                        <span class="badge status-badge
                                         <?php
-                                    switch ($order['status']) {
-                                        case 'Completed':
-                                            echo 'bg-success';
-                                            break;
-                                        case 'Pending':
-                                            echo 'bg-warning text-dark';
-                                            break;
-                                        case 'Cancelled':
-                                            echo 'bg-danger';
-                                            break;
-                                        default:
-                                            echo 'bg-secondary';
-                                    }
-                                    ?>">
-                                        <?= esc_html($order['status']) ?>
-                                    </span>
-                                </td>
-                                <td class="text-end action-cell">
-                                    <a href="order-details.php?id=<?= $order['id'] ?>"
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye-fill me-1"></i>View
-                                    </a>
-                                    <?php if ($order['status'] === 'Pending'): ?>
-                                        <button class="btn btn-sm btn-outline-danger cancel-order-btn"
+                                        switch ($order['status']) {
+                                            case 'Completed':
+                                                echo 'bg-success';
+                                                break;
+                                            case 'Pending':
+                                                echo 'bg-warning text-dark';
+                                                break;
+                                            case 'Cancelled':
+                                                echo 'bg-danger';
+                                                break;
+                                            default:
+                                                echo 'bg-secondary';
+                                        }
+                                        ?>">
+                                            <?= esc_html($order['status']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-end action-cell">
+                                        <a href="order-details.php?id=<?= $order['id'] ?>"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye-fill me-1"></i>View
+                                        </a>
+                                        <?php if ($order['status'] === 'Pending'): ?>
+                                            <button class="btn btn-sm btn-outline-danger cancel-order-btn"
                                                 data-order-id="<?= $order['id'] ?>">
-                                            <i class="bi bi-x-circle me-1"></i>Cancel
-                                        </button>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                                                <i class="bi bi-x-circle me-1"></i>Cancel
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -111,23 +100,23 @@ include 'includes/header.php';
 </main>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const ordersTable = document.getElementById('orders-table');
 
         if (ordersTable) {
-            ordersTable.addEventListener('click', function (e) {
+            ordersTable.addEventListener('click', function(e) {
                 if (e.target.classList.contains('cancel-order-btn')) {
                     const button = e.target;
                     const orderId = button.dataset.orderId;
 
                     if (confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
                         fetch('cancel_order.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: 'order_id=' + encodeURIComponent(orderId)
-                        })
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: 'order_id=' + encodeURIComponent(orderId)
+                            })
                             .then(response => response.json())
                             .then(data => {
                                 if (data.status === 'success') {

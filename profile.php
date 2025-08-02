@@ -106,12 +106,7 @@ $orders = $orders_stmt->fetchAll(PDO::FETCH_ASSOC);
 include 'includes/header.php';
 ?>
 
-<div class="page-header" style="background-color: #f8f9fa; padding: 2rem 0; margin-bottom: 3rem;">
-    <div class="container">
-        <h1 class="display-5 fw-bold">My Account</h1>
-        <p class="text-muted">Manage your profile, address, and view your order history.</p>
-    </div>
-</div>
+
 
 <main class="container my-5">
     <div class="row">
@@ -217,30 +212,30 @@ include 'includes/header.php';
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
-                                        <tr>
-                                            <th>Order ID</th>
-                                            <th>Date</th>
-                                            <th>Total</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Date</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach ($orders as $order): ?>
-                                            <tr>
-                                                <td>#<?= esc_html($order['id']) ?></td>
-                                                <td><?= format_date($order['created_at']) ?></td>
-                                                <td><?= formatPrice($order['total_amount']) ?></td>
-                                                <td>
+                                            <?php foreach ($orders as $order): ?>
+                                                <tr>
+                                                    <td>#<?= esc_html($order['id']) ?></td>
+                                                    <td><?= format_date($order['created_at']) ?></td>
+                                                    <td><?= formatPrice($order['total_amount']) ?></td>
+                                                    <td>
                                                         <span class="badge <?= $order['status'] === 'Completed' ? 'bg-success' : 'bg-warning text-dark' ?>">
                                                             <?= esc_html($order['status']) ?>
                                                         </span>
-                                                </td>
-                                                <td>
-                                                    <a href="order-details?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-primary">View</a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
+                                                    </td>
+                                                    <td>
+                                                        <a href="order-details?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-primary">View</a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
