@@ -1,4 +1,3 @@
-
 <?php
 // This is your category listing page, e.g., category.php
 
@@ -33,10 +32,30 @@ if (!$category) {
 $category_name = $category['name'];
 
 
-// 3. All Products in this Category with Pagination
+// 3. Filtering & Pagination Logic
+$sort_by = filter_input(INPUT_GET, 'sort', FILTER_UNSAFE_RAW) ?: 'newest';
 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, ['options' => ['default' => 1, 'min_range' => 1]]);
 $per_page = 12; // 12 products per page
 $offset = ($page - 1) * $per_page;
+
+// Determine sort order
+$order_by = "created_at DESC"; // Default
+switch ($sort_by) {
+    case 'price_low':
+        $order_by = "price ASC";
+        break;
+    case 'price_high':
+        $order_by = "price DESC";
+        break;
+    case 'name':
+        $order_by = "name ASC";
+        break;
+    case 'oldest':
+        $order_by = "created_at ASC";
+        break;
+    default:
+        $order_by = "created_at DESC";
+}
 
 // Get total number of products in this category for pagination
 $total_products_stmt = $pdo->prepare("SELECT COUNT(id) FROM products WHERE category_id = :category_id AND is_active = 1");
@@ -46,7 +65,7 @@ $total_pages = ceil($total_products / $per_page);
 
 // Fetch the paginated products for the current category
 $products_stmt = $pdo->prepare(
-    "SELECT * FROM products WHERE category_id = :category_id AND is_active = 1 ORDER BY created_at DESC LIMIT :limit OFFSET :offset"
+    "SELECT * FROM products WHERE category_id = :category_id AND is_active = 1 ORDER BY " . $order_by . " LIMIT :limit OFFSET :offset"
 );
 $products_stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
 $products_stmt->bindValue(':limit', $per_page, PDO::PARAM_INT);
@@ -55,70 +74,151 @@ $products_stmt->execute();
 $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<div class="page-header">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?= esc_html($category_name) ?></li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold mt-2"><?= esc_html($category_name) ?></h1>
+<div class="products-hero">
+    <div class="container text-center">
+        <h1 class="fade-in text-uppercase"><?= esc_html($category_name) ?></h1>
     </div>
 </div>
 
 <main class="container my-5">
-    <section class="category-products">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            <?php if (empty($products)): ?>
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        There are currently no products in this category.
-                    </div>
+    <!-- Desktop Filters & Sort -->
+    <div class="row">
+        <aside class="col-lg-3 d-none d-lg-block">
+            <div class="modern-sidebar fade-in">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-funnel me-2"></i>Filters
+                </h4>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-3">Sort By</label>
+                    <form method="get" action="category.php" id="sortForm">
+                        <input type="hidden" name="id" value="<?= $category_id ?>">
+                        <select name="sort" class="form-select modern-filter-select" onchange="document.getElementById('sortForm').submit()">
+                            <option value="newest" <?= ($sort_by === 'newest') ? 'selected' : '' ?>>Newest First</option>
+                            <option value="oldest" <?= ($sort_by === 'oldest') ? 'selected' : '' ?>>Oldest First</option>
+                            <option value="price_low" <?= ($sort_by === 'price_low') ? 'selected' : '' ?>>Price: Low to High</option>
+                            <option value="price_high" <?= ($sort_by === 'price_high') ? 'selected' : '' ?>>Price: High to Low</option>
+                            <option value="name" <?= ($sort_by === 'name') ? 'selected' : '' ?>>Name: A to Z</option>
+                        </select>
+                    </form>
                 </div>
-            <?php else: ?>
-                <?php foreach ($products as $product): ?>
-                    <div class="col">
-                        <div class="card h-100 product-card">
-                            <a href="product.php?id=<?= $product['id'] ?>">
-                                <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>" class="card-img-top product-card-img-top" alt="<?= esc_html($product['name']) ?>">
+            </div>
+        </aside>
+
+        <section class="col-lg-9">
+            <!-- Results Header -->
+            <div class="results-header fade-in">
+                <div class="results-count">
+                    <strong><?= number_format($total_products) ?></strong>
+                    <?= $total_products === 1 ? 'product' : 'products' ?> found
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <?php if (empty($products)): ?>
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <h3>No Products Found</h3>
+                            <p>We couldn't find any products in this category.</p>
+                            <a href="all-products.php" class="add-to-cart-btn d-inline-flex">
+                                <i class="bi bi-arrow-left me-2"></i>View All Products
                             </a>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title h6"><a href="product.php?id=<?= $product['id'] ?>" class="text-dark text-decoration-none"><?= esc_html($product['name']) ?></a></h5>
-                                <p class="card-text fw-bold text-primary mb-0"><?= formatPrice($product['price']) ?></p>
-                            </div>
-                            <div class="card-footer bg-transparent border-top-0">
-                               <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="btn btn-outline-primary w-100">Add to Cart</a>
-                            </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
+                <?php else: ?>
+                    <?php foreach ($products as $product): ?>
+                        <div class="col">
+                            <div class="custom-product-card">
+                                <div class="product-image-container">
+                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
+                                        class="product-image"
+                                        alt="<?= esc_html($product['name']) ?>"
+                                        loading="lazy">
+                                    <div class="product-overlay">
+                                        <a href="product.php?id=<?= $product['id'] ?>" class="quick-view-btn">
+                                            <i class="bi bi-eye"></i>Quick View
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <a href="product.php?id=<?= $product['id'] ?>" class="product-name">
+                                        <?= esc_html($product['name']) ?>
+                                    </a>
+                                    <div class="product-price">
+                                        <?= formatPrice($product['price']) ?>
+                                    </div>
+                                    <?php if ($product['stock'] > 0): ?>
+                                        <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="add-to-cart-btn">
+                                            <i class="bi bi-cart-plus"></i>Add to Cart
+                                        </a>
+                                    <?php else: ?>
+                                        <button class="btn out-of-stock-custom" disabled>Out of Stock</button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
 
-        <!-- Pagination -->
-        <?php if ($total_pages > 1): ?>
-        <nav aria-label="Page navigation" class="mt-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="?id=<?= $category_id ?>&page=<?= $page - 1 ?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                        <a class="page-link" href="?id=<?= $category_id ?>&page=<?= $i ?>"><?= $i ?></a>
-                    </li>
-                <?php endfor; ?>
-                <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="?id=<?= $category_id ?>&page=<?= $page + 1 ?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <?php endif; ?>
-    </section>
+            <!-- Pagination -->
+            <?php if ($total_pages > 1): ?>
+                <div class="custom-pagination fade-in">
+                    <nav aria-label="Page navigation" class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            <?php
+                            $pagination_params = ['id' => $category_id];
+                            if ($sort_by !== 'newest') {
+                                $pagination_params['sort'] = $sort_by;
+                            }
+                            ?>
+                            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page - 1 ?>&<?= http_build_query($pagination_params) ?>" aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                            <?php
+                            $start_page = max(1, $page - 2);
+                            $end_page = min($total_pages, $page + 2);
+                            if ($start_page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1&<?= http_build_query($pagination_params) ?>">1</a>
+                                </li>
+                                <?php if ($start_page > 2): ?>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                                <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                                    <a class="page-link" href="?page=<?= $i ?>&<?= http_build_query($pagination_params) ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
+                            <?php if ($end_page < $total_pages): ?>
+                                <?php if ($end_page < $total_pages - 1): ?>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <?php endif; ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?= $total_pages ?>&<?= http_build_query($pagination_params) ?>"><?= $total_pages ?></a>
+                                </li>
+                            <?php endif; ?>
+                            <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page + 1 ?>&<?= http_build_query($pagination_params) ?>" aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            <?php endif; ?>
+        </section>
+    </div>
 </main>
 
 <?php include 'includes/footer.php'; ?>

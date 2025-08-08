@@ -15,6 +15,7 @@ $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // --- Filtering & Pagination Logic ---
 $selected_category_id = filter_input(INPUT_GET, 'category', FILTER_VALIDATE_INT);
+$sort_by = filter_input(INPUT_GET, 'sort', FILTER_UNSAFE_RAW) ?: 'newest';
 $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, ['options' => ['default' => 1, 'min_range' => 1]]);
 $per_page = 12; // 12 products per page
 $offset = ($page - 1) * $per_page;
@@ -30,6 +31,25 @@ if ($selected_category_id) {
 
 $where_sql = " WHERE " . implode(" AND ", $where_clauses);
 
+// Determine sort order
+$order_by = "created_at DESC"; // Default
+switch ($sort_by) {
+    case 'price_low':
+        $order_by = "price ASC";
+        break;
+    case 'price_high':
+        $order_by = "price DESC";
+        break;
+    case 'name':
+        $order_by = "name ASC";
+        break;
+    case 'oldest':
+        $order_by = "created_at ASC";
+        break;
+    default:
+        $order_by = "created_at DESC";
+}
+
 // Get total number of products for pagination with filter
 $total_products_stmt = $pdo->prepare("SELECT COUNT(id) FROM products" . $where_sql);
 $total_products_stmt->execute($params);
@@ -37,7 +57,7 @@ $total_products = $total_products_stmt->fetchColumn();
 $total_pages = ceil($total_products / $per_page);
 
 // Fetch the paginated products with filter
-$products_sql = "SELECT * FROM products" . $where_sql . " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+$products_sql = "SELECT * FROM products" . $where_sql . " ORDER BY " . $order_by . " LIMIT :limit OFFSET :offset";
 $products_stmt = $pdo->prepare($products_sql);
 
 // Combine all named parameters and bind them
@@ -48,7 +68,6 @@ $all_params = array_merge(
 
 // Bind all parameters. We must bind LIMIT/OFFSET as integers.
 foreach ($all_params as $key => &$val) {
-    // Use bindParam for the loop variable, and bindValue for static values if preferred
     if ($key === ':limit' || $key === ':offset') {
         $products_stmt->bindParam($key, $val, PDO::PARAM_INT);
     } else {
@@ -61,70 +80,23 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<style>
-    .page-header {
-        background-color: #f8f9fa;
-        padding: 2rem 0;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .category-sidebar .form-select {
-        font-size: 0.95rem;
-    }
-
-    .product-card {
-        border: 1px solid #e9ecef;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
-    }
-
-    .product-card .card-img-top {
-        aspect-ratio: 1 / 1;
-        object-fit: cover;
-    }
-
-    .product-card .card-title a {
-        color: #343a40;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-
-    .product-card .card-title a:hover {
-        color: #0d6efd;
-    }
-
-    .product-card .card-footer {
-        background-color: #fff;
-        border-top: 1px solid #e9ecef;
-        padding: 0.75rem 1.25rem;
-    }
-
-    .product-card .btn-add-to-cart {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-</style>
 
 
+<!-- Hero Section -->
+<section class="products-hero">
+    <div class="container text-center">
+        <h1 class="fade-in text-uppercase">Discover Amazing Products</h1>
+    </div>
+</section>
 
-<main class="container my-5">
-    <div class="row">
-        <!-- Category Filter Sidebar -->
-        <aside class="col-lg-3 mb-4 mb-lg-0">
-            <div class="category-sidebar">
-                <h4 class="h5 mb-3 fw-bold">Categories</h4>
-                <form method="get" action="all-products.php" id="categoryFilterForm">
-                    <select name="category" class="form-select" onchange="document.getElementById('categoryFilterForm').submit()">
-                        <option value="">All Products</option>
+<!-- Mobile Filters (visible on mobile) -->
+<div class="container d-lg-none">
+    <div class="filters-section fade-in">
+        <div class="row g-3">
+            <div class="col-6">
+                <form method="get" action="all-products.php" id="mobileFilterForm">
+                    <select name="category" class="form-select custom-filter-select" onchange="document.getElementById('mobileFilterForm').submit()">
+                        <option value="">All Categories</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= $category['id'] ?>" <?= ($selected_category_id == $category['id']) ? 'selected' : '' ?>>
                                 <?= esc_html($category['name']) ?>
@@ -133,32 +105,121 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </form>
             </div>
+            <div class="col-6">
+                <form method="get" action="all-products.php" id="mobileSortForm">
+                    <?php if ($selected_category_id): ?>
+                        <input type="hidden" name="category" value="<?= $selected_category_id ?>">
+                    <?php endif; ?>
+                    <select name="sort" class="form-select custom-filter-select" onchange="document.getElementById('mobileSortForm').submit()">
+                        <option value="newest" <?= ($sort_by === 'newest') ? 'selected' : '' ?>>Newest First</option>
+                        <option value="oldest" <?= ($sort_by === 'oldest') ? 'selected' : '' ?>>Oldest First</option>
+                        <option value="price_low" <?= ($sort_by === 'price_low') ? 'selected' : '' ?>>Price: Low to High</option>
+                        <option value="price_high" <?= ($sort_by === 'price_high') ? 'selected' : '' ?>>Price: High to Low</option>
+                        <option value="name" <?= ($sort_by === 'name') ? 'selected' : '' ?>>Name: A to Z</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="container my-5">
+    <div class="row">
+        <!-- Desktop Sidebar -->
+        <aside class="col-lg-3 d-none d-lg-block">
+            <div class="custom-sidebar fade-in">
+                <h4 class="sidebar-title">
+                    <i class="bi bi-funnel me-2"></i>Filters
+                </h4>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-3">Category</label>
+                    <form method="get" action="all-products.php" id="categoryFilterForm">
+                        <select name="category" class="form-select custom-filter-select" onchange="document.getElementById('categoryFilterForm').submit()">
+                            <option value="">All Categories</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= $category['id'] ?>" <?= ($selected_category_id == $category['id']) ? 'selected' : '' ?>>
+                                    <?= esc_html($category['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-3">Sort By</label>
+                    <form method="get" action="all-products.php" id="sortForm">
+                        <?php if ($selected_category_id): ?>
+                            <input type="hidden" name="category" value="<?= $selected_category_id ?>">
+                        <?php endif; ?>
+                        <select name="sort" class="form-select custom-filter-select" onchange="document.getElementById('sortForm').submit()">
+                            <option value="newest" <?= ($sort_by === 'newest') ? 'selected' : '' ?>>Newest First</option>
+                            <option value="oldest" <?= ($sort_by === 'oldest') ? 'selected' : '' ?>>Oldest First</option>
+                            <option value="price_low" <?= ($sort_by === 'price_low') ? 'selected' : '' ?>>Price: Low to High</option>
+                            <option value="price_high" <?= ($sort_by === 'price_high') ? 'selected' : '' ?>>Price: High to Low</option>
+                            <option value="name" <?= ($sort_by === 'name') ? 'selected' : '' ?>>Name: A to Z</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
         </aside>
 
         <!-- Products Grid -->
         <section class="col-lg-9">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4">
+            <!-- Results Header -->
+            <div class="results-header fade-in">
+                <div class="results-count">
+                    <strong><?= number_format($total_products) ?></strong>
+                    <?= $total_products === 1 ? 'product' : 'products' ?> found
+                    <?php if ($selected_category_id): ?>
+                        <?php
+                        $selected_cat = array_filter($categories, fn($c) => $c['id'] == $selected_category_id);
+                        $selected_cat = reset($selected_cat);
+                        ?>
+                        in <strong><?= esc_html($selected_cat['name']) ?></strong>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 fade-in" id="productsGrid">
                 <?php if (empty($products)): ?>
                     <div class="col-12">
-                        <div class="alert alert-light text-center" role="alert">
-                            <h4 class="alert-heading">No Products Found</h4>
-                            <p class="mb-0">There are no products matching your current selection. Please try a different category.</p>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <h3>No Products Found</h3>
+                            <p>We couldn't find any products matching your current selection. Try adjusting your filters or browse all categories.</p>
+                            <a href="all-products.php" class="add-to-cart-btn d-inline-flex">
+                                <i class="bi bi-arrow-left me-2"></i>View All Products
+                            </a>
                         </div>
                     </div>
                 <?php else: ?>
                     <?php foreach ($products as $product): ?>
-                        <div class="col">
-                            <div class="card h-100 product-card">
-                                <a href="product.php?id=<?= $product['id'] ?>">
-                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>" class="card-img-top" alt="<?= esc_html($product['name']) ?>">
-                                </a>
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title h6"><a href="product.php?id=<?= $product['id'] ?>"><?= esc_html($product['name']) ?></a></h5>
-                                    <p class="card-text fs-5 fw-bold text-primary mb-0 mt-auto"><?= formatPrice($product['price']) ?></p>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="custom-product-card">
+                                <div class="product-image-container">
+                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
+                                        class="product-image"
+                                        alt="<?= esc_html($product['name']) ?>"
+                                        loading="lazy">
+                                    <div class="product-overlay">
+                                        <a href="product.php?id=<?= $product['id'] ?>" class="quick-view-btn">
+                                            <i class="bi bi-eye"></i>Quick View
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="card-footer">
-                                    <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="btn btn-primary w-100 btn-add-to-cart">
-                                        <i class="bi bi-cart-plus"></i> Add to Cart
+                                <div class="product-info">
+                                    <a href="product.php?id=<?= $product['id'] ?>" class="product-name">
+                                        <?= esc_html($product['name']) ?>
+                                    </a>
+                                    <div class="product-price">
+                                        <?= formatPrice($product['price']) ?>
+                                    </div>
+                                    <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="add-to-cart-btn">
+                                        <i class="bi bi-cart-plus"></i>Add to Cart
                                     </a>
                                 </div>
                             </div>
@@ -169,34 +230,114 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <!-- Pagination -->
             <?php if ($total_pages > 1): ?>
-                <nav aria-label="Page navigation" class="mt-5">
-                    <ul class="pagination justify-content-center">
-                        <?php
-                        $pagination_params = [];
-                        if ($selected_category_id) {
-                            $pagination_params['category'] = $selected_category_id;
-                        }
-                        ?>
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $page - 1 ?>&<?= http_build_query($pagination_params) ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?>&<?= http_build_query($pagination_params) ?>"><?= $i ?></a>
+                <div class="custom-pagination fade-in">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <?php
+                            $pagination_params = [];
+                            if ($selected_category_id) {
+                                $pagination_params['category'] = $selected_category_id;
+                            }
+                            if ($sort_by !== 'newest') {
+                                $pagination_params['sort'] = $sort_by;
+                            }
+                            ?>
+                            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page - 1 ?>&<?= http_build_query($pagination_params) ?>" aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
                             </li>
-                        <?php endfor; ?>
-                        <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $page + 1 ?>&<?= http_build_query($pagination_params) ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+
+                            <?php
+                            $start_page = max(1, $page - 2);
+                            $end_page = min($total_pages, $page + 2);
+
+                            if ($start_page > 1): ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1&<?= http_build_query($pagination_params) ?>">1</a>
+                                </li>
+                                <?php if ($start_page > 2): ?>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
+                            <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                                <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                                    <a class="page-link" href="?page=<?= $i ?>&<?= http_build_query($pagination_params) ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php if ($end_page < $total_pages): ?>
+                                <?php if ($end_page < $total_pages - 1): ?>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                <?php endif; ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=<?= $total_pages ?>&<?= http_build_query($pagination_params) ?>"><?= $total_pages ?></a>
+                                </li>
+                            <?php endif; ?>
+
+                            <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page + 1 ?>&<?= http_build_query($pagination_params) ?>" aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             <?php endif; ?>
         </section>
     </div>
 </main>
+
+<script>
+    // Add loading animation when filtering
+    document.querySelectorAll('form select').forEach(select => {
+        select.addEventListener('change', function() {
+            const grid = document.getElementById('productsGrid');
+            if (grid) {
+                grid.style.opacity = '0.6';
+                grid.style.pointerEvents = 'none';
+            }
+        });
+    });
+
+    // Lazy loading for images
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src || img.src;
+                    img.classList.remove('loading-skeleton');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('.product-image').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+
+    // Add to cart with loading state
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (this.href && this.href.includes('add_to_cart.php')) {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Adding...';
+                this.style.pointerEvents = 'none';
+
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.pointerEvents = 'auto';
+                }, 2000);
+            }
+        });
+    });
+</script>
 
 <?php include 'includes/footer.php'; ?>

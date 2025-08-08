@@ -9,7 +9,6 @@ $page_file = basename($_SERVER['PHP_SELF'], '.php'); // Get current filename wit
 
 $page_name = ($page_file === 'index') ? 'Home' : ucfirst(str_replace(['-', '_'], ' ', $page_file));
 
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -65,118 +64,138 @@ if (!empty($_SESSION['cart'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/custom.css">
-
-    <!-- Custom Styles for Modern Header -->
-
+    <link rel="stylesheet" href="assets/css/updated-css.css">
 </head>
 
 <body>
-
-    <header class="header-sticky bg-light">
+    <header class="custom-header">
         <!-- Main Navigation Bar -->
-        <nav class="navbar navbar-expand-lg bg-light">
-            <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container py-2">
                 <!-- Logo -->
                 <a class="navbar-brand me-lg-4" href="index">
-                    <img src="<?= esc_html($companyLogo) ?>" alt="<?= esc_html($companyName) ?> Logo">
+                    <img src="<?= esc_html($companyLogo) ?>" alt="<?= esc_html($companyName) ?> Logo" class="brand-logo">
                 </a>
 
                 <!-- Mobile: User & Cart Icons (shown only on mobile) -->
                 <div class="d-flex align-items-center d-lg-none ms-auto">
                     <?php if (isLoggedIn()): ?>
-                        <a class="nav-link me-3" href="profile"><i class="bi bi-person-circle fs-4"></i></a>
+                        <a class="nav-icon-btn me-2" href="profile">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
                     <?php else: ?>
-                        <a class="nav-link me-3" href="login"><i class="bi bi-person-circle fs-4"></i></a>
+                        <a class="nav-icon-btn me-2" href="login">
+                            <i class="bi bi-person fs-4"></i>
+                        </a>
                     <?php endif; ?>
-                    <a class="nav-link position-relative me-3" href="cart">
-                        <i class="bi bi-cart3 fs-4"></i>
+
+                    <a class="nav-icon-btn me-3" href="cart">
+                        <i class="bi bi-bag fs-4"></i>
                         <?php if ($cart_items_count > 0): ?>
-                            <span class="badge bg-primary rounded-pill"><?= $cart_items_count ?></span>
+                            <span class="cart-badge"><?= $cart_items_count ?></span>
                         <?php endif; ?>
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+
+                    <button class="mobile-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
                         aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <i class="bi bi-list fs-4"></i>
                     </button>
                 </div>
 
                 <!-- Navbar Content -->
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <!-- Search Form (centered on desktop, first on mobile) -->
-                    <form class="d-flex mx-auto search-form my-3 my-lg-0" role="search" action="search" method="get">
-                        <input class="form-control me-2" type="search" name="q" placeholder="Search for products..."
-                            aria-label="Search">
-                        <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
-                    </form>
+                    <div class="mx-auto my-3 my-lg-0">
+                        <form class="custom-search" role="search" action="search" method="get">
+                            <input class="form-control" type="search" name="q"
+                                placeholder="Search for amazing products..." aria-label="Search">
+                            <button class="search-btn" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </form>
+                    </div>
 
                     <!-- Main Site Navigation (for mobile view) -->
-                    <ul class="navbar-nav d-lg-none">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="all-products">All Products</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Categories
-                            </a>
-                            <ul class="dropdown-menu">
-                                <?php foreach ($categories as $cat): ?>
-                                    <li><a class="dropdown-item"
-                                            href="category?id=<?= $cat['id'] ?>"><?= esc_html($cat['name']) ?></a></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="about">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact">Contact Us</a>
-                        </li>
-                        <hr>
-                    </ul>
+                    <div class="mobile-menu d-lg-none">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index">
+                                    <i class="bi bi-house me-2"></i>Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="all-products">
+                                    <i class="bi bi-grid me-2"></i>All Products
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-tags me-2"></i>Categories
+                                </a>
+                                <ul class="dropdown-menu custom-dropdown">
+                                    <?php foreach ($categories as $cat): ?>
+                                        <li><a class="dropdown-item" href="category?id=<?= $cat['id'] ?>">
+                                                <?= esc_html($cat['name']) ?>
+                                            </a></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about">
+                                    <i class="bi bi-info-circle me-2"></i>About Us
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact">
+                                    <i class="bi bi-envelope me-2"></i>Contact Us
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
                     <!-- Desktop User Actions (right-aligned, hidden on mobile) -->
-                    <ul class="navbar-nav  mb-2 mb-lg-0 align-items-center d-none d-lg-flex">
+                    <div class="d-none d-lg-flex align-items-center gap-3">
                         <?php if (isLoggedIn()): ?>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="bi bi-person-circle fs-5 me-1"></i>
-                                    Hello, <?= esc_html($_SESSION['user_name'] ?? 'User') ?>
+                            <div class="dropdown user-dropdown">
+                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <?= esc_html($_SESSION['user_name'] ?? 'User') ?>
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="profile">My Profile</a></li>
-                                    <li><a class="dropdown-item" href="orders">My Orders</a></li>
+                                <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
+                                    <li><a class="dropdown-item" href="profile">
+                                            <i class="bi bi-person me-2"></i>My Profile
+                                        </a></li>
+                                    <li><a class="dropdown-item" href="orders">
+                                            <i class="bi bi-box-seam me-2"></i>My Orders
+                                        </a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="logout">Logout</a></li>
+                                    <li><a class="dropdown-item" href="logout">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                        </a></li>
                                 </ul>
-                            </li>
+                            </div>
                         <?php else: ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="login">
-                                    <i class="bi bi-person-circle fs-5 me-1"></i> Login/Register
-                                </a>
-                            </li>
+                            <a class="login-btn" href="login">
+                                <i class="bi bi-person"></i>
+                                Join Us
+                            </a>
                         <?php endif; ?>
 
-                        <li class="nav-item">
-                            <a class="nav-link position-relative" href="cart">
-                                <i class="bi bi-cart3 fs-4"></i>
-                                <?php if ($cart_items_count > 0): ?>
-                                    <span class="badge bg-primary rounded-pill"><?= $cart_items_count ?></span>
-                                <?php endif; ?>
-                            </a>
-                        </li>
-                    </ul>
+                        <a class="nav-icon-btn position-relative" href="cart">
+                            <i class="bi bi-bag fs-4"></i>
+                            <?php if ($cart_items_count > 0): ?>
+                                <span class="cart-badge"><?= $cart_items_count ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -184,7 +203,7 @@ if (!empty($_SESSION['cart'])) {
         <!-- Category Navigation Bar (Desktop Only) -->
         <nav class="category-nav d-none d-lg-block">
             <div class="container">
-                <ul class="nav">
+                <ul class="nav justify-content-center">
                     <li class="nav-item">
                         <a class="nav-link" href="index">Home</a>
                     </li>
@@ -193,14 +212,14 @@ if (!empty($_SESSION['cart'])) {
                     </li>
                     <!-- Categories Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategories" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             Categories
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategories">
+                        <ul class="dropdown-menu custom-dropdown">
                             <?php foreach ($categories as $cat): ?>
-                                <li><a class="dropdown-item"
-                                        href="category?id=<?= $cat['id'] ?>"><?= esc_html($cat['name']) ?></a></li>
+                                <li><a class="dropdown-item" href="category?id=<?= $cat['id'] ?>">
+                                        <?= esc_html($cat['name']) ?>
+                                    </a></li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -215,5 +234,17 @@ if (!empty($_SESSION['cart'])) {
         </nav>
     </header>
     <!-- End of Header -->
+
+    <script>
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.custom-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
 
     <!-- The rest of your page content (e.g., from index.php) will go here -->
