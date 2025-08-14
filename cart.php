@@ -75,16 +75,9 @@ $shipping_cost = 50.00; // Example fixed shipping cost
 $grand_total = $subtotal + $shipping_cost;
 
 ?>
-
-<div class="page-header" style="background-color: #f8f9fa; padding: 2rem 0; margin-bottom: 3rem;">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold mt-2">Your Cart</h1>
+<div class="products-hero">
+    <div class="container text-center">
+        <h1 class="fade-in">Shopping Cart</h1>
     </div>
 </div>
 
@@ -92,59 +85,59 @@ $grand_total = $subtotal + $shipping_cost;
     <div class="row">
         <?php if (empty($products_in_cart)): ?>
             <div class="col-12 text-center">
-                <div class="card p-5">
-                    <div class="card-body">
-                        <i class="bi bi-cart-x" style="font-size: 5rem; color: #6c757d;"></i>
-                        <h3 class="card-title mt-4">Your cart is empty</h3>
-                        <p class="card-text text-muted">Looks like you haven't added anything to your cart yet.</p>
-                        <a href="index" class="btn btn-primary mt-3">Continue Shopping</a>
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-cart-x"></i>
                     </div>
+                    <h3>Your cart is empty</h3>
+                    <p>Looks like you haven't added anything to your cart yet. Start exploring our products!</p>
+                    <a href="index" class="add-to-cart-btn d-inline-flex">
+                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                    </a>
                 </div>
             </div>
         <?php else: ?>
             <!-- Cart Items Column -->
             <div class="col-lg-8">
-                <form action="cart" method="post">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white py-3">
-                            <h5 class="mb-0">Cart Items (<?= count($products_in_cart) ?>)</h5>
-                        </div>
+                <form action="cart.php" method="post">
+                    <div class="glass-panel p-4">
+                        <h5 class="mb-4 fw-bold">Cart Items (<?= count($products_in_cart) ?>)</h5>
                         <div class="table-responsive">
                             <table class="table align-middle mb-0">
                                 <tbody>
-                                <?php foreach ($products_in_cart as $product): ?>
-                                    <tr>
-                                        <td style="width: 120px;">
-                                            <a href="product?id=<?= $product['id'] ?>">
-                                                <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>" alt="<?= esc_html($product['name']) ?>" class="img-fluid rounded">
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="product?id=<?= $product['id'] ?>" class="text-dark text-decoration-none fw-bold"><?= esc_html($product['name']) ?></a>
-                                            <p class="text-muted small mb-0">Price: <?= formatPrice($product['price']) ?></p>
-                                        </td>
-                                        <td style="width: 150px;">
-                                            <div class="input-group">
-                                                <input type="number" name="quantities[<?= $product['id'] ?>]" class="form-control text-center" value="<?= $cart_items[$product['id']] ?>" min="1" max="<?= $product['stock'] ?>">
-                                            </div>
-                                        </td>
-                                        <td class="text-end fw-bold" style="width: 120px;">
-                                            <?= formatPrice($product['price'] * $cart_items[$product['id']]) ?>
-                                        </td>
-                                        <td class="text-end" style="width: 50px;">
-                                            <!-- Use a separate form for each remove button to avoid conflicts -->
-                                            <form action="cart" method="post" class="d-inline">
-                                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
-                                                <button type="submit" name="remove_item" class="btn btn-sm btn-outline-danger" title="Remove item"><i class="bi bi-trash"></i></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                    <?php foreach ($products_in_cart as $product): ?>
+                                        <tr class="fade-in">
+                                            <td style="width: 120px;">
+                                                <a href="product.php?id=<?= $product['id'] ?>">
+                                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>" alt="<?= esc_html($product['name']) ?>" class="img-fluid rounded-3">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="product.php?id=<?= $product['id'] ?>" class="text-dark text-decoration-none fw-bold product-name"><?= esc_html($product['name']) ?></a>
+                                                <p class="text-muted small mb-0 product-price-custom">Price: <?= formatPrice($product['price']) ?></p>
+                                            </td>
+                                            <td style="width: 150px;">
+                                                <div class="input-group">
+                                                    <input type="number" name="quantities[<?= $product['id'] ?>]" class="form-control text-center" value="<?= $cart_items[$product['id']] ?>" min="1" max="<?= $product['stock'] ?>">
+                                                </div>
+                                            </td>
+                                            <td class="text-end fw-bold" style="width: 120px;">
+                                                <?= formatPrice($product['price'] * $cart_items[$product['id']]) ?>
+                                            </td>
+                                            <td class="text-end" style="width: 50px;">
+                                                <!-- Use a separate form for each remove button to avoid conflicts -->
+                                                <form action="cart.php" method="post" class="d-inline">
+                                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                                                    <button type="submit" name="remove_item" class="btn btn-sm btn-danger rounded-circle" title="Remove item"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
-                            <a href="index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Continue Shopping</a>
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 ">
+                            <a href="all-products.php" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Continue Shopping</a>
                             <button type="submit" name="update_cart" class="btn btn-primary"><i class="bi bi-arrow-repeat me-2"></i>Update Cart</button>
                         </div>
                     </div>
@@ -153,36 +146,29 @@ $grand_total = $subtotal + $shipping_cost;
 
             <!-- Summary Column -->
             <div class="col-lg-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">Cart Summary</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                Subtotal
-                                <span><?= formatPrice($subtotal) ?></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
-                                Shipping
-                                <span><?= formatPrice($shipping_cost) ?></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                                <div>
-                                    <strong>Total amount</strong>
-                                    <p class="mb-0 small text-muted">(including VAT)</p>
-                                </div>
-                                <span class="fw-bold fs-5"><?= formatPrice($grand_total) ?></span>
-                            </li>
-                        </ul>
-                        <div class="d-grid">
-                            <?php if (isLoggedIn()): ?>
-                                <a href="checkout" class="btn btn-primary btn-lg">Proceed to Checkout</a>
-                            <?php else: ?>
-                                <a href="login?redirect=checkout" class="btn btn-primary btn-lg">Login to Checkout</a>
-                                <p class="text-center small mt-2 text-muted">You must be logged in to place an order.</p>
-                            <?php endif; ?>
-                        </div>
+                <div class="glass-panel p-4">
+                    <h5 class="mb-4 fw-bold">Cart Summary</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 pb-0">
+                            Subtotal
+                            <span><?= formatPrice($subtotal) ?></span>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 mb-3  pt-3 mt-3">
+                            <div>
+                                <strong>Total amount</strong>
+                                <p class="mb-0 small text-muted">(including VAT)</p>
+                            </div>
+                            <span class="fw-bold fs-5"><?= formatPrice($grand_total) ?></span>
+                        </li>
+                    </ul>
+                    <div class="d-grid mt-4">
+                        <?php if (isLoggedIn()): ?>
+                            <a href="checkout.php" class="btn btn-custom-primary btn-lg">Proceed to Checkout</a>
+                        <?php else: ?>
+                            <a href="login.php?redirect=checkout.php" class="btn btn-custom-primary btn-lg">Login to Checkout</a>
+                            <p class="text-center small mt-2 text-muted">You must be logged in to place an order.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

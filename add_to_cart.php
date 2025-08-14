@@ -23,7 +23,7 @@ if (!$product_id || $quantity <= 0) {
         'message' => 'Invalid product or quantity specified.'
     ];
     // Redirect back to the previous page or homepage
-    redirect($_SERVER['HTTP_REFERER'] ?? 'index.php');
+    redirect($_SERVER['HTTP_REFERER'] ?? 'index');
 }
 
 // --- Check Product Availability ---
@@ -34,7 +34,7 @@ try {
 
     if (!$product) {
         $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Product not found.'];
-        redirect($_SERVER['HTTP_REFERER'] ?? 'index.php');
+        redirect($_SERVER['HTTP_REFERER'] ?? 'index');
     }
 
     $stock = (int)$product['stock'];
@@ -43,7 +43,7 @@ try {
     // Check if the product is out of stock
     if ($stock <= 0) {
         $_SESSION['flash_message'] = ['type' => 'warning', 'message' => "Sorry, '" . esc_html($product_name) . "' is currently out of stock."];
-        redirect($_SERVER['HTTP_REFERER'] ?? 'index.php');
+        redirect($_SERVER['HTTP_REFERER'] ?? 'index');
     }
 
     // --- Add to Cart Logic ---
@@ -67,7 +67,6 @@ try {
         $message = "Added {$quantity} x '" . esc_html($product_name) . "' to your cart.";
         $_SESSION['flash_message'] = ['type' => 'success', 'message' => $message];
     }
-
 } catch (PDOException $e) {
     // Handle database errors gracefully
     $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'A database error occurred. Please try again.'];
@@ -77,4 +76,4 @@ try {
 
 // --- Redirect ---
 // Send the user back to the page they came from.
-redirect($_SERVER['HTTP_REFERER'] ?? 'index.php');
+redirect($_SERVER['HTTP_REFERER'] ?? 'index');

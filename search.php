@@ -54,7 +54,7 @@ if (!empty($search_query)) {
         <div class="text-center p-5 bg-light rounded">
             <h4>No Products Found</h4>
             <p>We couldn't find any products matching your search. Try a different keyword.</p>
-            <a href="index.php" class="btn btn-primary">Back to Home</a>
+            <a href="index" class="btn btn-primary">Back to Home</a>
         </div>
     <?php else: ?>
         <!-- Product Grid -->
@@ -64,11 +64,11 @@ if (!empty($search_query)) {
                     <div class="card h-100 product-card">
                         <a href="product.php?id=<?= $product['id'] ?>">
                             <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
-                                 class="card-img-top product-card-img-top" alt="<?= esc_html($product['name']) ?>">
+                                class="card-img-top product-card-img-top" alt="<?= esc_html($product['name']) ?>">
                         </a>
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title h6"><a href="product.php?id=<?= $product['id'] ?>"
-                                                         class="text-dark text-decoration-none"><?= esc_html($product['name']) ?></a>
+                                    class="text-dark text-decoration-none"><?= esc_html($product['name']) ?></a>
                             </h5>
                             <p class="card-text fw-bold text-primary mb-0"><?= formatPrice($product['price']) ?></p>
                         </div>
@@ -90,7 +90,7 @@ if (!empty($search_query)) {
                     ?>
                     <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
                         <a class="page-link"
-                           href="?page=<?= $page - 1 ?>&<?= $filter_params ?>"><span>&laquo;</span></a>
+                            href="?page=<?= $page - 1 ?>&<?= $filter_params ?>"><span>&laquo;</span></a>
                     </li>
                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
@@ -99,7 +99,7 @@ if (!empty($search_query)) {
                     <?php endfor; ?>
                     <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
                         <a class="page-link"
-                           href="?page=<?= $page + 1 ?>&<?= $filter_params ?>"><span>&raquo;</span></a>
+                            href="?page=<?= $page + 1 ?>&<?= $filter_params ?>"><span>&raquo;</span></a>
                     </li>
                 </ul>
             </nav>

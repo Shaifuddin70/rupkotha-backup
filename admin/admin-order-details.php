@@ -65,7 +65,7 @@ foreach ($order_items as $item) {
 ?>
 
 <style>
-    /* Modern UI Styles */
+    /* custom UI Styles */
     :root {
         --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --success-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -80,14 +80,14 @@ foreach ($order_items as $item) {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    .modern-container {
+    .custom-container {
         max-width: 1400px;
         margin: 0 auto;
         padding: 2rem;
     }
 
     /* Header Section */
-    .modern-header {
+    .custom-header {
         background: white;
         border-radius: var(--border-radius);
         box-shadow: var(--card-shadow);
@@ -97,7 +97,7 @@ foreach ($order_items as $item) {
         overflow: hidden;
     }
 
-    .modern-header::before {
+    .custom-header::before {
         content: '';
         position: absolute;
         top: 0;
@@ -128,7 +128,7 @@ foreach ($order_items as $item) {
         flex-wrap: wrap;
     }
 
-    .modern-btn {
+    .custom-btn {
         padding: 12px 24px;
         border-radius: 12px;
         font-weight: 600;
@@ -166,8 +166,8 @@ foreach ($order_items as $item) {
         box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
     }
 
-    /* Modern Cards */
-    .modern-card {
+    /* custom Cards */
+    .custom-card {
         background: white;
         border-radius: var(--border-radius);
         box-shadow: var(--card-shadow);
@@ -176,17 +176,17 @@ foreach ($order_items as $item) {
         backdrop-filter: blur(10px);
     }
 
-    .modern-card:hover {
+    .custom-card:hover {
         transform: translateY(-5px);
         box-shadow: var(--hover-shadow);
     }
 
-    .card-header-modern {
+    .card-header-custom {
         padding: 1.5rem 2rem 1rem;
         border-bottom: 1px solid #f1f5f9;
     }
 
-    .card-title-modern {
+    .card-title-custom {
         font-size: 1.25rem;
         font-weight: 600;
         color: #1e293b;
@@ -196,12 +196,12 @@ foreach ($order_items as $item) {
         gap: 0.5rem;
     }
 
-    .card-body-modern {
+    .card-body-custom {
         padding: 1.5rem 2rem 2rem;
     }
 
     /* Status Badge */
-    .status-badge-modern {
+    .status-badge-custom {
         padding: 8px 16px;
         border-radius: 50px;
         font-weight: 600;
@@ -258,8 +258,8 @@ foreach ($order_items as $item) {
         color: #1e293b;
     }
 
-    /* Modern Table */
-    .modern-table {
+    /* custom Table */
+    .custom-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
@@ -268,11 +268,11 @@ foreach ($order_items as $item) {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    .modern-table thead {
+    .custom-table thead {
         background: linear-gradient(135deg, #f8fafc, #e2e8f0);
     }
 
-    .modern-table th {
+    .custom-table th {
         padding: 1rem 1.5rem;
         font-weight: 600;
         color: #475569;
@@ -282,17 +282,17 @@ foreach ($order_items as $item) {
         letter-spacing: 0.5px;
     }
 
-    .modern-table td {
+    .custom-table td {
         padding: 1rem 1.5rem;
         border-top: 1px solid #f1f5f9;
         vertical-align: middle;
     }
 
-    .modern-table tbody tr {
+    .custom-table tbody tr {
         transition: var(--transition);
     }
 
-    .modern-table tbody tr:hover {
+    .custom-table tbody tr:hover {
         background: #f8fafc;
     }
 
@@ -321,7 +321,7 @@ foreach ($order_items as $item) {
         margin-top: 1rem;
     }
 
-    .form-select-modern {
+    .form-select-custom {
         width: 100%;
         padding: 12px 16px;
         border: 2px solid #e2e8f0;
@@ -331,7 +331,7 @@ foreach ($order_items as $item) {
         transition: var(--transition);
     }
 
-    .form-select-modern:focus {
+    .form-select-custom:focus {
         outline: none;
         border-color: #667eea;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -471,13 +471,13 @@ foreach ($order_items as $item) {
             transform: none !important;
         }
 
-        .modern-container {
+        .custom-container {
             max-width: 100% !important;
             padding: 20px !important;
             margin: 0 !important;
         }
 
-        .modern-header {
+        .custom-header {
             box-shadow: none !important;
             border: 1px solid #ddd !important;
             margin-bottom: 20px !important;
@@ -485,7 +485,7 @@ foreach ($order_items as $item) {
             background: white !important;
         }
 
-        .modern-card {
+        .custom-card {
             box-shadow: none !important;
             border: 1px solid #ddd !important;
             margin-bottom: 15px !important;
@@ -493,26 +493,26 @@ foreach ($order_items as $item) {
             background: white !important;
         }
 
-        .modern-table {
+        .custom-table {
             box-shadow: none !important;
             border: 1px solid #ddd !important;
             background: white !important;
         }
 
-        .modern-table th,
-        .modern-table td {
+        .custom-table th,
+        .custom-table td {
             border: 1px solid #ddd !important;
             padding: 8px 12px !important;
             background: white !important;
             color: #000 !important;
         }
 
-        .modern-table th {
+        .custom-table th {
             background: #f5f5f5 !important;
             font-weight: bold !important;
         }
 
-        .status-badge-modern {
+        .status-badge-custom {
             border: 1px solid #333 !important;
             color: #000 !important;
             background: #f0f0f0 !important;
@@ -593,7 +593,7 @@ foreach ($order_items as $item) {
             gap: 1rem;
         }
 
-        .modern-container {
+        .custom-container {
             padding: 1rem;
         }
 
@@ -607,9 +607,9 @@ foreach ($order_items as $item) {
     }
 </style>
 
-<div class="modern-container">
+<div class="custom-container">
     <!-- Header Section -->
-    <div class="modern-header no-print">
+    <div class="custom-header no-print">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
             <div>
                 <h1 class="order-title">Order #<?= esc_html($order['id']) ?></h1>
@@ -619,11 +619,11 @@ foreach ($order_items as $item) {
                 </p>
             </div>
             <div class="action-buttons">
-                <a href="orders.php" class="modern-btn btn-outline">
+                <a href="orders.php" class="custom-btn btn-outline">
                     <i class="bi bi-arrow-left"></i>
                     Back to Orders
                 </a>
-                <button onclick="window.print()" class="modern-btn btn-primary">
+                <button onclick="window.print()" class="custom-btn btn-primary">
                     <i class="bi bi-printer-fill"></i>
                     Print Invoice
                 </button>
@@ -647,14 +647,14 @@ foreach ($order_items as $item) {
 
 
             <!-- Customer Details -->
-            <div class="modern-card no-print" style="margin-bottom: 1.5rem;">
-                <div class="card-header-modern">
-                    <h3 class="card-title-modern">
+            <div class="custom-card no-print" style="margin-bottom: 1.5rem;">
+                <div class="card-header-custom">
+                    <h3 class="card-title-custom">
                         <i class="bi bi-person-circle" style="color: #667eea;"></i>
                         Customer Details
                     </h3>
                 </div>
-                <div class="card-body-modern">
+                <div class="card-body-custom">
                     <div class="info-item">
                         <span class="info-label">Customer ID</span>
                         <span class="info-value">#<?= esc_html($order['user_id']) ?></span>
@@ -687,14 +687,14 @@ foreach ($order_items as $item) {
             </div>
 
             <!-- Payment Details
-            <div class="modern-card no-print" style="margin-bottom: 1.5rem;">
-                <div class="card-header-modern">
-                    <h3 class="card-title-modern">
+            <div class="custom-card no-print" style="margin-bottom: 1.5rem;">
+                <div class="card-header-custom">
+                    <h3 class="card-title-custom">
                         <i class="bi bi-credit-card" style="color: #667eea;"></i>
                         Payment Details
                     </h3>
                 </div>
-                <div class="card-body-modern">
+                <div class="card-body-custom">
                     <div class="info-item">
                         <span class="info-label">Payment Method</span>
                         <span class="info-value">
@@ -722,14 +722,14 @@ foreach ($order_items as $item) {
             </div> -->
 
             <!-- Order Timeline
-            <div class="modern-card no-print" style="margin-bottom: 1.5rem;">
-                <div class="card-header-modern">
-                    <h3 class="card-title-modern">
+            <div class="custom-card no-print" style="margin-bottom: 1.5rem;">
+                <div class="card-header-custom">
+                    <h3 class="card-title-custom">
                         <i class="bi bi-clock-history" style="color: #667eea;"></i>
                         Order Timeline
                     </h3>
                 </div>
-                <div class="card-body-modern">
+                <div class="card-body-custom">
                     <div class="timeline">
                         <div class="timeline-item <?= in_array($order['status'], ['Pending', 'Processing', 'Shipped', 'Completed']) ? 'completed' : '' ?>">
                             <div class="timeline-marker"></div>
@@ -764,16 +764,16 @@ foreach ($order_items as $item) {
             </div> -->
 
             <!-- Status Update (No Print) -->
-            <div class="modern-card status-update-section no-print">
-                <div class="card-header-modern">
-                    <h3 class="card-title-modern">
+            <div class="custom-card status-update-section no-print">
+                <div class="card-header-custom">
+                    <h3 class="card-title-custom">
                         <i class="bi bi-arrow-repeat" style="color: #667eea;"></i>
                         Update Status
                     </h3>
                 </div>
-                <div class="card-body-modern">
+                <div class="card-body-custom">
                     <form method="post" class="status-form">
-                        <select name="status" class="form-select-modern">
+                        <select name="status" class="form-select-custom">
                             <option value="Pending" <?= $order['status'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
                             <option value="Processing" <?= $order['status'] === 'Processing' ? 'selected' : '' ?>>Processing</option>
                             <option value="Shipped" <?= $order['status'] === 'Shipped' ? 'selected' : '' ?>>Shipped</option>
@@ -791,23 +791,23 @@ foreach ($order_items as $item) {
 
         <!-- Right Column - Invoice -->
         <div class="grid-item">
-            <div class="modern-card">
-                <div class="card-header-modern">
+            <div class="custom-card">
+                <div class="card-header-custom">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3 class="card-title-modern">
+                        <h3 class="card-title-custom">
                             <i class="bi bi-receipt" style="color: #667eea;"></i>
                             Invoice Details
                         </h3>
-                        <span class="status-badge-modern status-<?= strtolower($order['status']) ?>">
+                        <span class="status-badge-custom status-<?= strtolower($order['status']) ?>">
                             <?= esc_html($order['status']) ?>
                         </span>
                     </div>
                 </div>
-                <div class="card-body-modern">
+                <div class="card-body-custom">
                     <!-- Order Items Table -->
                     <div style="margin-bottom: 2rem;">
                         <h4 style="margin-bottom: 1rem; color: #1e293b; font-weight: 600;">Ordered Items</h4>
-                        <table class="modern-table">
+                        <table class="custom-table">
                             <thead>
                                 <tr>
                                     <th>Product</th>
