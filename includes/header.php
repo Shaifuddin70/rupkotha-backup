@@ -1,5 +1,5 @@
 <?php
-// It's best practice to have session_start() at the very top of your entry point file (e.g., index.php)
+// It's best practice to have session_start() at the very top of your entry point file (e.g., index)
 // before any output. But if it's in each header, this works too.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -247,4 +247,4 @@ if (!empty($_SESSION['cart'])) {
         });
     </script>
 
-    <!-- The rest of your page content (e.g., from index.php) will go here -->
+    <!-- The rest of your page content (e.g., from index) will go here -->

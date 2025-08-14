@@ -60,122 +60,143 @@ foreach ($order_items as $item) {
 // Assuming a fixed shipping cost was used, as in checkout.php
 $shipping_cost = $order['total_amount'] - $subtotal;
 
-
 // STEP 3: Now, include the header.
 include 'includes/header.php';
 ?>
 
 
 
-<div class="page-header" style="background-color: #f8f9fa; padding: 2rem 0; margin-bottom: 3rem;">
+<div class="modern-header">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="index">Home</a></li>
-                <li class="breadcrumb-item"><a href="profile">My Account</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Order Details</li>
-            </ol>
-        </nav>
-        <h1 class="display-5 fw-bold mt-2">Order #<?= esc_html($order['id']) ?></h1>
+        <div class="modern-breadcrumb">
+            <a href="index">Home</a>
+            <span class="separator">•</span>
+            <a href="profile">My Account</a>
+            <span class="separator">•</span>
+            <span>Order Details</span>
+        </div>
+        <h1 class="order-title">Order #<?= esc_html($order['id']) ?></h1>
+        <p class="order-subtitle">Complete order details and invoice</p>
     </div>
 </div>
 
-<main class="container my-5">
-    <!-- Add a wrapper div for the printable area -->
-    <div class="invoice-area">
-        <div class="card shadow-sm">
-            <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Order Details</h5>
-                <button onclick="window.print()" class="btn btn-sm btn-outline-secondary"><i class="bi bi-printer-fill me-2"></i>Print</button>
-            </div>
-            <div class="card-body p-4">
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <h6>Order Information</h6>
-                        <p class="mb-1"><strong>Order ID:</strong> #<?= esc_html($order['id']) ?></p>
-                        <p class="mb-1"><strong>Date:</strong> <?= format_date($order['created_at']) ?></p>
-                        <p class="mb-1"><strong>Status:</strong>
-                            <span class="badge <?= $order['status'] === 'Completed' ? 'bg-success' : 'bg-warning text-dark' ?>">
-                                <?= esc_html($order['status']) ?>
-                            </span>
-                        </p>
+<div class="modern-container mb-5">
+    <div class="glass-card">
+        <div class="card-header-modern">
+            <h2 class="card-title">Order Summary</h2>
+            <button onclick="window.print()" class="print-button">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14a1 1 0 001-1v-1h8v1a1 1 0 001 1v2H5v-2z" clip-rule="evenodd" />
+                </svg>
+                Print Invoice
+            </button>
+        </div>
+
+        <div class="card-content">
+            <div class="info-grid">
+                <div class="info-section">
+                    <h6>Order Information</h6>
+                    <div class="info-item">
+                        <span class="info-label">Order ID</span>
+                        <span class="info-value">#<?= esc_html($order['id']) ?></span>
                     </div>
-                    <div class="col-md-8">
-                        <h6>Shipping Address:</h6>
-                        <p class="mb-1"> Name: <strong><?= esc_html($order['username']) ?></strong></p>
-                        <p class="mb-1">Address: <?= esc_html($order['address']) ?></p>
-                        <p class="mb-1">Phone: <?= esc_html($order['phone']) ?></p>
-                        <p class="mb-1">Email: <?= esc_html($order['email']) ?></p>
+                    <div class="info-item">
+                        <span class="info-label">Order Date</span>
+                        <span class="info-value"><?= format_date($order['created_at']) ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="status-badge <?= $order['status'] === 'Completed' ? 'status-completed' : 'status-pending' ?>">
+                            <?= esc_html($order['status']) ?>
+                        </span>
                     </div>
                 </div>
 
-                <h5 class="mb-3">Items Ordered</h5>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
+                <div class="info-section">
+                    <h6>Shipping Details</h6>
+                    <div class="info-item">
+                        <span class="info-label">Name</span>
+                        <span class="info-value"><?= esc_html($order['username']) ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Address</span>
+                        <span class="info-value"><?= esc_html($order['address']) ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value"><?= esc_html($order['phone']) ?></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value"><?= esc_html($order['email']) ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="items-section">
+                <h3 class="section-title">Order Items</h3>
+
+                <table class="modern-table">
+                    <thead>
                         <tr>
-                            <th scope="col" class="border-0 bg-light" style="width: 100px;">
-                                <div class="p-2 text-uppercase">Product</div>
-                            </th>
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="py-2 text-uppercase">Description</div>
-                            </th>
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="py-2 text-uppercase">Price</div>
-                            </th>
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="py-2 text-uppercase">Quantity</div>
-                            </th>
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="py-2 text-uppercase">Total</div>
-                            </th>
+                            <th>Product</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         <?php foreach ($order_items as $item): ?>
                             <tr>
                                 <td>
-                                    <img src="admin/assets/uploads/<?= esc_html($item['image']) ?>" alt="<?= esc_html($item['name']) ?>" width="80" class="img-fluid rounded">
+                                    <img src="admin/assets/uploads/<?= esc_html($item['image']) ?>"
+                                        alt="<?= esc_html($item['name']) ?>"
+                                        class="invice-product-image">
                                 </td>
-                                <td class="align-middle">
-                                    <strong class="d-block"> <?= esc_html($item['name']) ?></strong>
+                                <td>
+                                    <h6 class="product-name"><?= esc_html($item['name']) ?></h6>
                                 </td>
-                                <td class="align-middle"><?= formatPrice($item['price']) ?></td>
-                                <td class="align-middle"><?= esc_html($item['quantity']) ?></td>
-                                <td class="align-middle fw-bold"><?= formatPrice($item['price'] * $item['quantity']) ?></td>
+                                <td>
+                                    <span class="price-text"><?= formatPrice($item['price']) ?></span>
+                                </td>
+                                <td>
+                                    <span class="quantity-badge"><?= esc_html($item['quantity']) ?></span>
+                                </td>
+                                <td>
+                                    <span class="price-text"><?= formatPrice($item['price'] * $item['quantity']) ?></span>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span class="price-text"><?= formatPrice($subtotal) ?></span>
                 </div>
-
-                <hr class="my-4">
-
-                <div class="row justify-content-end">
-                    <div class="col-lg-4">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                Subtotal
-                                <span><?= formatPrice($subtotal) ?></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
-                                Shipping
-                                <span><?= formatPrice($shipping_cost) ?></span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3 fs-5 fw-bold">
-                                <span>Grand Total</span>
-                                <span><?= formatPrice($order['total_amount']) ?></span>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="total-row">
+                    <span>Shipping</span>
+                    <span class="price-text"><?= formatPrice($shipping_cost) ?></span>
+                </div>
+                <div class="total-row">
+                    <span>Grand Total</span>
+                    <span><?= formatPrice($order['total_amount']) ?></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-4">
-        <a href="profile#v-pills-orders-tab" class="btn btn-primary"><i class="bi bi-arrow-left me-2"></i>Back to Order History</a>
+    <div style="text-align: center;">
+        <a href="orders" class="back-button">
+            <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Order History
+        </a>
     </div>
-</main>
+</div>
 
 <?php include 'includes/footer.php'; ?>

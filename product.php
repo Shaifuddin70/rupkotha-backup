@@ -44,9 +44,7 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<style>
 
-</style>
 
 <div class="product-page-custom">
     <div class="container-custom">
@@ -54,7 +52,7 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="breadcrumb-custom">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item"><a href="index">Home</a></li>
                     <li class="breadcrumb-item">
                         <a href="category.php?id=<?= $product['category_id'] ?>">
                             <?= esc_html($product['category_name']) ?>
@@ -69,7 +67,7 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="row">
             <!-- Product Gallery -->
-            <div class="col-lg-7">
+            <div class="col-lg-7 mb-5 mb-lg-0">
                 <div class="product-gallery-custom">
                     <div class="main-image-custom">
                         <img id="main-product-image"
@@ -292,28 +290,28 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
             });
         });
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // // Intersection Observer for animations
+        // const observerOptions = {
+        //     threshold: 0.1,
+        //     rootMargin: '0px 0px -50px 0px'
+        // };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+        // const observer = new IntersectionObserver((entries) => {
+        //     entries.forEach(entry => {
+        //         if (entry.isIntersecting) {
+        //             entry.target.style.opacity = '1';
+        //             entry.target.style.transform = 'translateY(0)';
+        //         }
+        //     });
+        // }, observerOptions);
 
-        // Observe elements for animation
-        document.querySelectorAll('.product-gallery-custom, .product-details-custom, .description-section-custom, .related-products-custom').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease';
-            observer.observe(el);
-        });
+        // // Observe elements for animation
+        // document.querySelectorAll('.product-gallery-custom, .product-details-custom, .description-section-custom, .related-products-custom').forEach(el => {
+        //     el.style.opacity = '0';
+        //     el.style.transform = 'translateY(30px)';
+        //     el.style.transition = 'all 0.6s ease';
+        //     observer.observe(el);
+        // });
     });
 </script>
 

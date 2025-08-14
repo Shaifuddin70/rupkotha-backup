@@ -71,7 +71,7 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="product-details-new">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="index">Home</a></li>
                             <li class="breadcrumb-item"><a href="category.php?id=<?= $product['category_id'] ?>"><?= esc_html($product['category_name']) ?></a></li>
                             <li class="breadcrumb-item active" aria-current="page"><?= esc_html($product['name']) ?></li>
                         </ol>

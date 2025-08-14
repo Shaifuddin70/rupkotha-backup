@@ -1,5 +1,5 @@
 <?php
-// This is your main storefront page, e.g., index.php
+// This is your main storefront page, e.g., index
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
