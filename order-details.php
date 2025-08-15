@@ -84,12 +84,12 @@ include 'includes/header.php';
     <div class="glass-card">
         <div class="card-header-modern">
             <h2 class="card-title">Order Summary</h2>
-            <button onclick="window.print()" class="print-button">
+            <a href="print-order.php?id=<?= $order['id'] ?>" target="_blank" class="print-button" style="text-decoration:none;">
                 <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14a1 1 0 001-1v-1h8v1a1 1 0 001 1v2H5v-2z" clip-rule="evenodd" />
                 </svg>
                 Print Invoice
-            </button>
+            </a>
         </div>
 
         <div class="card-content">

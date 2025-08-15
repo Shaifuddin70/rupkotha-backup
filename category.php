@@ -133,6 +133,14 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="col">
                             <div class="custom-product-card">
                                 <div class="product-image-container">
+                                    <?php
+                                    $isNew = (strtotime($product['created_at'] ?? 'now') >= strtotime('-14 days'));
+                                    $lowStock = ($product['stock'] ?? 0) > 0 && ($product['stock'] ?? 0) <= 5;
+                                    ?>
+                                    <?php if ($isNew): ?><span class="product-badge badge-new">New</span><?php endif; ?>
+                                    <?php if ($lowStock): ?><span class="product-badge badge-low" style="left:auto; right:10px;">Low</span><?php endif; ?>
+
+                                    <div class="price-badge"><?= formatPrice($product['price']) ?></div>
                                     <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
                                         class="product-image"
                                         alt="<?= esc_html($product['name']) ?>"
@@ -151,9 +159,14 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?= formatPrice($product['price']) ?>
                                     </div>
                                     <?php if ($product['stock'] > 0): ?>
-                                        <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="add-to-cart-btn">
-                                            <i class="bi bi-cart-plus"></i>Add to Cart
-                                        </a>
+                                        <div class="button-container">
+                                            <a href="product.php?id=<?= $product['id'] ?>" class="buy-button button">Buy Now</a>
+                                            <a href="add_to_cart.php?id=<?= $product['id'] ?>" class="cart-button button" aria-label="Add to cart">
+                                                <svg viewBox="0 0 27.97 25.074" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0,1.175A1.173,1.173,0,0,1,1.175,0H3.4A2.743,2.743,0,0,1,5.882,1.567H26.01A1.958,1.958,0,0,1,27.9,4.035l-2.008,7.459a3.532,3.532,0,0,1-3.4,2.61H8.36l.264,1.4a1.18,1.18,0,0,0,1.156.955H23.9a1.175,1.175,0,0,1,0,2.351H9.78a3.522,3.522,0,0,1-3.462-2.865L3.791,2.669A.39.39,0,0,0,3.4,2.351H1.175A1.173,1.173,0,0,1,0,1.175ZM6.269,22.724a2.351,2.351,0,1,1,2.351,2.351A2.351,2.351,0,0,1,6.269,22.724Zm16.455-2.351a2.351,2.351,0,1,1-2.351,2.351A2.351,2.351,0,0,1,22.724,20.373Z"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
                                     <?php else: ?>
                                         <button class="btn out-of-stock-custom" disabled>Out of Stock</button>
                                     <?php endif; ?>

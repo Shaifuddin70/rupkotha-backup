@@ -1,6 +1,4 @@
 <?php
-// admin/admin-order-details.php
-
 require_once 'includes/header.php';
 require_once 'includes/functions.php';
 
@@ -22,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $allowed_statuses = ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled'];
 
     if (in_array($status, $allowed_statuses)) {
-        $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?");
         if ($stmt->execute([$status, $order_id])) {
             $_SESSION['flash_message'] = ['type' => 'success', 'message' => "Order #{$order_id} status updated to {$status}."];
         } else {
@@ -64,548 +62,6 @@ foreach ($order_items as $item) {
 }
 ?>
 
-<style>
-    /* custom UI Styles */
-    :root {
-        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --success-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        --border-radius: 16px;
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    body {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .custom-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
-
-    /* Header Section */
-    .custom-header {
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: var(--card-shadow);
-        padding: 2rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .custom-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--primary-gradient);
-    }
-
-    .order-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-    }
-
-    .order-meta {
-        color: #64748b;
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .custom-btn {
-        padding: 12px 24px;
-        border-radius: 12px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: var(--transition);
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1rem;
-    }
-
-    .btn-outline {
-        background: white;
-        color: #475569;
-        border: 2px solid #e2e8f0;
-    }
-
-    .btn-outline:hover {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-primary {
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-    }
-
-    /* custom Cards */
-    .custom-card {
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: var(--card-shadow);
-        transition: var(--transition);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-    }
-
-    .custom-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--hover-shadow);
-    }
-
-    .card-header-custom {
-        padding: 1.5rem 2rem 1rem;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .card-title-custom {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .card-body-custom {
-        padding: 1.5rem 2rem 2rem;
-    }
-
-    /* Status Badge */
-    .status-badge-custom {
-        padding: 8px 16px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .status-pending {
-        background: linear-gradient(135deg, #fbbf24, #f59e0b);
-        color: white;
-    }
-
-    .status-processing {
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        color: white;
-    }
-
-    .status-shipped {
-        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-        color: white;
-    }
-
-    .status-completed {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-    }
-
-    .status-cancelled {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: white;
-    }
-
-    /* Info Item */
-    .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .info-item:last-child {
-        border-bottom: none;
-    }
-
-    .info-label {
-        font-weight: 500;
-        color: #64748b;
-    }
-
-    .info-value {
-        font-weight: 600;
-        color: #1e293b;
-    }
-
-    /* custom Table */
-    .custom-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .custom-table thead {
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-    }
-
-    .custom-table th {
-        padding: 1rem 1.5rem;
-        font-weight: 600;
-        color: #475569;
-        text-align: left;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .custom-table td {
-        padding: 1rem 1.5rem;
-        border-top: 1px solid #f1f5f9;
-        vertical-align: middle;
-    }
-
-    .custom-table tbody tr {
-        transition: var(--transition);
-    }
-
-    .custom-table tbody tr:hover {
-        background: #f8fafc;
-    }
-
-    /* Summary Section */
-    .summary-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 0;
-    }
-
-    .summary-row.total {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1e293b;
-        border-top: 2px solid #e2e8f0;
-        margin-top: 1rem;
-        padding-top: 1rem;
-    }
-
-    /* Status Update Form */
-    .status-form {
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin-top: 1rem;
-    }
-
-    .form-select-custom {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        font-size: 1rem;
-        margin-bottom: 1rem;
-        transition: var(--transition);
-    }
-
-    .form-select-custom:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .btn-update {
-        width: 100%;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-    }
-
-    .btn-update:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-    }
-
-    /* Timeline Styles */
-    .timeline {
-        position: relative;
-        padding-left: 2rem;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 15px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #e2e8f0;
-    }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
-
-    .timeline-item:last-child {
-        margin-bottom: 0;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -23px;
-        top: 6px;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #e2e8f0;
-        border: 3px solid white;
-        box-shadow: 0 0 0 2px #e2e8f0;
-        transition: var(--transition);
-    }
-
-    .timeline-item.completed .timeline-marker {
-        background: #10b981;
-        box-shadow: 0 0 0 2px #10b981;
-    }
-
-    .timeline-content h6 {
-        margin: 0 0 4px 0;
-        font-weight: 600;
-        color: #1e293b;
-    }
-
-    .timeline-content p {
-        margin: 0;
-        color: #64748b;
-        font-size: 0.9rem;
-    }
-
-    .timeline-item.completed .timeline-content h6 {
-        color: #059669;
-    }
-
-    /* Product Image Styles */
-    .product-image {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-    }
-
-    /* Enhanced Badge Styles */
-    .badge {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Responsive Grid */
-    .grid-layout {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    /* Print Styles */
-    @media print {
-        * {
-            -webkit-print-color-adjust: exact !important;
-            color-adjust: exact !important;
-        }
-
-        body {
-            background: white !important;
-            font-size: 12px;
-            color: #000 !important;
-        }
-
-        body>nav,
-        #layoutSidenav_nav,
-        .sb-sidenav,
-        .no-print,
-        .status-update-section {
-            display: none !important;
-        }
-
-        #layoutSidenav,
-        #layoutSidenav_content {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            position: static !important;
-            transform: none !important;
-        }
-
-        .custom-container {
-            max-width: 100% !important;
-            padding: 20px !important;
-            margin: 0 !important;
-        }
-
-        .custom-header {
-            box-shadow: none !important;
-            border: 1px solid #ddd !important;
-            margin-bottom: 20px !important;
-            page-break-after: avoid;
-            background: white !important;
-        }
-
-        .custom-card {
-            box-shadow: none !important;
-            border: 1px solid #ddd !important;
-            margin-bottom: 15px !important;
-            page-break-inside: avoid;
-            background: white !important;
-        }
-
-        .custom-table {
-            box-shadow: none !important;
-            border: 1px solid #ddd !important;
-            background: white !important;
-        }
-
-        .custom-table th,
-        .custom-table td {
-            border: 1px solid #ddd !important;
-            padding: 8px 12px !important;
-            background: white !important;
-            color: #000 !important;
-        }
-
-        .custom-table th {
-            background: #f5f5f5 !important;
-            font-weight: bold !important;
-        }
-
-        .status-badge-custom {
-            border: 1px solid #333 !important;
-            color: #000 !important;
-            background: #f0f0f0 !important;
-        }
-
-        .grid-layout {
-            display: block !important;
-        }
-
-        .grid-item {
-            width: 100% !important;
-            margin-bottom: 15px !important;
-        }
-
-        .print-only {
-            display: block !important;
-        }
-
-        .timeline::before {
-            background: #333 !important;
-        }
-
-        .timeline-marker {
-            border-color: white !important;
-            box-shadow: 0 0 0 2px #333 !important;
-            background: #f0f0f0 !important;
-        }
-
-        .timeline-item.completed .timeline-marker {
-            background: #333 !important;
-            box-shadow: 0 0 0 2px #333 !important;
-        }
-
-        .product-image {
-            display: none !important;
-        }
-
-        /* Force all text to be black */
-        * {
-            color: #000 !important;
-        }
-
-        /* Ensure summary section prints properly */
-        .summary-row {
-            border-bottom: 1px solid #ddd !important;
-            padding: 8px 0 !important;
-        }
-
-        .summary-row.total {
-            border-top: 2px solid #333 !important;
-            border-bottom: 2px solid #333 !important;
-            font-weight: bold !important;
-        }
-
-        /* Company header for print */
-        .print-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #333;
-        }
-
-        .print-header h1 {
-            font-size: 28px !important;
-            font-weight: bold !important;
-            margin: 0 0 10px 0 !important;
-        }
-
-        .print-header h2 {
-            font-size: 20px !important;
-            margin: 0 0 5px 0 !important;
-        }
-    }
-
-    @media (max-width: 968px) {
-        .grid-layout {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .custom-container {
-            padding: 1rem;
-        }
-
-        .order-title {
-            font-size: 2rem;
-        }
-
-        .action-buttons {
-            flex-direction: column;
-        }
-    }
-</style>
 
 <div class="custom-container">
     <!-- Header Section -->
@@ -623,6 +79,14 @@ foreach ($order_items as $item) {
                     <i class="bi bi-arrow-left"></i>
                     Back to Orders
                 </a>
+                <a href="mailto:<?= esc_html($order['email']) ?>" class="custom-btn btn-outline">
+                    <i class="bi bi-envelope"></i>
+                    Email Customer
+                </a>
+                <button type="button" id="copyAddressBtn" class="custom-btn btn-outline">
+                    <i class="bi bi-clipboard"></i>
+                    Copy Address
+                </button>
                 <button onclick="window.print()" class="custom-btn btn-primary">
                     <i class="bi bi-printer-fill"></i>
                     Print Invoice
@@ -686,7 +150,7 @@ foreach ($order_items as $item) {
                 </div>
             </div>
 
-            <!-- Payment Details
+            <!-- Payment Details -->
             <div class="custom-card no-print" style="margin-bottom: 1.5rem;">
                 <div class="card-header-custom">
                     <h3 class="card-title-custom">
@@ -719,49 +183,9 @@ foreach ($order_items as $item) {
                         </div>
                     <?php endif; ?>
                 </div>
-            </div> -->
+            </div>
 
-            <!-- Order Timeline
-            <div class="custom-card no-print" style="margin-bottom: 1.5rem;">
-                <div class="card-header-custom">
-                    <h3 class="card-title-custom">
-                        <i class="bi bi-clock-history" style="color: #667eea;"></i>
-                        Order Timeline
-                    </h3>
-                </div>
-                <div class="card-body-custom">
-                    <div class="timeline">
-                        <div class="timeline-item <?= in_array($order['status'], ['Pending', 'Processing', 'Shipped', 'Completed']) ? 'completed' : '' ?>">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <h6>Order Placed</h6>
-                                <p><?= format_date($order['created_at']) ?></p>
-                            </div>
-                        </div>
-                        <div class="timeline-item <?= in_array($order['status'], ['Processing', 'Shipped', 'Completed']) ? 'completed' : '' ?>">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <h6>Processing</h6>
-                                <p>Order being prepared</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item <?= in_array($order['status'], ['Shipped', 'Completed']) ? 'completed' : '' ?>">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <h6>Shipped</h6>
-                                <p>Order dispatched</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item <?= $order['status'] === 'Completed' ? 'completed' : '' ?>">
-                            <div class="timeline-marker"></div>
-                            <div class="timeline-content">
-                                <h6>Delivered</h6>
-                                <p>Order completed</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+            <!-- Order Timeline removed per request -->
 
             <!-- Status Update (No Print) -->
             <div class="custom-card status-update-section no-print">
@@ -806,7 +230,7 @@ foreach ($order_items as $item) {
                 <div class="card-body-custom">
                     <!-- Order Items Table -->
                     <div style="margin-bottom: 2rem;">
-                        <h4 style="margin-bottom: 1rem; color: #1e293b; font-weight: 600;">Ordered Items</h4>
+                        <h4>Ordered Items</h4>
                         <table class="custom-table">
                             <thead>
                                 <tr>
@@ -831,7 +255,7 @@ foreach ($order_items as $item) {
                                                     </div>
                                                 <?php endif; ?>
                                                 <div>
-                                                    <div style="font-weight: 600; color: #1e293b;">
+                                                    <div class="product-name">
                                                         <?= esc_html($item['name']) ?>
                                                     </div>
                                                 </div>
@@ -853,8 +277,8 @@ foreach ($order_items as $item) {
                     </div>
 
                     <!-- Order Summary -->
-                    <div class="no-print" style="margin-top: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px;">
-                        <h4 style="margin-bottom: 1rem; color: #1e293b; font-weight: 600;">Order Summary</h4>
+                    <div class="no-print">
+                        <h4>Order Summary</h4>
                         <div class="summary-row">
                             <span>Subtotal (<?= count($order_items) ?> items)</span>
                             <span><?= formatPrice($subtotal) ?></span>
@@ -870,7 +294,7 @@ foreach ($order_items as $item) {
                     </div>
 
                     <!-- Additional Order Info for Print -->
-                    <div style="margin-top: 2rem; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: #fafbfc;">
+                    <div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
                             <div>
                                 <strong>Customer:</strong><br>
@@ -904,3 +328,20 @@ foreach ($order_items as $item) {
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
+<script>
+    // Enhance: copy address to clipboard for quick paste to couriers
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('copyAddressBtn');
+        if (!btn) return;
+        btn.addEventListener('click', async function() {
+            const address = `<?= addslashes($order['username'] ?? '') ?>\n<?= addslashes($order['address'] ?? '') ?>\n<?= addslashes($order['phone'] ?? '') ?>`;
+            try {
+                await navigator.clipboard.writeText(address);
+                btn.textContent = 'Copied!';
+                setTimeout(() => (btn.textContent = 'Copy Address'), 1500);
+            } catch (e) {
+                alert('Failed to copy address');
+            }
+        });
+    });
+</script>

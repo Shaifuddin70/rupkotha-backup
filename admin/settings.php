@@ -65,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_settings'])) {
 
         $pdo->commit();
         $_SESSION['flash_message'] = ['type' => 'success', 'message' => 'Settings updated successfully!'];
-
     } catch (Exception $e) {
         $pdo->rollBack();
         $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'An error occurred: ' . $e->getMessage()];
@@ -84,49 +83,50 @@ $admin = $admin_user->fetch(PDO::FETCH_ASSOC) ?: [];
 
 <h2 class="page-title mb-4">Website Settings</h2>
 
-<div class="card shadow-sm">
-    <div class="card-header">
+<div class="main-card">
+    <div class="card-header-modern">
         <!-- Nav Tabs -->
         <ul class="nav nav-tabs card-header-tabs" id="settingsTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general"
-                        type="button" role="tab">General
+                    type="button" role="tab">General
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button"
-                        role="tab">Contact & Social
+                    role="tab">Contact & Social
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
-                        role="tab">Payment & Shipping
+                    role="tab">Payment & Shipping
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-                        role="tab">Admin Account
+                    role="tab">Admin Account
                 </button>
             </li>
         </ul>
     </div>
-    <div class="card-body">
+    <div class="p-4">
         <form method="post" enctype="multipart/form-data">
             <!-- Tab Content -->
             <div class="tab-content p-2" id="settingsTabsContent">
                 <!-- General Settings Tab -->
                 <div class="tab-pane fade show active" id="general" role="tabpanel">
                     <h5 class="mb-3">General Information</h5>
-                    <div class="mb-3"><label for="company_name" class="form-label">Company Name</label><input
-                                type="text" name="company_name" id="company_name" class="form-control"
-                                value="<?= esc_html($settings['company_name'] ?? '') ?>" required></div>
-                    <div class="mb-3"><label for="logo" class="form-label">Company Logo</label><input type="file"
-                                                                                                      name="logo"
-                                                                                                      id="logo"
-                                                                                                      class="form-control"><small
-                                class="form-text text-muted">Upload a new logo to replace the current one.</small></div>
+                    <div class="mb-3"><label for="company_name" class="form-label form-label-modern">Company Name</label><input
+                            type="text" name="company_name" id="company_name" class="form-control form-control-modern"
+                            value="<?= esc_html($settings['company_name'] ?? '') ?>" required></div>
+                    <div class="mb-3"><label for="logo" class="form-label form-label-modern">Company Logo</label><input type="file"
+                            name="logo"
+                            id="logo"
+                            class="form-control form-control-modern"><small
+                            class="form-text text-muted">Upload a new logo to replace the current one.</small></div>
                     <?php if (!empty($settings['logo'])): ?>
-                        <div class="mb-3"><p><strong>Current Logo:</strong></p><img
+                        <div class="mb-3">
+                            <p><strong>Current Logo:</strong></p><img
                                 src="assets/uploads/<?= esc_html($settings['logo']) ?>" alt="Current Logo"
                                 style="max-height: 80px; background-color: #f8f9fa; padding: 5px; border-radius: 5px;">
                         </div><?php endif; ?>
@@ -136,26 +136,26 @@ $admin = $admin_user->fetch(PDO::FETCH_ASSOC) ?: [];
                 <div class="tab-pane fade" id="social" role="tabpanel">
                     <h5 class="mb-3">Contact & Social Media</h5>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="email" class="form-label">Public Email</label><input
-                                    type="email" name="email" id="email" class="form-control"
-                                    value="<?= esc_html($settings['email'] ?? '') ?>"></div>
-                        <div class="col-md-6 mb-3"><label for="phone" class="form-label">Public Phone</label><input
-                                    type="text" name="phone" id="phone" class="form-control"
-                                    value="<?= esc_html($settings['phone'] ?? '') ?>"></div>
+                        <div class="col-md-6 mb-3"><label for="email" class="form-label form-label-modern">Public Email</label><input
+                                type="email" name="email" id="email" class="form-control form-control-modern"
+                                value="<?= esc_html($settings['email'] ?? '') ?>"></div>
+                        <div class="col-md-6 mb-3"><label for="phone" class="form-label form-label-modern">Public Phone</label><input
+                                type="text" name="phone" id="phone" class="form-control form-control-modern"
+                                value="<?= esc_html($settings['phone'] ?? '') ?>"></div>
                     </div>
-                    <div class="mb-3"><label for="address" class="form-label">Company Address</label><textarea
-                                name="address" id="address" class="form-control"
-                                rows="3"><?= esc_html($settings['address'] ?? '') ?></textarea></div>
+                    <div class="mb-3"><label for="address" class="form-label form-label-modern">Company Address</label><textarea
+                            name="address" id="address" class="form-control form-control-modern"
+                            rows="3"><?= esc_html($settings['address'] ?? '') ?></textarea></div>
                     <div class="row">
-                        <div class="col-md-4 mb-3"><label for="facebook" class="form-label">Facebook URL</label><input
-                                    type="url" name="facebook" id="facebook" class="form-control"
-                                    value="<?= esc_html($settings['facebook'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="instagram" class="form-label">Instagram URL</label><input
-                                    type="url" name="instagram" id="instagram" class="form-control"
-                                    value="<?= esc_html($settings['instagram'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="twitter" class="form-label">Twitter URL</label><input
-                                    type="url" name="twitter" id="twitter" class="form-control"
-                                    value="<?= esc_html($settings['twitter'] ?? '') ?>"></div>
+                        <div class="col-md-4 mb-3"><label for="facebook" class="form-label form-label-modern">Facebook URL</label><input
+                                type="url" name="facebook" id="facebook" class="form-control form-control-modern"
+                                value="<?= esc_html($settings['facebook'] ?? '') ?>"></div>
+                        <div class="col-md-4 mb-3"><label for="instagram" class="form-label form-label-modern">Instagram URL</label><input
+                                type="url" name="instagram" id="instagram" class="form-control form-control-modern"
+                                value="<?= esc_html($settings['instagram'] ?? '') ?>"></div>
+                        <div class="col-md-4 mb-3"><label for="twitter" class="form-label form-label-modern">Twitter URL</label><input
+                                type="url" name="twitter" id="twitter" class="form-control form-control-modern"
+                                value="<?= esc_html($settings['twitter'] ?? '') ?>"></div>
                     </div>
                 </div>
 
@@ -163,42 +163,42 @@ $admin = $admin_user->fetch(PDO::FETCH_ASSOC) ?: [];
                 <div class="tab-pane fade" id="payment" role="tabpanel">
                     <h5 class="mb-3">Shipping Fees</h5>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="shipping_fee_dhaka" class="form-label">Shipping Fee
+                        <div class="col-md-6 mb-3"><label for="shipping_fee_dhaka" class="form-label form-label-modern">Shipping Fee
                                 (Inside Dhaka)</label>
                             <div class="input-group"><span class="input-group-text">৳</span><input type="number"
-                                                                                                   name="shipping_fee_dhaka"
-                                                                                                   id="shipping_fee_dhaka"
-                                                                                                   class="form-control"
-                                                                                                   step="0.01"
-                                                                                                   value="<?= esc_html($settings['shipping_fee_dhaka'] ?? '') ?>">
+                                    name="shipping_fee_dhaka"
+                                    id="shipping_fee_dhaka"
+                                    class="form-control form-control-modern"
+                                    step="0.01"
+                                    value="<?= esc_html($settings['shipping_fee_dhaka'] ?? '') ?>">
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3"><label for="shipping_fee_outside" class="form-label">Shipping Fee
+                        <div class="col-md-6 mb-3"><label for="shipping_fee_outside" class="form-label form-label-modern">Shipping Fee
                                 (Outside Dhaka)</label>
                             <div class="input-group"><span class="input-group-text">৳</span><input type="number"
-                                                                                                   name="shipping_fee_outside"
-                                                                                                   id="shipping_fee_outside"
-                                                                                                   class="form-control"
-                                                                                                   step="0.01"
-                                                                                                   value="<?= esc_html($settings['shipping_fee_outside'] ?? '') ?>">
+                                    name="shipping_fee_outside"
+                                    id="shipping_fee_outside"
+                                    class="form-control form-control-modern"
+                                    step="0.01"
+                                    value="<?= esc_html($settings['shipping_fee_outside'] ?? '') ?>">
                             </div>
                         </div>
                     </div>
                     <hr>
                     <h5 class="mb-3">Mobile Payment Numbers</h5>
                     <div class="row">
-                        <div class="col-md-4 mb-3"><label for="bkash_number" class="form-label">bKash
+                        <div class="col-md-4 mb-3"><label for="bkash_number" class="form-label form-label-modern">bKash
                                 Number</label><input type="text" name="bkash_number" id="bkash_number"
-                                                     class="form-control"
-                                                     value="<?= esc_html($settings['bkash_number'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="nagad_number" class="form-label">Nagad
+                                class="form-control form-control-modern"
+                                value="<?= esc_html($settings['bkash_number'] ?? '') ?>"></div>
+                        <div class="col-md-4 mb-3"><label for="nagad_number" class="form-label form-label-modern">Nagad
                                 Number</label><input type="text" name="nagad_number" id="nagad_number"
-                                                     class="form-control"
-                                                     value="<?= esc_html($settings['nagad_number'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="rocket_number" class="form-label">Rocket
+                                class="form-control form-control-modern"
+                                value="<?= esc_html($settings['nagad_number'] ?? '') ?>"></div>
+                        <div class="col-md-4 mb-3"><label for="rocket_number" class="form-label form-label-modern">Rocket
                                 Number</label><input type="text" name="rocket_number" id="rocket_number"
-                                                     class="form-control"
-                                                     value="<?= esc_html($settings['rocket_number'] ?? '') ?>"></div>
+                                class="form-control form-control-modern"
+                                value="<?= esc_html($settings['rocket_number'] ?? '') ?>"></div>
                     </div>
                 </div>
 
@@ -208,28 +208,28 @@ $admin = $admin_user->fetch(PDO::FETCH_ASSOC) ?: [];
                     <p class="text-muted">Update your login credentials here. Only fill in the password fields if you
                         want to change your password.</p>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="admin_username" class="form-label">Admin Username</label><input
-                                    type="text" name="admin_username" id="admin_username" class="form-control"
-                                    value="<?= esc_html($admin['username'] ?? '') ?>" required></div>
-                        <div class="col-md-6 mb-3"><label for="admin_email" class="form-label">Admin Email</label><input
-                                    type="email" name="admin_email" id="admin_email" class="form-control"
-                                    value="<?= esc_html($admin['email'] ?? '') ?>" required></div>
+                        <div class="col-md-6 mb-3"><label for="admin_username" class="form-label form-label-modern">Admin Username</label><input
+                                type="text" name="admin_username" id="admin_username" class="form-control form-control-modern"
+                                value="<?= esc_html($admin['username'] ?? '') ?>" required></div>
+                        <div class="col-md-6 mb-3"><label for="admin_email" class="form-label form-label-modern">Admin Email</label><input
+                                type="email" name="admin_email" id="admin_email" class="form-control form-control-modern"
+                                value="<?= esc_html($admin['email'] ?? '') ?>" required></div>
                     </div>
                     <hr>
                     <h5 class="mb-3">Change Password</h5>
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label for="new_password" class="form-label">New
+                        <div class="col-md-6 mb-3"><label for="new_password" class="form-label form-label-modern">New
                                 Password</label><input type="password" name="new_password" id="new_password"
-                                                       class="form-control"></div>
-                        <div class="col-md-6 mb-3"><label for="confirm_password" class="form-label">Confirm New
+                                class="form-control form-control-modern"></div>
+                        <div class="col-md-6 mb-3"><label for="confirm_password" class="form-label form-label-modern">Confirm New
                                 Password</label><input type="password" name="confirm_password" id="confirm_password"
-                                                       class="form-control"></div>
+                                class="form-control form-control-modern"></div>
                     </div>
                 </div>
             </div>
 
             <div class="mt-4 text-end border-top pt-3">
-                <button type="submit" name="update_settings" class="btn btn-primary btn-lg">Save All Settings</button>
+                <button type="submit" name="update_settings" class="btn btn-primary-modern btn-modern">Save All Settings</button>
             </div>
         </form>
     </div>
