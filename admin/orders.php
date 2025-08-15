@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 }
             }
 
-            // Update the order status and updated_at timestamp
-            $update_order_stmt = $pdo->prepare("UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?");
+            // Update the order status
+            $update_order_stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
             $update_order_stmt->execute([$status, $order_id]);
 
             // If all queries were successful, commit the transaction
@@ -44,7 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         } catch (Exception $e) {
             // If any part of the process fails, roll back the transaction
             $pdo->rollBack();
-            // You might want to log the actual error for debugging: error_log($e->getMessage());
+            // Log the actual error for debugging
+            error_log("Order status update error: " . $e->getMessage());
             $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Failed to update order status due to a database error.'];
         }
     } else {

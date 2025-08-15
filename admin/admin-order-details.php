@@ -20,11 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $allowed_statuses = ['Pending', 'Processing', 'Shipped', 'Completed', 'Cancelled'];
 
     if (in_array($status, $allowed_statuses)) {
-        $stmt = $pdo->prepare("UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?");
-        if ($stmt->execute([$status, $order_id])) {
-            $_SESSION['flash_message'] = ['type' => 'success', 'message' => "Order #{$order_id} status updated to {$status}."];
-        } else {
-            $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Failed to update order status.'];
+        try {
+            $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+            if ($stmt->execute([$status, $order_id])) {
+                $_SESSION['flash_message'] = ['type' => 'success', 'message' => "Order #{$order_id} status updated to {$status}."];
+            } else {
+                $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Failed to update order status.'];
+            }
+        } catch (Exception $e) {
+            error_log("Order status update error (details page): " . $e->getMessage());
+            $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Failed to update order status due to a database error.'];
         }
     } else {
         $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Invalid status selected.'];
