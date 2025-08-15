@@ -898,7 +898,7 @@
      margin-bottom: 3rem;
      position: relative;
  }
-
+/* 
  .section-title::after {
      content: '';
      position: absolute;
@@ -909,7 +909,7 @@
      height: 4px;
      background: var(--accent-gradient);
      border-radius: 2px;
- }
+ } */
 
  /* custom Product Cards */
  .product-card-custom {
@@ -5268,7 +5268,7 @@
 
  .cart-summary {
      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-     color: white;
+  
      border-radius: 16px;
      padding: 2rem;
      position: sticky;
