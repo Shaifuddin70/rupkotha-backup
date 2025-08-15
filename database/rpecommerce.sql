@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 12, 2025 at 03:43 PM
+-- Generation Time: Aug 16, 2025 at 12:14 AM
 -- Server version: 5.7.24
 -- PHP Version: 8.3.1
 
@@ -117,16 +117,20 @@ CREATE TABLE `orders` (
   `payment_trx_id` varchar(255) DEFAULT NULL,
   `payment_sender_no` varchar(20) DEFAULT NULL,
   `shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `payment_method`, `payment_trx_id`, `payment_sender_no`, `shipping_fee`, `created_at`) VALUES
-(10, 1, '1560.00', 'Completed', 'cod', '', '', '60.00', '2025-07-12 06:35:00'),
-(11, 1, '575060.00', 'Cancelled', 'cod', '', '', '60.00', '2025-07-12 07:58:04');
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `payment_method`, `payment_trx_id`, `payment_sender_no`, `shipping_fee`, `created_at`, `updated_at`) VALUES
+(10, 1, '1560.00', 'Completed', 'cod', '', '', '60.00', '2025-07-12 06:35:00', NULL),
+(11, 1, '575060.00', 'Cancelled', 'cod', '', '', '60.00', '2025-07-12 07:58:04', NULL),
+(12, 1, '446060.00', 'Shipped', 'cod', '', '', '60.00', '2025-08-15 17:25:44', NULL),
+(13, 1, '24060.00', 'Processing', 'bkash', 'awd456a46wd', '01635485750', '60.00', '2025-08-15 17:38:15', '2025-08-15 18:13:53'),
+(14, 1, '115060.00', 'Pending', 'cod', '', '', '60.00', '2025-08-15 17:55:26', '2025-08-15 18:13:39');
 
 -- --------------------------------------------------------
 
@@ -148,7 +152,11 @@ CREATE TABLE `order_items` (
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
 (13, 10, 19, 1, '1500.00'),
-(14, 11, 21, 5, '115000.00');
+(14, 11, 21, 5, '115000.00'),
+(15, 12, 22, 9, '24000.00'),
+(16, 12, 21, 2, '115000.00'),
+(17, 13, 22, 1, '24000.00'),
+(18, 14, 21, 1, '115000.00');
 
 -- --------------------------------------------------------
 
@@ -178,8 +186,8 @@ CREATE TABLE `products` (
 INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `image`, `price`, `cost_price`, `created_at`, `stock`, `is_active`, `updated_at`, `deleted_at`) VALUES
 (18, 24, 'Indo-Wester', 'New Collection', '3928887fbbf145c1f3c5b337.webp', '1299.00', '1000.00', '2025-07-12 06:57:30', 5, 1, '2025-07-12 06:57:30', NULL),
 (19, 24, 'Indo Western Gown', 'Indo Western Gown', '8c21a75f1bc1a74a43e166e1.webp', '1500.00', '1200.00', '2025-07-12 06:57:52', 9, 1, '2025-07-12 06:57:52', NULL),
-(21, 8, 'Galaxy S25 Edge 5', 'Durability with titanium frame and IP68 rating.', '1b7794fbc7637ab559c0cca0.jpg', '115000.00', '105000.00', '2025-07-12 08:28:48', 6, 1, '2025-07-12 08:28:48', NULL),
-(22, 8, 'Tecno Camon 40', 'Network	Technology	: GSM / HSPA / LTE\r\nLaunch	Announced	2025, March 03\r\nStatus	Available. Released 2025, May\r\nBody	Dimensions	164.1 x 74.6 x 7.3 mm (6.46 x 2.94 x 0.29 in)\r\nWeight	177.2 g (6.24 oz)\r\nSIM	Nano-SIM + Nano-SIM\r\n 	IP66 dust tight and water resistant (high pressure water jets)\r\nDisplay	Type	AMOLED, 120Hz\r\nSize	6.78 inches, 109.9 cm2 (~89.8% screen-to-body ratio)\r\nResolution	1080 x 2436 pixels (~393 ppi density)\r\nProtection	Panda King Glass\r\n 	HDR image support\r\nPlatform	OS	Android 15, up to 3 major Android upgrades, HIOS 15\r\nChipset	Mediatek Helio G100 Ultimate (6 nm)\r\nCPU	Octa-core (2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55)\r\nGPU	Mali-G57 MC2\r\nMemory	Card slot	Unspecified\r\nInternal	128GB 8GB RAM, 128GB 12GB RAM, 256GB 8GB RAM, 256GB 12GB RAM\r\nMain Camera	Dual	50 MP, f/1.9, 23mm (wide), 1/1.56\", 1.0µm, PDAF, OIS\r\n8 MP, (ultrawide)\r\nFeatures	Dual-LED flash, HDR, panorama\r\nVideo	Yes\r\nSelfie camera	Single	32 MP, (wide)\r\nVideo	Yes\r\nSound	Loudspeaker	Yes, with stereo speakers\r\n3.5mm jack	Unspecified\r\nComms	WLAN	Yes\r\nBluetooth	Yes\r\nPositioning	GPS\r\nNFC	Yes\r\nInfrared port	Yes\r\nRadio	FM radio\r\nUSB	USB Type-C 2.0, OTG\r\nFeatures	Sensors	Fingerprint (under display, optical), accelerometer, gyro, proximity, compass\r\n 	Circle to Search\r\nBattery	Type	5200 mAh\r\nCharging	45W wired, 50% in 23 min, 100% in 43 min\r\nMisc	Colors	Emerald Lake Green, Galaxy Black, Glacier White, Emerald Glow Green\r\nModels	CM5', '29ccf61ea7b1410d63bf563a.jpg', '24000.00', '22600.00', '2025-07-12 09:08:05', 10, 1, '2025-07-12 09:08:05', NULL);
+(21, 8, 'Galaxy S25 Edge 5', 'Durability with titanium frame and IP68 rating.', '1b7794fbc7637ab559c0cca0.jpg', '115000.00', '105000.00', '2025-08-15 17:55:26', 3, 1, '2025-08-15 17:55:26', NULL),
+(22, 8, 'Tecno Camon 40', 'Network	Technology	: GSM / HSPA / LTE\r\nLaunch	Announced	2025, March 03\r\nStatus	Available. Released 2025, May\r\nBody	Dimensions	164.1 x 74.6 x 7.3 mm (6.46 x 2.94 x 0.29 in)\r\nWeight	177.2 g (6.24 oz)\r\nSIM	Nano-SIM + Nano-SIM\r\n 	IP66 dust tight and water resistant (high pressure water jets)\r\nDisplay	Type	AMOLED, 120Hz\r\nSize	6.78 inches, 109.9 cm2 (~89.8% screen-to-body ratio)\r\nResolution	1080 x 2436 pixels (~393 ppi density)\r\nProtection	Panda King Glass\r\n 	HDR image support\r\nPlatform	OS	Android 15, up to 3 major Android upgrades, HIOS 15\r\nChipset	Mediatek Helio G100 Ultimate (6 nm)\r\nCPU	Octa-core (2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55)\r\nGPU	Mali-G57 MC2\r\nMemory	Card slot	Unspecified\r\nInternal	128GB 8GB RAM, 128GB 12GB RAM, 256GB 8GB RAM, 256GB 12GB RAM\r\nMain Camera	Dual	50 MP, f/1.9, 23mm (wide), 1/1.56\", 1.0µm, PDAF, OIS\r\n8 MP, (ultrawide)\r\nFeatures	Dual-LED flash, HDR, panorama\r\nVideo	Yes\r\nSelfie camera	Single	32 MP, (wide)\r\nVideo	Yes\r\nSound	Loudspeaker	Yes, with stereo speakers\r\n3.5mm jack	Unspecified\r\nComms	WLAN	Yes\r\nBluetooth	Yes\r\nPositioning	GPS\r\nNFC	Yes\r\nInfrared port	Yes\r\nRadio	FM radio\r\nUSB	USB Type-C 2.0, OTG\r\nFeatures	Sensors	Fingerprint (under display, optical), accelerometer, gyro, proximity, compass\r\n 	Circle to Search\r\nBattery	Type	5200 mAh\r\nCharging	45W wired, 50% in 23 min, 100% in 43 min\r\nMisc	Colors	Emerald Lake Green, Galaxy Black, Glacier White, Emerald Glow Green\r\nModels	CM5', '29ccf61ea7b1410d63bf563a.jpg', '24000.00', '22600.00', '2025-08-15 17:38:15', 0, 1, '2025-08-15 17:38:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -361,13 +369,13 @@ ALTER TABLE `hero_products`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `products`

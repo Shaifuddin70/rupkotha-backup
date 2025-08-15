@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
     if (in_array($status, $allowed_statuses)) {
         try {
-            $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?");
             if ($stmt->execute([$status, $order_id])) {
                 $_SESSION['flash_message'] = ['type' => 'success', 'message' => "Order #{$order_id} status updated to {$status}."];
             } else {

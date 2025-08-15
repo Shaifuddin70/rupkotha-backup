@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 }
             }
 
-            // Update the order status
-            $update_order_stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+            // Update the order status and timestamp
+            $update_order_stmt = $pdo->prepare("UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?");
             $update_order_stmt->execute([$status, $order_id]);
 
             // If all queries were successful, commit the transaction
@@ -102,7 +102,7 @@ $sql = "SELECT o.*, u.username
         FROM orders o 
         LEFT JOIN users u ON o.user_id = u.id"
     . $where_sql .
-    " ORDER BY o.created_at DESC 
+    " ORDER BY COALESCE(o.updated_at, o.created_at) DESC 
         LIMIT {$per_page} OFFSET {$offset}";
 
 $orders_stmt = $pdo->prepare($sql);
