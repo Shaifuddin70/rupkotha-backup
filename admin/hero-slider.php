@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_slider_item'])) {
 $products = $pdo->query("SELECT id, name FROM products ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-    <h2 class="page-title">Hero Slider Management</h2>
+
 
 <?php if ($success_message): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -60,73 +60,88 @@ $products = $pdo->query("SELECT id, name FROM products ORDER BY name")->fetchAll
     </div>
 <?php endif; ?>
 
-    <div class="card p-4 mb-4">
+<div class="main-card mb-4">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern"><i class="bi bi-images me-2"></i>Add New Slider Item</h3>
+    </div>
+    <div class="p-4">
         <form method="post" enctype="multipart/form-data">
-            <h4>Add New Slider Item</h4>
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label class="form-label">Product</label>
-                    <select name="product_id" class="form-select" required>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label form-label-modern">Product *</label>
+                    <select name="product_id" class="form-select form-control-modern" required>
                         <option value="" disabled selected>-- Select Product --</option>
                         <?php foreach ($products as $p): ?>
                             <option value="<?= htmlspecialchars($p['id']) ?>"><?= htmlspecialchars($p['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Title</label>
-                    <input type="text" name="title" class="form-control" required>
+                <div class="col-md-4">
+                    <label class="form-label form-label-modern">Title *</label>
+                    <input type="text" name="title" class="form-control form-control-modern" required>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Subtitle</label>
-                    <input type="text" name="subtitle" class="form-control">
+                <div class="col-md-4">
+                    <label class="form-label form-label-modern">Subtitle</label>
+                    <input type="text" name="subtitle" class="form-control form-control-modern">
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Image</label>
-                    <input type="file" name="image" class="form-control" required>
+                <div class="col-md-6">
+                    <label class="form-label form-label-modern">Image *</label>
+                    <input type="file" name="image" class="form-control form-control-modern" required accept="image/*">
                 </div>
-                <div class="col-md-2">
-                    <div class="form-check form-switch">
-                        <input type="checkbox" name="is_active" class="form-check-input" role="switch" checked>
-                        <label class="form-check-label">Active</label>
-                    </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <label class="toggle-switch me-3">
+                        <input type="checkbox" name="is_active" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span>Active</span>
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-success" name="add_slider_item">Add Item</button>
+                <div class="col-md-3 d-flex align-items-end justify-content-end">
+                    <button type="submit" class="btn btn-primary-modern btn-modern" name="add_slider_item">
+                        <i class="bi bi-plus-circle me-2"></i>Add Item
+                    </button>
                 </div>
             </div>
         </form>
     </div>
+</div>
 
-    <div class="card p-4">
-        <div id="hero-slider-table-container">
-            <div class="text-center">
-                <div class="spinner-border" role="status">
+<div class="main-card">
+    <div class="card-header-modern">
+        <h3 class="card-title-modern"><i class="bi bi-list-ul me-2"></i>Slider Items</h3>
+    </div>
+    <div class="p-0">
+        <div id="hero-slider-table-container" class="table-responsive">
+            <div class="text-center p-5">
+                <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
+                <p class="mt-2 text-muted">Loading items...</p>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editItemModalLabel">Edit Slider Item</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade modal-modern" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editItemModalLabel">
+                    <i class="bi bi-pencil me-2"></i>Edit Slider Item
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editItemForm" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
                 </div>
-                <form id="editItemForm" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-modern btn-modern" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary-modern btn-modern">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script src="assets/hero-slider.js"></script>
+<script src="assets/hero-slider.js"></script>
 
 <?php include 'includes/footer.php'; ?>

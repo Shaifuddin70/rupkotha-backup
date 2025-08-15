@@ -19,8 +19,7 @@ $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<h4 class="mb-3">Slider Items</h4>
-<table class="table table-bordered table-hover align-middle">
+<table class="table table-modern align-middle mb-0">
     <thead>
         <tr>
             <th>ID</th>
@@ -34,24 +33,39 @@ $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <tbody>
         <?php if (empty($hero_items)): ?>
             <tr>
-                <td colspan="6" class="text-center">No slider items found.</td>
+                <td colspan="6" class="empty-state">
+                    <div class="empty-state-icon"><i class="bi bi-images"></i></div>
+                    <h4>No slider items found</h4>
+                    <p class="text-muted">Create your first slider item using the form above</p>
+                </td>
             </tr>
         <?php else: ?>
             <?php foreach ($hero_items as $item): ?>
                 <tr id="hero-item-row-<?= $item['id'] ?>">
                     <td><?= esc_html($item['id']) ?></td>
-                    <td><img src="assets/uploads/<?= esc_html($item['image']) ?>" width="100" class="img-thumbnail"></td>
+                    <td>
+                        <img src="assets/uploads/<?= esc_html($item['image']) ?>" alt="<?= esc_html($item['title']) ?>" class="product-image">
+                    </td>
                     <td><?= esc_html($item['title']) ?></td>
                     <td><?= esc_html($item['product_name']) ?></td>
                     <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input status-toggle" type="checkbox" role="switch" data-id="<?= $item['id'] ?>" <?= $item['is_active'] ? 'checked' : '' ?>>
-                            <span class="badge <?= $item['is_active'] ? 'bg-success' : 'bg-secondary' ?>"><?= $item['is_active'] ? 'Active' : 'Inactive' ?></span>
-                        </div>
+                        <label class="toggle-switch me-2">
+                            <input class="status-toggle" type="checkbox" data-id="<?= $item['id'] ?>" <?= $item['is_active'] ? 'checked' : '' ?>>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="badge badge-modern <?= $item['is_active'] ? 'badge-status' : 'badge-deleted' ?>">
+                            <?= $item['is_active'] ? 'Active' : 'Inactive' ?>
+                        </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-warning edit-btn" data-id="<?= $item['id'] ?>">Edit</button>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $item['id'] ?>">Delete</button>
+                        <div class="action-buttons">
+                            <button class="btn btn-action btn-edit edit-btn" data-id="<?= $item['id'] ?>">
+                                <i class="bi bi-pencil me-1"></i>Edit
+                            </button>
+                            <button class="btn btn-action btn-delete delete-btn" data-id="<?= $item['id'] ?>">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </button>
+                        </div>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -61,18 +75,18 @@ $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- Pagination Links -->
 <?php if ($total_pages > 1): ?>
-    <nav>
-        <ul class="pagination justify-content-center">
+    <nav class="pagination-modern">
+        <ul class="pagination justify-content-center mb-0">
             <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                <a class="page-link" href="?page=<?= $page - 1 ?>">&laquo;</a>
+                <a class="page-link-modern" href="?page=<?= $page - 1 ?>"><i class="bi bi-chevron-left"></i></a>
             </li>
             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                 <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                    <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                    <a class="page-link-modern" href="?page=<?= $i ?>"><?= $i ?></a>
                 </li>
             <?php endfor; ?>
             <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                <a class="page-link" href="?page=<?= $page + 1 ?>">&raquo;</a>
+                <a class="page-link-modern" href="?page=<?= $page + 1 ?>"><i class="bi bi-chevron-right"></i></a>
             </li>
         </ul>
     </nav>

@@ -39,24 +39,7 @@ include 'includes/header.php';
         --glass-border: rgba(255, 255, 255, 0.18);
     }
 
-    .page-header {
-        background: var(--primary-gradient);
-        padding: 80px 0;
-        margin-bottom: 60px;
-        position: relative;
-        overflow: hidden;
-    }
 
-    .page-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-        animation: slide 20s infinite linear;
-    }
 
     @keyframes slide {
         0% {
@@ -465,13 +448,6 @@ include 'includes/header.php';
 
 <div class="floating-elements"></div>
 
-<!-- Page Header -->
-<section class="page-header">
-    <div class="container">
-        <h1 class="page-title">Order History</h1>
-        <p class="page-subtitle">Track and manage all your orders in one place</p>
-    </div>
-</section>
 
 <main class="orders-container">
     <div class="modern-card mb-5">

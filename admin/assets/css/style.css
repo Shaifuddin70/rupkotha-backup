@@ -291,6 +291,7 @@ body.dark-theme .theme-toggle-indicator {
   flex: 1;
   padding: 30px;
   color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
 }
 
 .main-content .page-title {
@@ -302,7 +303,7 @@ body.dark-theme .theme-toggle-indicator {
 .main-content .card {
   background-color: var(--color-bg-sidebar);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* Responsive media query code for small screens */
