@@ -1854,3 +1854,443 @@ body.dark-theme .page-link-modern {
     background: var(--color-bg-sidebar);
     color: var(--color-text-primary);
 }
+
+/* ==============================
+   SETTINGS PAGE STYLES
+   Modern design with full dark theme support
+   
+   Features:
+   - Modern gradient headers and cards
+   - Responsive design for all devices
+   - File upload with drag & drop
+   - Interactive form elements
+   - Payment method grid layout
+   - Seamless dark theme integration
+   - Tab navigation with animations
+   - Professional alert messages
+   
+   Dark Theme: Automatically adapts colors using CSS variables
+   Mobile: Responsive breakpoints and touch-friendly elements
+   ============================== */
+
+/* Settings Root Variables */
+:root {
+    --settings-primary: #6366f1;
+    --settings-primary-hover: #5b5dd8;
+    --settings-secondary: #f8fafc;
+    --settings-dark: #0f172a;
+    --settings-text: #334155;
+    --settings-light-text: #64748b;
+    --settings-border: #e2e8f0;
+    --settings-success: #10b981;
+    --settings-warning: #f59e0b;
+    --settings-danger: #ef4444;
+    --settings-info: #3b82f6;
+    --settings-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --settings-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --settings-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --settings-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Settings Header */
+.settings-header {
+    background: linear-gradient(135deg, var(--settings-primary) 0%, var(--settings-primary-hover) 100%);
+    color: white;
+    padding: 2rem 0;
+    margin: -2rem -2rem 2rem -2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="settings-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23settings-pattern)"/></svg>');
+    opacity: 0.1;
+}
+
+.settings-header-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+/* Settings Main Card */
+.settings-card {
+    background: var(--color-bg-sidebar);
+    border-radius: 20px;
+    box-shadow: var(--settings-shadow-lg);
+    border: 1px solid var(--color-border-hr);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+/* Settings Navigation */
+.settings-nav {
+    background: linear-gradient(135deg, var(--color-bg-primary), var(--color-bg-secondary));
+    border-bottom: 1px solid var(--color-border-hr);
+    padding: 0;
+}
+
+.settings-nav .nav-tabs {
+    border: none;
+    justify-content: center;
+}
+
+.settings-nav .nav-link {
+    border: none;
+    border-radius: 0;
+    padding: 1.25rem 2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    transition: var(--settings-transition);
+    position: relative;
+    background: transparent;
+}
+
+.settings-nav .nav-link:hover {
+    color: var(--settings-primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.settings-nav .nav-link.active {
+    color: var(--settings-primary);
+    background: var(--color-bg-sidebar);
+    border-bottom: 3px solid var(--settings-primary);
+}
+
+.settings-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--settings-primary);
+    transition: var(--settings-transition);
+    transform: translateX(-50%);
+}
+
+.settings-nav .nav-link.active::after {
+    width: 100%;
+}
+
+/* Tab Content */
+.settings-tab-content {
+    padding: 2.5rem;
+}
+
+
+
+.settings-section:last-child {
+    margin-bottom: 1rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border-hr);
+}
+
+.section-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--settings-primary), var(--settings-primary-hover));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+/* Modern Form Elements */
+.modern-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.modern-form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.modern-form-control {
+    border: 2px solid var(--color-border-hr);
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    transition: var(--settings-transition);
+    font-size: 1rem;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    width: 100%;
+}
+
+.modern-form-control:focus {
+    border-color: var(--settings-primary);
+    background: var(--color-bg-sidebar);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.modern-form-control::placeholder {
+    color: var(--color-text-placeholder);
+}
+
+/* Input Groups */
+.modern-input-group {
+    position: relative;
+}
+
+.modern-input-group .input-group-text {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-placeholder);
+    font-weight: 600;
+    z-index: 10;
+}
+
+.modern-input-group .modern-form-control {
+    padding-left: 3rem;
+}
+
+/* Logo Display */
+.current-logo-display {
+    background: var(--color-bg-primary);
+    border: 2px solid var(--color-border-hr);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.current-logo-display img {
+    max-height: 100px;
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: var(--settings-shadow-md);
+}
+
+/* File Upload */
+.file-upload-area {
+    border: 2px dashed var(--color-border-hr);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: var(--settings-transition);
+    cursor: pointer;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+}
+
+.file-upload-area:hover {
+    border-color: var(--settings-primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.file-upload-area.dragover {
+    border-color: var(--settings-primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* Payment Methods */
+.payment-method-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.payment-method-card {
+    background: var(--color-bg-primary);
+    border: 2px solid var(--color-border-hr);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: var(--settings-transition);
+}
+
+.payment-method-card:hover {
+    border-color: var(--settings-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--settings-shadow-md);
+}
+
+.payment-logo {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+/* Save Button */
+.settings-save-btn {
+    background: linear-gradient(135deg, var(--settings-primary), var(--settings-primary-hover));
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: var(--settings-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-save-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: var(--settings-transition);
+}
+
+.settings-save-btn:hover::before {
+    left: 100%;
+}
+
+.settings-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+/* Alert Messages */
+.alert-modern {
+    border-radius: 15px;
+    border: none;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.alert-modern.alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
+    color: var(--settings-success);
+    border-left: 5px solid var(--settings-success);
+}
+
+.alert-modern.alert-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
+    color: var(--settings-danger);
+    border-left: 5px solid var(--settings-danger);
+}
+
+.alert-modern.alert-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.1));
+    color: var(--settings-info);
+    border-left: 5px solid var(--settings-info);
+}
+
+/* Form Text */
+.form-text-modern {
+    color: var(--color-text-placeholder);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Dark Theme Specific Adjustments */
+body.dark-theme .settings-header {
+    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+}
+
+body.dark-theme .settings-nav .nav-link:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+body.dark-theme .file-upload-area:hover {
+    background: rgba(99, 102, 241, 0.08);
+}
+
+body.dark-theme .file-upload-area.dragover {
+    background: rgba(99, 102, 241, 0.15);
+}
+
+body.dark-theme .payment-method-card:hover {
+    background: var(--color-bg-secondary);
+}
+
+body.dark-theme .alert-modern.alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+    color: #34d399;
+}
+
+body.dark-theme .alert-modern.alert-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+    color: #f87171;
+}
+
+body.dark-theme .alert-modern.alert-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+    color: #60a5fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .settings-header {
+        margin: -1rem -1rem 2rem -1rem;
+        padding: 1.5rem 0;
+    }
+    
+    .settings-tab-content {
+        padding: 1.5rem;
+    }
+    
+    .settings-nav .nav-link {
+        padding: 1rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .payment-method-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modern-form-control {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        text-align: left;
+    }
+    
+    .section-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+}

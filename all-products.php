@@ -82,12 +82,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-<!-- Hero Section -->
-<section class="products-hero">
-    <div class="container text-center">
-        <h1 class="fade-in text-uppercase">Discover Amazing Products</h1>
-    </div>
-</section>
+
 
 <!-- Mobile Filters (visible on mobile) -->
 <div class="container d-lg-none">

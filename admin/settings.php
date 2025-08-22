@@ -1,6 +1,6 @@
 <?php
 require_once 'includes/header.php';
-require_once 'includes/functions.php'; // Contains session_start(), db connection, and functions
+require_once 'includes/functions.php';
 require_once 'includes/settings-helper.php';
 
 // --- Authentication Check ---
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_settings'])) {
             'rocket_number' => trim($_POST['rocket_number'])
         ];
 
-        // Use the get_setting helper here to get the current logo for the handleImageUpload function
+        // Handle logo upload
         if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
             $settings_data['logo'] = handleImageUpload($_FILES['logo'], get_setting('logo'));
         }
@@ -81,158 +81,505 @@ $admin = $admin_user->fetch(PDO::FETCH_ASSOC) ?: [];
 
 ?>
 
-<h2 class="page-title mb-4">Website Settings</h2>
 
-<div class="main-card">
-    <div class="card-header-modern">
-        <!-- Nav Tabs -->
-        <ul class="nav nav-tabs card-header-tabs" id="settingsTabs" role="tablist">
+
+<!-- Flash Messages -->
+<?php if (isset($_SESSION['flash_message'])): ?>
+    <div class="alert-modern alert-<?= $_SESSION['flash_message']['type'] ?> alert-dismissible fade show" role="alert">
+        <i class="bi bi-<?= $_SESSION['flash_message']['type'] === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill' ?>"></i>
+        <strong><?= $_SESSION['flash_message']['type'] === 'success' ? 'Success!' : 'Error!' ?></strong>
+        <?= $_SESSION['flash_message']['message'] ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['flash_message']); ?>
+<?php endif; ?>
+
+<!-- Settings Card -->
+<div class="settings-card">
+    <!-- Navigation Tabs -->
+    <div class="settings-nav">
+        <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general"
-                    type="button" role="tab">General
+                    type="button" role="tab">
+                    <i class="bi bi-building me-2"></i>General
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button"
-                    role="tab">Contact & Social
+                    role="tab">
+                    <i class="bi bi-telephone me-2"></i>Contact & Social
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button"
-                    role="tab">Payment & Shipping
+                    role="tab">
+                    <i class="bi bi-credit-card me-2"></i>Payment & Shipping
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-                    role="tab">Admin Account
+                    role="tab">
+                    <i class="bi bi-person-gear me-2"></i>Admin Account
                 </button>
             </li>
         </ul>
     </div>
-    <div class="p-4">
-        <form method="post" enctype="multipart/form-data">
-            <!-- Tab Content -->
-            <div class="tab-content p-2" id="settingsTabsContent">
+
+    <!-- Form Content -->
+    <form method="post" enctype="multipart/form-data" id="settingsForm">
+        <div class="settings-tab-content">
+            <div class="tab-content" id="settingsTabsContent">
+                
                 <!-- General Settings Tab -->
                 <div class="tab-pane fade show active" id="general" role="tabpanel">
-                    <h5 class="mb-3">General Information</h5>
-                    <div class="mb-3"><label for="company_name" class="form-label form-label-modern">Company Name</label><input
-                            type="text" name="company_name" id="company_name" class="form-control form-control-modern"
-                            value="<?= esc_html($settings['company_name'] ?? '') ?>" required></div>
-                    <div class="mb-3"><label for="logo" class="form-label form-label-modern">Company Logo</label><input type="file"
-                            name="logo"
-                            id="logo"
-                            class="form-control form-control-modern"><small
-                            class="form-text text-muted">Upload a new logo to replace the current one.</small></div>
-                    <?php if (!empty($settings['logo'])): ?>
-                        <div class="mb-3">
-                            <p><strong>Current Logo:</strong></p><img
-                                src="assets/uploads/<?= esc_html($settings['logo']) ?>" alt="Current Logo"
-                                style="max-height: 80px; background-color: #f8f9fa; padding: 5px; border-radius: 5px;">
-                        </div><?php endif; ?>
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <h3 class="section-title">Company Information</h3>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <div class="modern-form-group">
+                                    <label for="company_name" class="modern-form-label">
+                                        <i class="bi bi-buildings"></i>Company Name
+                                    </label>
+                                    <input type="text" name="company_name" id="company_name" 
+                                           class="modern-form-control" 
+                                           value="<?= esc_html($settings['company_name'] ?? '') ?>" 
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-image"></i>
+                            </div>
+                            <h3 class="section-title">Company Logo</h3>
+                        </div>
+                        
+                        <div class="modern-form-group">
+                            <label for="logo" class="modern-form-label">
+                                <i class="bi bi-upload"></i>Upload New Logo
+                            </label>
+                            <div class="file-upload-area" onclick="document.getElementById('logo').click()">
+                                <i class="bi bi-cloud-upload" style="font-size: 2rem; color: var(--settings-primary); margin-bottom: 1rem;"></i>
+                                <p class="mb-2"><strong>Click to upload</strong> or drag and drop</p>
+                                <small class="text-muted">PNG, JPG, GIF up to 10MB</small>
+                            </div>
+                            <input type="file" name="logo" id="logo" class="d-none" accept="image/*">
+                            <div class="form-text-modern">
+                                <i class="bi bi-info-circle"></i>
+                                Recommended size: 200x80 pixels for best results
+                            </div>
+                        </div>
+
+                        <?php if (!empty($settings['logo'])): ?>
+                            <div class="current-logo-display">
+                                <p class="mb-3"><strong>Current Logo:</strong></p>
+                                <img src="assets/uploads/<?= esc_html($settings['logo']) ?>" alt="Current Logo">
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
-                <!-- Social & Contact Tab -->
+                <!-- Contact & Social Tab -->
                 <div class="tab-pane fade" id="social" role="tabpanel">
-                    <h5 class="mb-3">Contact & Social Media</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3"><label for="email" class="form-label form-label-modern">Public Email</label><input
-                                type="email" name="email" id="email" class="form-control form-control-modern"
-                                value="<?= esc_html($settings['email'] ?? '') ?>"></div>
-                        <div class="col-md-6 mb-3"><label for="phone" class="form-label form-label-modern">Public Phone</label><input
-                                type="text" name="phone" id="phone" class="form-control form-control-modern"
-                                value="<?= esc_html($settings['phone'] ?? '') ?>"></div>
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <h3 class="section-title">Contact Information</h3>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="email" class="modern-form-label">
+                                        <i class="bi bi-envelope"></i>Public Email
+                                    </label>
+                                    <input type="email" name="email" id="email" class="modern-form-control"
+                                           value="<?= esc_html($settings['email'] ?? '') ?>"
+                                           placeholder="contact@yourcompany.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="phone" class="modern-form-label">
+                                        <i class="bi bi-phone"></i>Public Phone
+                                    </label>
+                                    <input type="text" name="phone" id="phone" class="modern-form-control"
+                                           value="<?= esc_html($settings['phone'] ?? '') ?>"
+                                           placeholder="+880 123 456 789">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="modern-form-group">
+                                    <label for="address" class="modern-form-label">
+                                        <i class="bi bi-geo-alt"></i>Company Address
+                                    </label>
+                                    <textarea name="address" id="address" class="modern-form-control" rows="4"
+                                              placeholder="Enter your complete business address"><?= esc_html($settings['address'] ?? '') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3"><label for="address" class="form-label form-label-modern">Company Address</label><textarea
-                            name="address" id="address" class="form-control form-control-modern"
-                            rows="3"><?= esc_html($settings['address'] ?? '') ?></textarea></div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3"><label for="facebook" class="form-label form-label-modern">Facebook URL</label><input
-                                type="url" name="facebook" id="facebook" class="form-control form-control-modern"
-                                value="<?= esc_html($settings['facebook'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="instagram" class="form-label form-label-modern">Instagram URL</label><input
-                                type="url" name="instagram" id="instagram" class="form-control form-control-modern"
-                                value="<?= esc_html($settings['instagram'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="twitter" class="form-label form-label-modern">Twitter URL</label><input
-                                type="url" name="twitter" id="twitter" class="form-control form-control-modern"
-                                value="<?= esc_html($settings['twitter'] ?? '') ?>"></div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-share"></i>
+                            </div>
+                            <h3 class="section-title">Social Media Links</h3>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="modern-form-group">
+                                    <label for="facebook" class="modern-form-label">
+                                        <i class="bi bi-facebook" style="color: #1877f2;"></i>Facebook URL
+                                    </label>
+                                    <input type="url" name="facebook" id="facebook" class="modern-form-control"
+                                           value="<?= esc_html($settings['facebook'] ?? '') ?>"
+                                           placeholder="https://facebook.com/yourpage">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="modern-form-group">
+                                    <label for="instagram" class="modern-form-label">
+                                        <i class="bi bi-instagram" style="color: #E4405F;"></i>Instagram URL
+                                    </label>
+                                    <input type="url" name="instagram" id="instagram" class="modern-form-control"
+                                           value="<?= esc_html($settings['instagram'] ?? '') ?>"
+                                           placeholder="https://instagram.com/yourprofile">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="modern-form-group">
+                                    <label for="twitter" class="modern-form-label">
+                                        <i class="bi bi-twitter" style="color: #1DA1F2;"></i>Twitter URL
+                                    </label>
+                                    <input type="url" name="twitter" id="twitter" class="modern-form-control"
+                                           value="<?= esc_html($settings['twitter'] ?? '') ?>"
+                                           placeholder="https://twitter.com/yourhandle">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Payment & Shipping Tab -->
                 <div class="tab-pane fade" id="payment" role="tabpanel">
-                    <h5 class="mb-3">Shipping Fees</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3"><label for="shipping_fee_dhaka" class="form-label form-label-modern">Shipping Fee
-                                (Inside Dhaka)</label>
-                            <div class="input-group"><span class="input-group-text">৳</span><input type="number"
-                                    name="shipping_fee_dhaka"
-                                    id="shipping_fee_dhaka"
-                                    class="form-control form-control-modern"
-                                    step="0.01"
-                                    value="<?= esc_html($settings['shipping_fee_dhaka'] ?? '') ?>">
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-truck"></i>
                             </div>
+                            <h3 class="section-title">Shipping Configuration</h3>
                         </div>
-                        <div class="col-md-6 mb-3"><label for="shipping_fee_outside" class="form-label form-label-modern">Shipping Fee
-                                (Outside Dhaka)</label>
-                            <div class="input-group"><span class="input-group-text">৳</span><input type="number"
-                                    name="shipping_fee_outside"
-                                    id="shipping_fee_outside"
-                                    class="form-control form-control-modern"
-                                    step="0.01"
-                                    value="<?= esc_html($settings['shipping_fee_outside'] ?? '') ?>">
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="shipping_fee_dhaka" class="modern-form-label">
+                                        <i class="bi bi-building"></i>Shipping Fee (Inside Dhaka)
+                                    </label>
+                                    <div class="modern-input-group">
+                                        <span class="input-group-text">৳</span>
+                                        <input type="number" name="shipping_fee_dhaka" id="shipping_fee_dhaka"
+                                               class="modern-form-control" step="0.01" min="0"
+                                               value="<?= esc_html($settings['shipping_fee_dhaka'] ?? '') ?>"
+                                               placeholder="60.00">
+                                    </div>
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Standard delivery within Dhaka city
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="shipping_fee_outside" class="modern-form-label">
+                                        <i class="bi bi-globe"></i>Shipping Fee (Outside Dhaka)
+                                    </label>
+                                    <div class="modern-input-group">
+                                        <span class="input-group-text">৳</span>
+                                        <input type="number" name="shipping_fee_outside" id="shipping_fee_outside"
+                                               class="modern-form-control" step="0.01" min="0"
+                                               value="<?= esc_html($settings['shipping_fee_outside'] ?? '') ?>"
+                                               placeholder="120.00">
+                                    </div>
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Delivery to other cities in Bangladesh
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <h5 class="mb-3">Mobile Payment Numbers</h5>
-                    <div class="row">
-                        <div class="col-md-4 mb-3"><label for="bkash_number" class="form-label form-label-modern">bKash
-                                Number</label><input type="text" name="bkash_number" id="bkash_number"
-                                class="form-control form-control-modern"
-                                value="<?= esc_html($settings['bkash_number'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="nagad_number" class="form-label form-label-modern">Nagad
-                                Number</label><input type="text" name="nagad_number" id="nagad_number"
-                                class="form-control form-control-modern"
-                                value="<?= esc_html($settings['nagad_number'] ?? '') ?>"></div>
-                        <div class="col-md-4 mb-3"><label for="rocket_number" class="form-label form-label-modern">Rocket
-                                Number</label><input type="text" name="rocket_number" id="rocket_number"
-                                class="form-control form-control-modern"
-                                value="<?= esc_html($settings['rocket_number'] ?? '') ?>"></div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-credit-card"></i>
+                            </div>
+                            <h3 class="section-title">Mobile Payment Methods</h3>
+                        </div>
+                        
+                        <div class="payment-method-grid">
+                            <div class="payment-method-card">
+                                <img src="../assets/images/bkash.svg" alt="bKash" class="payment-logo">
+                                <div class="modern-form-group">
+                                    <label for="bkash_number" class="modern-form-label">
+                                        <i class="bi bi-phone"></i>bKash Number
+                                    </label>
+                                    <input type="text" name="bkash_number" id="bkash_number" class="modern-form-control"
+                                           value="<?= esc_html($settings['bkash_number'] ?? '') ?>"
+                                           placeholder="01XXXXXXXXX">
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Personal or merchant number
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method-card">
+                                <img src="../assets/images/nagad.svg" alt="Nagad" class="payment-logo">
+                                <div class="modern-form-group">
+                                    <label for="nagad_number" class="modern-form-label">
+                                        <i class="bi bi-phone"></i>Nagad Number
+                                    </label>
+                                    <input type="text" name="nagad_number" id="nagad_number" class="modern-form-control"
+                                           value="<?= esc_html($settings['nagad_number'] ?? '') ?>"
+                                           placeholder="01XXXXXXXXX">
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Personal or merchant number
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method-card">
+                                <img src="../assets/images/rocket.png" alt="Rocket" class="payment-logo">
+                                <div class="modern-form-group">
+                                    <label for="rocket_number" class="modern-form-label">
+                                        <i class="bi bi-phone"></i>Rocket Number
+                                    </label>
+                                    <input type="text" name="rocket_number" id="rocket_number" class="modern-form-control"
+                                           value="<?= esc_html($settings['rocket_number'] ?? '') ?>"
+                                           placeholder="01XXXXXXXXX">
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Personal or merchant number
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Admin Account Tab -->
                 <div class="tab-pane fade" id="admin" role="tabpanel">
-                    <h5 class="mb-3">Admin Account Details</h5>
-                    <p class="text-muted">Update your login credentials here. Only fill in the password fields if you
-                        want to change your password.</p>
-                    <div class="row">
-                        <div class="col-md-6 mb-3"><label for="admin_username" class="form-label form-label-modern">Admin Username</label><input
-                                type="text" name="admin_username" id="admin_username" class="form-control form-control-modern"
-                                value="<?= esc_html($admin['username'] ?? '') ?>" required></div>
-                        <div class="col-md-6 mb-3"><label for="admin_email" class="form-label form-label-modern">Admin Email</label><input
-                                type="email" name="admin_email" id="admin_email" class="form-control form-control-modern"
-                                value="<?= esc_html($admin['email'] ?? '') ?>" required></div>
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-person-gear"></i>
+                            </div>
+                            <h3 class="section-title">Admin Account Details</h3>
+                        </div>
+                        
+                        <div class="alert-modern alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <div>
+                                <strong>Security Notice:</strong>
+                                <p class="mb-0 mt-1">Update your login credentials here. Only fill in the password fields if you want to change your password.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="admin_username" class="modern-form-label">
+                                        <i class="bi bi-person"></i>Admin Username
+                                    </label>
+                                    <input type="text" name="admin_username" id="admin_username" 
+                                           class="modern-form-control" 
+                                           value="<?= esc_html($admin['username'] ?? '') ?>" 
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="admin_email" class="modern-form-label">
+                                        <i class="bi bi-envelope"></i>Admin Email
+                                    </label>
+                                    <input type="email" name="admin_email" id="admin_email" 
+                                           class="modern-form-control" 
+                                           value="<?= esc_html($admin['email'] ?? '') ?>" 
+                                           required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <hr>
-                    <h5 class="mb-3">Change Password</h5>
-                    <div class="row">
-                        <div class="col-md-6 mb-3"><label for="new_password" class="form-label form-label-modern">New
-                                Password</label><input type="password" name="new_password" id="new_password"
-                                class="form-control form-control-modern"></div>
-                        <div class="col-md-6 mb-3"><label for="confirm_password" class="form-label form-label-modern">Confirm New
-                                Password</label><input type="password" name="confirm_password" id="confirm_password"
-                                class="form-control form-control-modern"></div>
+
+                    <div class="settings-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                            <h3 class="section-title">Change Password</h3>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="new_password" class="modern-form-label">
+                                        <i class="bi bi-key"></i>New Password
+                                    </label>
+                                    <input type="password" name="new_password" id="new_password" 
+                                           class="modern-form-control" 
+                                           placeholder="Leave blank to keep current password">
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Minimum 6 characters recommended
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label for="confirm_password" class="modern-form-label">
+                                        <i class="bi bi-key-fill"></i>Confirm New Password
+                                    </label>
+                                    <input type="password" name="confirm_password" id="confirm_password" 
+                                           class="modern-form-control" 
+                                           placeholder="Confirm your new password">
+                                    <div class="form-text-modern">
+                                        <i class="bi bi-info-circle"></i>
+                                        Must match the new password
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-4 text-end border-top pt-3">
-                <button type="submit" name="update_settings" class="btn btn-primary-modern btn-modern">Save All Settings</button>
+            <!-- Save Button Section -->
+            <div class="d-flex justify-content-between align-items-center mt-4 pt-4" style="border-top: 2px solid var(--settings-border);">
+                <div>
+                    <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i>
+                        Last updated: <?= date('M d, Y \a\t g:i A') ?>
+                    </small>
+                </div>
+                <button type="submit" name="update_settings" class="settings-save-btn">
+                    <i class="bi bi-check-lg me-2"></i>Save All Settings
+                </button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
+
+<!-- Enhanced JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // File upload enhancement
+    const fileInput = document.getElementById('logo');
+    const uploadArea = document.querySelector('.file-upload-area');
+    
+    if (fileInput && uploadArea) {
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                uploadArea.innerHTML = `
+                    <i class="bi bi-check-circle" style="font-size: 2rem; color: var(--settings-success); margin-bottom: 1rem;"></i>
+                    <p class="mb-2"><strong>File selected:</strong> ${file.name}</p>
+                    <small class="text-muted">Click to choose a different file</small>
+                `;
+            }
+        });
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+    }
+    
+    // Form validation
+    const form = document.getElementById('settingsForm');
+    const newPassword = document.getElementById('new_password');
+    const confirmPassword = document.getElementById('confirm_password');
+    
+    if (form && newPassword && confirmPassword) {
+        function validatePasswords() {
+            if (newPassword.value && confirmPassword.value) {
+                if (newPassword.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity('Passwords do not match');
+                    confirmPassword.classList.add('is-invalid');
+                } else {
+                    confirmPassword.setCustomValidity('');
+                    confirmPassword.classList.remove('is-invalid');
+                }
+            }
+        }
+        
+        newPassword.addEventListener('input', validatePasswords);
+        confirmPassword.addEventListener('input', validatePasswords);
+        
+        form.addEventListener('submit', function(e) {
+            validatePasswords();
+            if (!confirmPassword.checkValidity() && newPassword.value) {
+                e.preventDefault();
+                confirmPassword.focus();
+            }
+        });
+    }
+    
+    // Tab switching animation
+    const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
+    tabButtons.forEach(button => {
+        button.addEventListener('shown.bs.tab', function() {
+            const target = button.getAttribute('data-bs-target');
+            const pane = document.querySelector(target);
+            if (pane) {
+                pane.style.opacity = '0';
+                pane.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    pane.style.transition = 'all 0.3s ease';
+                    pane.style.opacity = '1';
+                    pane.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        });
+    });
+});
+</script>
 
 <?php require_once 'includes/footer.php'; ?>

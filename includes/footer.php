@@ -17,7 +17,7 @@ if (!isset($categories)) {
         <div class="container">
             <div class="row">
                 <!-- Company Info Column -->
-                <div class="col-lg-4 col-md-6 footer-column">
+                <div class="col-lg-3 col-md-6 footer-column">
                     <div class="footer-brand">
                         <div class="brand-logo">
                             <img src="assets/images/logo.jpg" alt="<?= esc_html($settings['company_name'] ?? 'Rupkotha') ?>" class="footer-logo">
@@ -28,41 +28,10 @@ if (!isset($categories)) {
                         </p>
                     </div>
 
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="bi bi-geo-alt-fill"></i>
-                            </div>
-                            <div class="contact-details">
-                                <span class="contact-label">Address</span>
-                                <span class="contact-value">Dhaka, Bangladesh</span>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="bi bi-envelope-fill"></i>
-                            </div>
-                            <div class="contact-details">
-                                <span class="contact-label">Email</span>
-                                <a href="mailto:<?= esc_html($settings['email'] ?? 'info@rupkotha.com') ?>" class="contact-value"><?= esc_html($settings['email'] ?? 'info@rupkotha.com') ?></a>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="bi bi-telephone-fill"></i>
-                            </div>
-                            <div class="contact-details">
-                                <span class="contact-label">Phone</span>
-                                <a href="tel:<?= esc_html($settings['phone'] ?? '+880123456789') ?>" class="contact-value"><?= esc_html($settings['phone'] ?? '+880 123 456 789') ?></a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Quick Links Column -->
-                <div class="col-lg-2 col-md-6 footer-column">
+                <div class="col-lg-3 col-md-6 footer-column">
                     <div class="footer-widget">
                         <h4 class="widget-title">
                             <i class="bi bi-link-45deg me-2"></i>
@@ -78,7 +47,7 @@ if (!isset($categories)) {
                 </div>
 
                 <!-- Categories Column -->
-                <div class="col-lg-2 col-md-6 footer-column">
+                <div class="col-lg-3 col-md-6 footer-column">
                     <div class="footer-widget">
                         <h4 class="widget-title">
                             <i class="bi bi-tags me-2"></i>
@@ -96,7 +65,7 @@ if (!isset($categories)) {
                 </div>
 
                 <!-- Account & Newsletter Column -->
-                <div class="col-lg-4 col-md-6 footer-column">
+                <div class="col-lg-3 col-md-6 footer-column">
                     <div class="footer-widget">
                         <h4 class="widget-title">
                             <i class="bi bi-person-circle me-2"></i>
@@ -109,21 +78,7 @@ if (!isset($categories)) {
                         </ul>
                     </div>
 
-                    <div class="footer-widget newsletter-widget">
-                        <h4 class="widget-title">
-                            <i class="bi bi-envelope-heart me-2"></i>
-                            Stay Updated
-                        </h4>
-                        <p class="newsletter-text">Subscribe to get special offers, free giveaways, and exclusive deals.</p>
-                        <form class="newsletter-form" action="#" method="post">
-                            <div class="newsletter-input-group">
-                                <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
-                                <button type="submit" class="newsletter-btn">
-                                    <i class="bi bi-send"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+             
                 </div>
             </div>
         </div>
@@ -134,7 +89,7 @@ if (!isset($categories)) {
         <div class="container">
             <div class="footer-bottom-content">
                 <div class="row align-items-center">
-                    <div class="col-md-6">
+                    <div class="col-lg-4 col-md-6">
                         <div class="copyright">
                             <p>&copy; <?= date('Y') ?> <span class="brand-highlight"><?= esc_html($settings['company_name'] ?? 'Rupkotha') ?></span>. All Rights Reserved.</p>
                             <div class="legal-links">
@@ -145,7 +100,7 @@ if (!isset($categories)) {
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-lg-4 col-md-6">
                         <div class="footer-extras">
                             <!-- Payment Methods -->
                             <div class="payment-methods">
@@ -157,8 +112,11 @@ if (!isset($categories)) {
                                 </div>
                             </div>
 
-                            <!-- Social Media -->
-                            <div class="social-links">
+                          
+                        </div>
+                          <!-- Social Media -->
+                        <div class="col-lg-4 col-md-6">
+                        <div class="social-links">
                                 <?php if (!empty($settings['facebook'])): ?>
                                     <a href="<?= esc_html($settings['facebook']) ?>" target="_blank" class="social-link facebook" title="Facebook">
                                         <i class="bi bi-facebook"></i>

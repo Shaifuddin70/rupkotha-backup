@@ -74,11 +74,7 @@ $products_stmt->execute();
 $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<div class="products-hero">
-    <div class="container text-center">
-        <h1 class="fade-in text-uppercase"><?= esc_html($category_name) ?></h1>
-    </div>
-</div>
+
 
 <main class="container my-5">
     <!-- Desktop Filters & Sort -->

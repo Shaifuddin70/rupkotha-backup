@@ -49,7 +49,7 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="product-page-custom">
     <div class="container-custom">
         <!-- custom Breadcrumb -->
-        <div class="breadcrumb-custom">
+        <!-- <div class="breadcrumb-custom">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index">Home</a></li>
@@ -63,7 +63,7 @@ $related_products = $related_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </li>
                 </ol>
             </nav>
-        </div>
+        </div> -->
 
         <div class="row">
             <!-- Product Gallery -->

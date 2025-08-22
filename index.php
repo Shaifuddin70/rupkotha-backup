@@ -155,7 +155,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="row justify-content-center">
 
 
-            <div class=" col-md-4 col-6 mb-3">
+            <div class=" col-md-4 col-6 mb-3 mb-lg-0">
                 <div class="feature-item-hero">
                     <div class="feature-icon-hero">
                         <i class="bi bi-truck"></i>
@@ -168,7 +168,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
 
-            <div class=" col-md-4 col-6 mb-3">
+            <div class=" col-md-4 col-6 mb-3 mb-lg-0">
                 <div class="feature-item-hero">
                     <div class="feature-icon-hero">
                         <i class="bi bi-tag"></i>
@@ -178,9 +178,9 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p>Competitive pricing</p>
                     </div>
                 </div>
-            </div>
+            </div>  
 
-            <div class=" col-md-4 col-6 mb-3">
+            <div class=" col-md-4 col-6 ">
                 <div class="feature-item-hero">
                     <div class="feature-icon-hero">
                         <i class="bi bi-headset"></i>
