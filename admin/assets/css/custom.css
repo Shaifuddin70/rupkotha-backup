@@ -1473,10 +1473,7 @@ body {
     letter-spacing: 0.05em;
 }
 
-.badge-category {
-    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-    color: var(--primary-color);
-}
+
 
 .badge-status {
     background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
@@ -1509,42 +1506,42 @@ body {
 }
 
 .btn-edit {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    background: linear-gradient(135deg, #bfdbfe 0%, #bfdbfe 100%);
     color: #1d4ed8;
 }
 
 .btn-edit:hover {
-    background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+    background: linear-gradient(135deg, #93c5fd 0%, #93c5fd 100%);
     color: #1e40af;
 }
 
 .btn-images {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    background: linear-gradient(135deg, #30d191 0%, #30d191 100%);
     color: #059669;
 }
 
 .btn-images:hover {
-    background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+    background: linear-gradient(135deg, #6ee7b7 0%, #6ee7b7 100%);
     color: #047857;
 }
 
 .btn-delete {
-    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    background: linear-gradient(135deg, #fca5a5 0%, #fca5a5 100%);
     color: #dc2626;
 }
 
 .btn-delete:hover {
-    background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+    background: linear-gradient(135deg, #f87171 0%, #f87171 100%);
     color: #b91c1c;
 }
 
 .btn-restore {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    background: linear-gradient(135deg, #fde68a 0%, #fde68a 100%);
     color: #d97706;
 }
 
 .btn-restore:hover {
-    background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
+    background: linear-gradient(135deg, #fcd34d 0%, #fcd34d 100%);
     color: #b45309;
 }
 
@@ -1853,6 +1850,7 @@ body.dark-theme .filter-tab {
 body.dark-theme .page-link-modern {
     background: var(--color-bg-sidebar);
     color: var(--color-text-primary);
+    text-decoration: none;
 }
 
 /* ==============================
@@ -2165,7 +2163,7 @@ body.dark-theme .page-link-modern {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: var(--settings-transition);
 }
 
@@ -2259,37 +2257,38 @@ body.dark-theme .alert-modern.alert-info {
         margin: -1rem -1rem 2rem -1rem;
         padding: 1.5rem 0;
     }
-    
+
     .settings-tab-content {
         padding: 1.5rem;
     }
-    
+
     .settings-nav .nav-link {
         padding: 1rem 1.5rem;
         font-size: 0.9rem;
     }
-    
+
     .payment-method-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .modern-form-control {
-        font-size: 16px; /* Prevent zoom on iOS */
+        font-size: 16px;
+        /* Prevent zoom on iOS */
     }
-    
+
     .section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
         text-align: left;
     }
-    
+
     .section-icon {
         width: 35px;
         height: 35px;
         font-size: 1rem;
     }
-    
+
     .section-title {
         font-size: 1.1rem;
     }

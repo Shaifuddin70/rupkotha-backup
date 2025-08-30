@@ -1,23 +1,16 @@
 <?php
 require_once 'includes/header.php';
-require_once 'includes/functions.php'; // Using functions like formatPrice()
+require_once 'includes/functions.php';
 
-// Ensure admin is logged in
+
 if (!isAdmin()) {
     redirect('login.php');
 }
 
-// --- DATA FETCHING FOR DASHBOARD WIDGETS ---
 
-// 1. Total Profit from completed orders
-// This calculation assumes you have a 'cost_price' column in your 'products' table.
-// Profit = Total Revenue - Total Cost of Goods Sold (COGS)
-
-// First, get the total revenue from completed orders
 $total_revenue = $pdo->query("SELECT SUM(total_amount) FROM orders WHERE status = 'Completed'")->fetchColumn();
 
-// Second, get the total cost of goods sold (COGS) for those orders
-// CORRECTED a typo here: o.ida -> o.id
+
 $cogs_query = "SELECT SUM(oi.quantity * p.cost_price)
                FROM order_items oi
                JOIN products p ON oi.product_id = p.id

@@ -131,7 +131,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </a>
 </div>
 
-<!-- Main Content Card -->
 <div class="main-card">
     <div class="card-header-modern d-flex justify-content-between align-items-center">
         <h3 class="card-title-modern">
@@ -202,9 +201,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </td>
                             <td data-label="Category">
-                                <span class="badge badge-modern badge-category">
-                                    <?= esc_html($prod['category_name']) ?>
-                                </span>
+                                <div class="fw-bold"> <?= esc_html($prod['category_name']) ?></div>
                             </td>
                             <td data-label="Pricing">
                                 <div class="price-display">
@@ -272,7 +269,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </table>
         <?php endif; ?>
 
-        <!-- Pagination -->
         <?php if ($total_pages > 1): ?>
             <div class="pagination-modern">
                 <nav>
@@ -302,7 +298,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 
-<!-- Add Product Modal -->
 <div class="modal fade modal-modern" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -389,7 +384,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- Edit Product Modal -->
 <div class="modal fade modal-modern" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -472,7 +466,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- Manage Images Modal -->
 <div class="modal fade modal-modern" id="manageImagesModal" tabindex="-1" aria-labelledby="manageImagesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
@@ -483,8 +476,13 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="mb-3">
+                    <input type="file" id="newImageInput" class="form-control" accept="image/*" style="display: none;">
+                    <button type="button" id="uploadNewImageBtn" class="btn btn-primary-modern btn-modern">
+                        <i class="bi bi-upload me-2"></i>Upload New Image
+                    </button>
+                </div>
                 <div id="image-gallery-container" class="row g-3">
-                    <!-- Images will be loaded here dynamically -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -496,7 +494,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -533,6 +530,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Image Management
         const productsTable = document.getElementById('productsTable');
         const manageImagesModalEl = document.getElementById('manageImagesModal');
+        const newImageInput = document.getElementById('newImageInput');
+        const uploadNewImageBtn = document.getElementById('uploadNewImageBtn');
 
         // Function to fetch and render images
         function fetchAndRenderImages(productId) {
@@ -598,6 +597,35 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 const productId = button.dataset.id;
                 this.dataset.productId = productId;
                 fetchAndRenderImages(productId);
+            });
+
+            uploadNewImageBtn.addEventListener('click', function() {
+                newImageInput.click();
+            });
+
+            newImageInput.addEventListener('change', function() {
+                const productId = manageImagesModalEl.dataset.productId;
+                const file = this.files[0];
+
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('product_id', productId);
+                    formData.append('image', file);
+
+                    fetch('ajax/upload_product_image.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                fetchAndRenderImages(productId);
+                            } else {
+                                alert(`Error: ${data.message}`);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
             });
 
             // Event delegation for image management buttons
