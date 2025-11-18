@@ -9,11 +9,15 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
     $user = 'root';
     $pass = 'root';
 } else {
+    $host = 'localhost';
+    $db = 'rpecommerce';
+    $user = 'root';
+    $pass = 'root';
     // Hosting database credentials
-    $host = 'localhost'; // Often 'localhost' or a specific host IP/name
-    $db = 'rokiblo3_rpecommerce';
-    $user = 'rokiblo3_rpecommerce';
-    $pass = 'Se7wypbb4ztpvwwTgrWU';
+    // $host = 'localhost'; // Often 'localhost' or a specific host IP/name
+    // $db = 'rokiblo3_rpecommerce';
+    // $user = 'rokiblo3_rpecommerce';
+    // $pass = 'Se7wypbb4ztpvwwTgrWU';
 }
 
 $charset = 'utf8mb4';

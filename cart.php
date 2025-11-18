@@ -545,7 +545,12 @@ function removeItem(productId) {
             },
             body: `product_id=${productId}&action=remove`
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.status);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 // Remove from cart data
@@ -566,7 +571,7 @@ function removeItem(productId) {
                     }
                 }, 300);
                 
-                showNotification('success', 'Item removed from cart');
+                showNotification('success', data.message || 'Item removed from cart');
             } else {
                 showNotification('error', data.message || 'Error removing item');
                 cartItem.style.opacity = '1';
@@ -574,7 +579,7 @@ function removeItem(productId) {
         })
         .catch(error => {
             console.error('Error:', error);
-            showNotification('error', 'Error removing item');
+            showNotification('error', 'Error removing item: ' + error.message);
             cartItem.style.opacity = '1';
         });
     }

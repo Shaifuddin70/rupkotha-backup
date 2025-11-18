@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Aug 16, 2025 at 12:14 AM
--- Server version: 5.7.24
--- PHP Version: 8.3.1
+-- Host: localhost:8889
+-- Generation Time: Nov 18, 2025 at 06:25 PM
+-- Server version: 8.0.40
+-- PHP Version: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,18 +28,18 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admins` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `admins`
 --
 
 INSERT INTO `admins` (`id`, `username`, `email`, `password`) VALUES
-(2, 'ROKIBa', 'admin@gmail.com', '$2y$10$JLlfSjU8JiL//lrLBqSYVuoZPrL/Pv1CyIVKJBP7/ffin5SBP2XHm');
+(2, 'ROKIB', 'admin@gmail.com', '$2y$10$JLlfSjU8JiL//lrLBqSYVuoZPrL/Pv1CyIVKJBP7/ffin5SBP2XHm');
 
 -- --------------------------------------------------------
 
@@ -48,11 +48,11 @@ INSERT INTO `admins` (`id`, `username`, `email`, `password`) VALUES
 --
 
 CREATE TABLE `cart` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -61,11 +61,11 @@ CREATE TABLE `cart` (
 --
 
 CREATE TABLE `categories` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `categories`
@@ -84,15 +84,15 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 --
 
 CREATE TABLE `hero_products` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `product_id` int NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `subtitle` varchar(255) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `hero_products`
@@ -109,8 +109,8 @@ INSERT INTO `hero_products` (`id`, `product_id`, `title`, `subtitle`, `image`, `
 --
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
   `status` varchar(50) DEFAULT 'Pending',
   `payment_method` varchar(50) NOT NULL DEFAULT 'Cash on Delivery',
@@ -119,18 +119,18 @@ CREATE TABLE `orders` (
   `shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `orders`
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `payment_method`, `payment_trx_id`, `payment_sender_no`, `shipping_fee`, `created_at`, `updated_at`) VALUES
-(10, 1, '1560.00', 'Completed', 'cod', '', '', '60.00', '2025-07-12 06:35:00', NULL),
-(11, 1, '575060.00', 'Cancelled', 'cod', '', '', '60.00', '2025-07-12 07:58:04', NULL),
-(12, 1, '446060.00', 'Shipped', 'cod', '', '', '60.00', '2025-08-15 17:25:44', NULL),
-(13, 1, '24060.00', 'Processing', 'bkash', 'awd456a46wd', '01635485750', '60.00', '2025-08-15 17:38:15', '2025-08-15 18:13:53'),
-(14, 1, '115060.00', 'Pending', 'cod', '', '', '60.00', '2025-08-15 17:55:26', '2025-08-15 18:13:39');
+(10, 1, 1560.00, 'Completed', 'cod', '', '', 60.00, '2025-07-12 06:35:00', NULL),
+(11, 1, 575060.00, 'Cancelled', 'cod', '', '', 60.00, '2025-07-12 07:58:04', NULL),
+(12, 1, 446060.00, 'Shipped', 'cod', '', '', 60.00, '2025-08-15 17:25:44', NULL),
+(13, 1, 24060.00, 'Processing', 'bkash', 'awd456a46wd', '01635485750', 60.00, '2025-08-15 17:38:15', '2025-08-15 18:13:53'),
+(14, 1, 115060.00, 'Pending', 'cod', '', '', 60.00, '2025-08-15 17:55:26', '2025-08-15 18:13:39');
 
 -- --------------------------------------------------------
 
@@ -139,24 +139,24 @@ INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `status`, `payment_method
 --
 
 CREATE TABLE `order_items` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `order_items`
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(13, 10, 19, 1, '1500.00'),
-(14, 11, 21, 5, '115000.00'),
-(15, 12, 22, 9, '24000.00'),
-(16, 12, 21, 2, '115000.00'),
-(17, 13, 22, 1, '24000.00'),
-(18, 14, 21, 1, '115000.00');
+(13, 10, 19, 1, 1500.00),
+(14, 11, 21, 5, 115000.00),
+(15, 12, 22, 9, 24000.00),
+(16, 12, 21, 2, 115000.00),
+(17, 13, 22, 1, 24000.00),
+(18, 14, 21, 1, 115000.00);
 
 -- --------------------------------------------------------
 
@@ -165,29 +165,31 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 --
 
 CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
-  `category_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `category_id` int DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
+  `short_description` varchar(255) NOT NULL,
   `description` text,
   `image` varchar(255) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `cost_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `stock` int(11) DEFAULT NULL,
+  `stock` int DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `image`, `price`, `cost_price`, `created_at`, `stock`, `is_active`, `updated_at`, `deleted_at`) VALUES
-(18, 24, 'Indo-Wester', 'New Collection', '3928887fbbf145c1f3c5b337.webp', '1299.00', '1000.00', '2025-07-12 06:57:30', 5, 1, '2025-07-12 06:57:30', NULL),
-(19, 24, 'Indo Western Gown', 'Indo Western Gown', '8c21a75f1bc1a74a43e166e1.webp', '1500.00', '1200.00', '2025-07-12 06:57:52', 9, 1, '2025-07-12 06:57:52', NULL),
-(21, 8, 'Galaxy S25 Edge 5', 'Durability with titanium frame and IP68 rating.', '1b7794fbc7637ab559c0cca0.jpg', '115000.00', '105000.00', '2025-08-15 17:55:26', 3, 1, '2025-08-15 17:55:26', NULL),
-(22, 8, 'Tecno Camon 40', 'Network	Technology	: GSM / HSPA / LTE\r\nLaunch	Announced	2025, March 03\r\nStatus	Available. Released 2025, May\r\nBody	Dimensions	164.1 x 74.6 x 7.3 mm (6.46 x 2.94 x 0.29 in)\r\nWeight	177.2 g (6.24 oz)\r\nSIM	Nano-SIM + Nano-SIM\r\n 	IP66 dust tight and water resistant (high pressure water jets)\r\nDisplay	Type	AMOLED, 120Hz\r\nSize	6.78 inches, 109.9 cm2 (~89.8% screen-to-body ratio)\r\nResolution	1080 x 2436 pixels (~393 ppi density)\r\nProtection	Panda King Glass\r\n 	HDR image support\r\nPlatform	OS	Android 15, up to 3 major Android upgrades, HIOS 15\r\nChipset	Mediatek Helio G100 Ultimate (6 nm)\r\nCPU	Octa-core (2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55)\r\nGPU	Mali-G57 MC2\r\nMemory	Card slot	Unspecified\r\nInternal	128GB 8GB RAM, 128GB 12GB RAM, 256GB 8GB RAM, 256GB 12GB RAM\r\nMain Camera	Dual	50 MP, f/1.9, 23mm (wide), 1/1.56\", 1.0µm, PDAF, OIS\r\n8 MP, (ultrawide)\r\nFeatures	Dual-LED flash, HDR, panorama\r\nVideo	Yes\r\nSelfie camera	Single	32 MP, (wide)\r\nVideo	Yes\r\nSound	Loudspeaker	Yes, with stereo speakers\r\n3.5mm jack	Unspecified\r\nComms	WLAN	Yes\r\nBluetooth	Yes\r\nPositioning	GPS\r\nNFC	Yes\r\nInfrared port	Yes\r\nRadio	FM radio\r\nUSB	USB Type-C 2.0, OTG\r\nFeatures	Sensors	Fingerprint (under display, optical), accelerometer, gyro, proximity, compass\r\n 	Circle to Search\r\nBattery	Type	5200 mAh\r\nCharging	45W wired, 50% in 23 min, 100% in 43 min\r\nMisc	Colors	Emerald Lake Green, Galaxy Black, Glacier White, Emerald Glow Green\r\nModels	CM5', '29ccf61ea7b1410d63bf563a.jpg', '24000.00', '22600.00', '2025-08-15 17:38:15', 0, 1, '2025-08-15 17:38:15', NULL);
+INSERT INTO `products` (`id`, `category_id`, `name`, `short_description`, `description`, `image`, `price`, `cost_price`, `created_at`, `stock`, `is_active`, `updated_at`, `deleted_at`) VALUES
+(18, 24, 'Indo-Wester', '', 'New Collection', '3928887fbbf145c1f3c5b337.webp', 1299.00, 1000.00, '2025-07-12 06:57:30', 5, 1, '2025-07-12 06:57:30', NULL),
+(19, 24, 'Indo Western Gown', '', 'Indo Western Gown', '8c21a75f1bc1a74a43e166e1.webp', 1500.00, 1200.00, '2025-07-12 06:57:52', 9, 1, '2025-07-12 06:57:52', NULL),
+(21, 8, 'Galaxy S25 Edge 5', '', 'Durability with titanium frame and IP68 rating.', '1b7794fbc7637ab559c0cca0.jpg', 115000.00, 105000.00, '2025-08-15 17:55:26', 3, 1, '2025-08-15 17:55:26', NULL),
+(22, 8, 'Tecno Camon 40', '', 'Network	Technology	: GSM / HSPA / LTE\r\nLaunch	Announced	2025, March 03\r\nStatus	Available. Released 2025, May\r\nBody	Dimensions	164.1 x 74.6 x 7.3 mm (6.46 x 2.94 x 0.29 in)\r\nWeight	177.2 g (6.24 oz)\r\nSIM	Nano-SIM + Nano-SIM\r\n 	IP66 dust tight and water resistant (high pressure water jets)\r\nDisplay	Type	AMOLED, 120Hz\r\nSize	6.78 inches, 109.9 cm2 (~89.8% screen-to-body ratio)\r\nResolution	1080 x 2436 pixels (~393 ppi density)\r\nProtection	Panda King Glass\r\n 	HDR image support\r\nPlatform	OS	Android 15, up to 3 major Android upgrades, HIOS 15\r\nChipset	Mediatek Helio G100 Ultimate (6 nm)\r\nCPU	Octa-core (2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55)\r\nGPU	Mali-G57 MC2\r\nMemory	Card slot	Unspecified\r\nInternal	128GB 8GB RAM, 128GB 12GB RAM, 256GB 8GB RAM, 256GB 12GB RAM\r\nMain Camera	Dual	50 MP, f/1.9, 23mm (wide), 1/1.56\", 1.0µm, PDAF, OIS\r\n8 MP, (ultrawide)\r\nFeatures	Dual-LED flash, HDR, panorama\r\nVideo	Yes\r\nSelfie camera	Single	32 MP, (wide)\r\nVideo	Yes\r\nSound	Loudspeaker	Yes, with stereo speakers\r\n3.5mm jack	Unspecified\r\nComms	WLAN	Yes\r\nBluetooth	Yes\r\nPositioning	GPS\r\nNFC	Yes\r\nInfrared port	Yes\r\nRadio	FM radio\r\nUSB	USB Type-C 2.0, OTG\r\nFeatures	Sensors	Fingerprint (under display, optical), accelerometer, gyro, proximity, compass\r\n 	Circle to Search\r\nBattery	Type	5200 mAh\r\nCharging	45W wired, 50% in 23 min, 100% in 43 min\r\nMisc	Colors	Emerald Lake Green, Galaxy Black, Glacier White, Emerald Glow Green\r\nModels	CM5', '29ccf61ea7b1410d63bf563a.jpg', 24000.00, 22600.00, '2025-11-18 17:46:33', 0, 1, '2025-11-18 17:46:33', NULL),
+(23, 16, 'jgyaidhiahwd', 'jgawkbd', 'uhweufhhfiugsouefbbsiugose', '3f5701cda7a9d74053bfdfe3.jpg', 345.00, 435.00, '2025-11-18 17:46:25', 345, 0, '2025-11-18 17:46:25', '2025-11-18 17:46:25');
 
 -- --------------------------------------------------------
 
@@ -196,11 +198,11 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `description`, `image`, `pr
 --
 
 CREATE TABLE `product_images` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `product_id` int NOT NULL,
   `image_path` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `product_images`
@@ -217,7 +219,7 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `created_at`) VA
 --
 
 CREATE TABLE `settings` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `logo` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
@@ -232,14 +234,14 @@ CREATE TABLE `settings` (
   `nagad_number` varchar(20) DEFAULT NULL,
   `rocket_number` varchar(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `settings`
 --
 
 INSERT INTO `settings` (`id`, `company_name`, `logo`, `phone`, `email`, `address`, `facebook`, `instagram`, `twitter`, `shipping_fee_dhaka`, `shipping_fee_outside`, `bkash_number`, `nagad_number`, `rocket_number`, `updated_at`) VALUES
-(1, 'Rupkotha Properties Bangladeshs', '29532d60dff44d17d4b4a4a1.jpg', '01234554', 'info@rpproperty.com', 'Dhaka, Bangladesh', 'https://www.facebook.com/', 'https://www.facebook.com/', 'https://www.facebook.com/', '60.00', '120.00', '01791912323', '01812345678', '01538347152', '2025-07-12 09:25:36');
+(1, 'Rupkotha Properties Bangladeshs', '29532d60dff44d17d4b4a4a1.jpg', '01234554', 'info@rpproperty.com', 'Dhaka, Bangladesh', 'https://www.facebook.com/', 'https://www.facebook.com/', 'https://www.facebook.com/', 60.00, 120.00, '01791912323', '01812345678', '01538347152', '2025-07-12 09:25:36');
 
 -- --------------------------------------------------------
 
@@ -248,14 +250,14 @@ INSERT INTO `settings` (`id`, `company_name`, `logo`, `phone`, `email`, `address
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `address` text,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `users`
@@ -345,61 +347,61 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `hero_products`
 --
 ALTER TABLE `hero_products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables

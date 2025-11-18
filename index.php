@@ -178,7 +178,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p>Competitive pricing</p>
                     </div>
                 </div>
-            </div>  
+            </div>
 
             <div class=" col-md-4 col-6 ">
                 <div class="feature-item-hero">
@@ -213,15 +213,12 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php if ($lowStock): ?><span class="product-badge badge-low" style="left:auto; right:10px;">Low</span><?php endif; ?>
 
                                 <div class="price-badge"><?= formatPrice($product['price']) ?></div>
-                                <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
-                                    class="product-image"
-                                    alt="<?= esc_html($product['name']) ?>"
-                                    loading="lazy">
-                                <div class="product-overlay">
-                                    <a href="product.php?id=<?= $product['id'] ?>" class="quick-view-btn">
-                                        <i class="bi bi-eye"></i>Quick View
-                                    </a>
-                                </div>
+                                <a href="product.php?id=<?= $product['id'] ?>">
+                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
+                                        class="product-image"
+                                        alt="<?= esc_html($product['name']) ?>"
+                                        loading="lazy">
+                                </a>
                             </div>
                             <div class="product-info">
                                 <a href="product.php?id=<?= $product['id'] ?>" class="product-name">
@@ -266,15 +263,12 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <?php if ($lowStock): ?><span class="product-badge badge-low" style="left:auto; right:10px;">Low</span><?php endif; ?>
 
                                     <div class="price-badge"><?= formatPrice($product['price']) ?></div>
-                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
-                                        class="product-image"
-                                        alt="<?= esc_html($product['name']) ?>"
-                                        loading="lazy">
-                                    <div class="product-overlay">
-                                        <a href="product.php?id=<?= $product['id'] ?>" class="quick-view-btn">
-                                            <i class="bi bi-eye"></i>Quick View
-                                        </a>
-                                    </div>
+                                    <a href="product.php?id=<?= $product['id'] ?>">
+                                        <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
+                                            class="product-image"
+                                            alt="<?= esc_html($product['name']) ?>"
+                                            loading="lazy">
+                                    </a>
                                 </div>
                                 <div class="product-info">
                                     <a href="product.php?id=<?= $product['id'] ?>" class="product-name">
@@ -324,15 +318,12 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <?php if ($lowStock): ?><span class="product-badge badge-low" style="left:auto; right:10px;">Low</span><?php endif; ?>
 
                                     <div class="price-badge"><?= formatPrice($product['price']) ?></div>
-                                    <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
-                                        class="product-image"
-                                        alt="<?= esc_html($product['name']) ?>"
-                                        loading="lazy">
-                                    <div class="product-overlay">
-                                        <a href="product.php?id=<?= $product['id'] ?>" class="quick-view-btn">
-                                            <i class="bi bi-eye"></i>Quick View
-                                        </a>
-                                    </div>
+                                    <a href="product.php?id=<?= $product['id'] ?>">
+                                        <img src="admin/assets/uploads/<?= esc_html($product['image']) ?>"
+                                            class="product-image"
+                                            alt="<?= esc_html($product['name']) ?>"
+                                            loading="lazy">
+                                    </a>
                                 </div>
                                 <div class="product-info">
                                     <a href="product.php?id=<?= $product['id'] ?>" class="product-name">

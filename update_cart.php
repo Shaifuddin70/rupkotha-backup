@@ -1,6 +1,7 @@
 <?php
 // Cart Update Handler - AJAX endpoint for cart operations
-header('Content-Type: application/json');
+// Prevent any output before JSON
+ob_start();
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -8,6 +9,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once 'includes/db.php';
 require_once 'includes/functions.php';
+
+// Clear any output buffer after includes and set headers
+ob_clean();
+header('Content-Type: application/json');
+header('Cache-Control: no-cache, must-revalidate');
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -19,11 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Get input data
 $product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
 $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
-$action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
+$action = isset($_POST['action']) ? trim($_POST['action']) : '';
+$action = in_array($action, ['update', 'remove', 'clear']) ? $action : '';
 
 // Validate required fields
 if (!$product_id || !$action) {
-    echo json_encode(['success' => false, 'message' => 'Invalid request parameters']);
+    ob_clean();
+    echo json_encode(['success' => false, 'message' => 'Invalid request parameters. Product ID: ' . ($product_id ?: 'null') . ', Action: ' . ($action ?: 'null')]);
     exit;
 }
 
@@ -97,31 +105,42 @@ try {
                 
                 // Calculate updated totals
                 $cart_total = 0;
+                $cart_count = 0;
                 if (!empty($_SESSION['cart'])) {
                     $remaining_ids = array_keys($_SESSION['cart']);
-                    $placeholders = implode(',', array_fill(0, count($remaining_ids), '?'));
-                    $stmt = $pdo->prepare("SELECT id, price FROM products WHERE id IN ($placeholders)");
-                    $stmt->execute($remaining_ids);
-                    $prices = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-                    
-                    foreach ($_SESSION['cart'] as $pid => $qty) {
-                        if (isset($prices[$pid])) {
-                            $cart_total += $prices[$pid] * $qty;
+                    if (!empty($remaining_ids)) {
+                        $placeholders = implode(',', array_fill(0, count($remaining_ids), '?'));
+                        $stmt = $pdo->prepare("SELECT id, price FROM products WHERE id IN ($placeholders)");
+                        $stmt->execute($remaining_ids);
+                        $prices = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                        
+                        foreach ($_SESSION['cart'] as $pid => $qty) {
+                            if (isset($prices[$pid])) {
+                                $cart_total += $prices[$pid] * $qty;
+                                $cart_count += $qty;
+                            }
                         }
                     }
                 }
                 
-                echo json_encode([
+                $response = [
                     'success' => true, 
                     'message' => 'Item removed from cart',
                     'cart_total' => $cart_total,
                     'cart_count' => count($_SESSION['cart'])
-                ]);
+                ];
+                
+                ob_clean();
+                echo json_encode($response);
+                exit;
             } else {
-                echo json_encode([
+                $response = [
                     'success' => false, 
                     'message' => 'Item not found in cart'
-                ]);
+                ];
+                ob_clean();
+                echo json_encode($response);
+                exit;
             }
             break;
 
@@ -139,10 +158,18 @@ try {
     }
 
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Database error occurred']);
-    // In production, log the error: error_log($e->getMessage());
+    error_log('Cart Update PDO Error: ' . $e->getMessage());
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Database error occurred. Please try again.',
+        'error' => (defined('DEBUG') && DEBUG) ? $e->getMessage() : null
+    ]);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'An error occurred']);
-    // In production, log the error: error_log($e->getMessage());
+    error_log('Cart Update Error: ' . $e->getMessage());
+    echo json_encode([
+        'success' => false, 
+        'message' => 'An error occurred. Please try again.',
+        'error' => (defined('DEBUG') && DEBUG) ? $e->getMessage() : null
+    ]);
 }
 ?>
