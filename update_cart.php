@@ -49,7 +49,7 @@ try {
             }
 
             // Verify product exists and get stock
-            $stmt = $pdo->prepare("SELECT id, name, stock FROM products WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT id, name, stock, price FROM products WHERE id = ?");
             $stmt->execute([$product_id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
 

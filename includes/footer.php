@@ -89,7 +89,7 @@ if (!isset($categories)) {
         <div class="container">
             <div class="footer-bottom-content">
                 <div class="row align-items-center">
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3 mb-md-0">
                         <div class="copyright">
                             <p>&copy; <?= date('Y') ?> <span class="brand-highlight"><?= esc_html($settings['company_name'] ?? 'Rupkotha') ?></span>. All Rights Reserved.</p>
                             <div class="legal-links">
@@ -100,7 +100,7 @@ if (!isset($categories)) {
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3 mb-md-0">
                         <div class="footer-extras">
                             <!-- Payment Methods -->
                             <div class="payment-methods">
@@ -111,31 +111,30 @@ if (!isset($categories)) {
                                     <img src="assets/images/rocket.png" alt="Rocket" class="payment-icon">
                                 </div>
                             </div>
-
-                          
                         </div>
-                          <!-- Social Media -->
-                        <div class="col-lg-4 col-md-6">
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="col-lg-4 col-md-12">
                         <div class="social-links">
-                                <?php if (!empty($settings['facebook'])): ?>
-                                    <a href="<?= esc_html($settings['facebook']) ?>" target="_blank" class="social-link facebook" title="Facebook">
-                                        <i class="bi bi-facebook"></i>
-                                    </a>
-                                <?php endif; ?>
-                                <?php if (!empty($settings['instagram'])): ?>
-                                    <a href="<?= esc_html($settings['instagram']) ?>" target="_blank" class="social-link instagram" title="Instagram">
-                                        <i class="bi bi-instagram"></i>
-                                    </a>
-                                <?php endif; ?>
-                                <?php if (!empty($settings['twitter'])): ?>
-                                    <a href="<?= esc_html($settings['twitter']) ?>" target="_blank" class="social-link twitter" title="Twitter">
-                                        <i class="bi bi-twitter"></i>
-                                    </a>
-                                <?php endif; ?>
-                                <a href="#" class="social-link whatsapp" title="WhatsApp">
-                                    <i class="bi bi-whatsapp"></i>
+                            <?php if (!empty($settings['facebook'])): ?>
+                                <a href="<?= esc_html($settings['facebook']) ?>" target="_blank" class="social-link facebook" title="Facebook">
+                                    <i class="bi bi-facebook"></i>
                                 </a>
-                            </div>
+                            <?php endif; ?>
+                            <?php if (!empty($settings['instagram'])): ?>
+                                <a href="<?= esc_html($settings['instagram']) ?>" target="_blank" class="social-link instagram" title="Instagram">
+                                    <i class="bi bi-instagram"></i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (!empty($settings['twitter'])): ?>
+                                <a href="<?= esc_html($settings['twitter']) ?>" target="_blank" class="social-link twitter" title="Twitter">
+                                    <i class="bi bi-twitter"></i>
+                                </a>
+                            <?php endif; ?>
+                            <a href="#" class="social-link whatsapp" title="WhatsApp">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
                         </div>
                     </div>
                 </div>

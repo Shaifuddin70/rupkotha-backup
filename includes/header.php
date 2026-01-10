@@ -95,11 +95,9 @@ if (!empty($_SESSION['cart'])) {
                         </a>
                     <?php endif; ?>
 
-                    <a class="nav-icon-btn me-3" href="cart">
+                    <a class="nav-icon-btn me-3 position-relative" href="cart">
                         <i class="bi bi-bag fs-4"></i>
-                        <?php if ($cart_items_count > 0): ?>
-                            <span class="cart-badge"><?= $cart_items_count ?></span>
-                        <?php endif; ?>
+                        <span class="cart-badge" style="display: <?= $cart_items_count > 0 ? 'flex' : 'none' ?>;"><?= $cart_items_count > 0 ? $cart_items_count : '' ?></span>
                     </a>
 
                     <button class="mobile-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
@@ -110,16 +108,33 @@ if (!empty($_SESSION['cart'])) {
 
                 <!-- Navbar Content -->
                 <div class="collapse navbar-collapse" id="mainNavbar">
-                    <!-- Search Form (centered on desktop, first on mobile) -->
-                    <div class="mx-auto my-3 my-lg-0">
-                        <form class="custom-search" role="search" action="search" method="get">
-                            <input class="form-control" type="search" name="q"
-                                placeholder="Search for amazing products..." aria-label="Search">
-                            <button class="search-btn" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </form>
-                    </div>
+                    <!-- Navigation Links (Desktop - Centered) -->
+                    <ul class="navbar-nav mx-auto d-none d-lg-flex align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white" href="index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white" href="all-products">All Products</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Categories
+                            </a>
+                            <ul class="dropdown-menu custom-dropdown">
+                                <?php foreach ($categories as $cat): ?>
+                                    <li><a class="dropdown-item" href="category?id=<?= $cat['id'] ?>">
+                                            <?= esc_html($cat['name']) ?>
+                                        </a></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white" href="about">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-white" href="contact">Contact Us</a>
+                        </li>
+                    </ul>
 
                     <!-- Main Site Navigation (for mobile view) -->
                     <div class="mobile-menu d-lg-none">
@@ -159,8 +174,20 @@ if (!empty($_SESSION['cart'])) {
                         </ul>
                     </div>
 
-                    <!-- Desktop User Actions (right-aligned, hidden on mobile) -->
-                    <div class="d-none d-lg-flex align-items-center gap-3">
+                    <!-- Search Bar and Profile Section (Right Side - Desktop) -->
+                    <div class="d-none d-lg-flex align-items-center gap-3 ms-auto">
+                        <!-- Search Form -->
+                        <div class="my-3 my-lg-0">
+                            <form class="custom-search" role="search" action="search" method="get">
+                                <input class="form-control" type="search" name="q"
+                                    placeholder="Search products..." aria-label="Search">
+                                <button class="search-btn" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Profile Section -->
                         <?php if (isLoggedIn()): ?>
                             <div class="dropdown user-dropdown">
                                 <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -191,45 +218,10 @@ if (!empty($_SESSION['cart'])) {
 
                         <a class="nav-icon-btn position-relative" href="cart">
                             <i class="bi bi-bag fs-4"></i>
-                            <?php if ($cart_items_count > 0): ?>
-                                <span class="cart-badge"><?= $cart_items_count ?></span>
-                            <?php endif; ?>
+                            <span class="cart-badge" style="display: <?= $cart_items_count > 0 ? 'flex' : 'none' ?>;"><?= $cart_items_count > 0 ? $cart_items_count : '' ?></span>
                         </a>
                     </div>
                 </div>
-            </div>
-        </nav>
-
-        <!-- Category Navigation Bar (Desktop Only) -->
-        <nav class="category-nav d-none d-lg-block">
-            <div class="container">
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="all-products">All Products</a>
-                    </li>
-                    <!-- Categories Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            Categories
-                        </a>
-                        <ul class="dropdown-menu custom-dropdown">
-                            <?php foreach ($categories as $cat): ?>
-                                <li><a class="dropdown-item" href="category?id=<?= $cat['id'] ?>">
-                                        <?= esc_html($cat['name']) ?>
-                                    </a></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact">Contact Us</a>
-                    </li>
-                </ul>
             </div>
         </nav>
     </header>

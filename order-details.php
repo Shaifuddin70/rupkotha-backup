@@ -66,136 +66,111 @@ include 'includes/header.php';
 
 
 
-<div class="modern-header">
+<div class="order-details-page">
     <div class="container">
-        <div class="modern-breadcrumb">
-            <a href="index">Home</a>
-            <span class="separator">•</span>
-            <a href="profile">My Account</a>
-            <span class="separator">•</span>
-            <span>Order Details</span>
-        </div>
-        <h1 class="order-title">Order #<?= esc_html($order['id']) ?></h1>
-        <p class="order-subtitle">Complete order details and invoice</p>
-    </div>
-</div>
-
-<div class="modern-container mb-5">
-    <div class="glass-card">
-        <div class="card-header-modern">
-            <h2 class="card-title">Order Summary</h2>
-            <a href="print-order.php?id=<?= $order['id'] ?>" target="_blank" class="print-button" style="text-decoration:none;">
-                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14a1 1 0 001-1v-1h8v1a1 1 0 001 1v2H5v-2z" clip-rule="evenodd" />
-                </svg>
-                Print Invoice
-            </a>
-        </div>
-
-        <div class="card-content">
-            <div class="info-grid">
-                <div class="info-section">
-                    <h6>Order Information</h6>
-                    <div class="info-item">
-                        <span class="info-label">Order ID</span>
-                        <span class="info-value">#<?= esc_html($order['id']) ?></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Order Date</span>
-                        <span class="info-value"><?= format_date($order['created_at']) ?></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Status</span>
-                        <span class="status-badge <?= $order['status'] === 'Completed' ? 'status-completed' : 'status-pending' ?>">
-                            <?= esc_html($order['status']) ?>
-                        </span>
-                    </div>
+        <!-- Minimal Header -->
+        <div class="order-details-header">
+            <div class="header-content">
+                <div>
+                    <nav class="breadcrumb-minimal">
+                        <a href="index">Home</a>
+                        <span>/</span>
+                        <a href="profile">Profile</a>
+                        <span>/</span>
+                        <span>Order #<?= esc_html($order['id']) ?></span>
+                    </nav>
+                    <h1 class="order-number">Order #<?= esc_html($order['id']) ?></h1>
+                    <p class="order-date">Placed on <?= format_date($order['created_at'], 'F d, Y') ?></p>
                 </div>
-
-                <div class="info-section">
-                    <h6>Shipping Details</h6>
-                    <div class="info-item">
-                        <span class="info-label">Name</span>
-                        <span class="info-value"><?= esc_html($order['username']) ?></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Address</span>
-                        <span class="info-value"><?= esc_html($order['address']) ?></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Phone</span>
-                        <span class="info-value"><?= esc_html($order['phone']) ?></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email</span>
-                        <span class="info-value"><?= esc_html($order['email']) ?></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="items-section">
-                <h3 class="section-title">Order Items</h3>
-
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($order_items as $item): ?>
-                            <tr>
-                                <td>
-                                    <img src="admin/assets/uploads/<?= esc_html($item['image']) ?>"
-                                        alt="<?= esc_html($item['name']) ?>"
-                                        class="invice-product-image">
-                                </td>
-                                <td>
-                                    <h6 class="product-name"><?= esc_html($item['name']) ?></h6>
-                                </td>
-                                <td>
-                                    <span class="price-text"><?= formatPrice($item['price']) ?></span>
-                                </td>
-                                <td>
-                                    <span class="quantity-badge"><?= esc_html($item['quantity']) ?></span>
-                                </td>
-                                <td>
-                                    <span class="price-text"><?= formatPrice($item['price'] * $item['quantity']) ?></span>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="total-section">
-                <div class="total-row">
-                    <span>Subtotal</span>
-                    <span class="price-text"><?= formatPrice($subtotal) ?></span>
-                </div>
-                <div class="total-row">
-                    <span>Shipping</span>
-                    <span class="price-text"><?= formatPrice($shipping_cost) ?></span>
-                </div>
-                <div class="total-row">
-                    <span>Grand Total</span>
-                    <span><?= formatPrice($order['total_amount']) ?></span>
+                <div class="header-actions">
+                    <span class="status-badge-minimal status-<?= strtolower($order['status']) ?>">
+                        <?= esc_html($order['status']) ?>
+                    </span>
+                    <a href="print-order.php?id=<?= $order['id'] ?>" target="_blank" class="btn-print-minimal">
+                        <i class="bi bi-printer"></i>
+                        Print Invoice
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div style="text-align: center;">
-        <a href="orders" class="back-button">
-            <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-            </svg>
-            Back to Order History
-        </a>
+        <!-- Main Content Grid -->
+        <div class="order-details-grid">
+            <!-- Order Items Section -->
+            <div class="order-section order-items-section">
+                <h2 class="section-title-minimal">Order Items</h2>
+                <div class="order-items-list">
+                    <?php foreach ($order_items as $item): ?>
+                        <div class="order-item-minimal">
+                            <div class="item-image-wrapper">
+                                <img src="admin/assets/uploads/<?= esc_html($item['image']) ?>"
+                                    alt="<?= esc_html($item['name']) ?>"
+                                    class="item-image-minimal">
+                            </div>
+                            <div class="item-details-minimal">
+                                <h3 class="item-name-minimal"><?= esc_html($item['name']) ?></h3>
+                                <div class="item-meta-minimal">
+                                    <span class="item-price-minimal"><?= formatPrice($item['price']) ?></span>
+                                    <span class="item-quantity-minimal">× <?= esc_html($item['quantity']) ?></span>
+                                </div>
+                            </div>
+                            <div class="item-total-minimal">
+                                <?= formatPrice($item['price'] * $item['quantity']) ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="order-sidebar">
+                <!-- Order Summary -->
+                <div class="order-summary-card">
+                    <h3 class="summary-title-minimal">Order Summary</h3>
+                    <div class="summary-row-minimal">
+                        <span>Subtotal</span>
+                        <span><?= formatPrice($subtotal) ?></span>
+                    </div>
+                    <div class="summary-row-minimal">
+                        <span>Shipping</span>
+                        <span><?= formatPrice($shipping_cost) ?></span>
+                    </div>
+                    <div class="summary-row-minimal summary-total">
+                        <span>Total</span>
+                        <span><?= formatPrice($order['total_amount']) ?></span>
+                    </div>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="order-info-card">
+                    <h3 class="info-title-minimal">Shipping Information</h3>
+                    <div class="info-content-minimal">
+                        <div class="info-row-minimal">
+                            <span class="info-label-minimal">Name</span>
+                            <span class="info-value-minimal"><?= esc_html($order['username']) ?></span>
+                        </div>
+                        <div class="info-row-minimal">
+                            <span class="info-label-minimal">Address</span>
+                            <span class="info-value-minimal"><?= esc_html($order['address']) ?></span>
+                        </div>
+                        <div class="info-row-minimal">
+                            <span class="info-label-minimal">Phone</span>
+                            <span class="info-value-minimal"><?= esc_html($order['phone']) ?></span>
+                        </div>
+                        <div class="info-row-minimal">
+                            <span class="info-label-minimal">Email</span>
+                            <span class="info-value-minimal"><?= esc_html($order['email']) ?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <a href="orders" class="btn-back-minimal">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Orders
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -10,9 +10,9 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
     $pass = 'root';
 } else {
     $host = 'localhost';
-    $db = 'rpecommerce';
-    $user = 'root';
-    $pass = 'root';
+    $db = 'dailyba4_ecommerce';
+    $user = 'dailyba4_admin';
+    $pass = '*UcJgRbA[tIY=_Fs';
     // Hosting database credentials
     // $host = 'localhost'; // Often 'localhost' or a specific host IP/name
     // $db = 'rokiblo3_rpecommerce';

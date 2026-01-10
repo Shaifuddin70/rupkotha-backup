@@ -163,324 +163,217 @@ include 'includes/header.php';
 
 
 
-<main class="profile-container">
-    <!-- Profile Header -->
-    <div class="profile-header">
-        <div class="row align-items-center">
-            <div class="col-md-auto">
-                <div class="profile-avatar">
-                    <?= strtoupper(substr($user['username'], 0, 1)) ?>
+<main class="profile-page-minimal">
+    <div class="container">
+        <!-- Minimal Profile Header -->
+        <div class="profile-header-minimal">
+            <div class="profile-avatar-minimal">
+                <?= strtoupper(substr($user['username'], 0, 1)) ?>
+            </div>
+            <div class="profile-info-minimal">
+                <h1 class="profile-name-minimal"><?= esc_html($user['username']) ?></h1>
+                <p class="profile-email-minimal"><?= esc_html($user['email']) ?></p>
+                <p class="profile-meta-minimal">Member since <?= format_date($user['created_at'], 'F Y') ?></p>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <?php if (!empty($errors)): ?>
+            <div class="alert-minimal alert-error">
+                <i class="bi bi-exclamation-circle"></i>
+                <div>
+                    <strong>Please fix the following errors:</strong>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= esc_html($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="profile-info">
-                    <h1><?= esc_html($user['username']) ?></h1>
-                    <div class="profile-meta">
-                        <i class="bi bi-envelope me-2"></i><?= esc_html($user['email']) ?>
-                        <span class="mx-3">•</span>
-                        <i class="bi bi-calendar me-2"></i>Member since <?= format_date($user['created_at'], 'M Y') ?>
-                    </div>
+        <?php endif; ?>
+
+        <?php if (!empty($success_messages)): ?>
+            <?php foreach ($success_messages as $message): ?>
+                <div class="alert-minimal alert-success">
+                    <i class="bi bi-check-circle"></i>
+                    <span><?= esc_html($message) ?></span>
                 </div>
-            </div>
-        </div>
-    </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
-    <?php if (!empty($errors)): ?>
-        <div class="alert-modern alert-danger">
-            <h6 class="mb-2"><i class="bi bi-exclamation-triangle me-2"></i>Please fix the following errors:</h6>
-            <ul class="mb-0">
-                <?php foreach ($errors as $error): ?>
-                    <li><?= esc_html($error) ?></li>
-                <?php endforeach; ?>
-            </ul>
+        <!-- Stats Cards -->
+        <div class="stats-minimal">
+            <div class="stat-minimal">
+                <div class="stat-value-minimal"><?= $total_orders ?></div>
+                <div class="stat-label-minimal">Orders</div>
+            </div>
+            <div class="stat-minimal">
+                <div class="stat-value-minimal">0</div>
+                <div class="stat-label-minimal">Wishlist</div>
+            </div>
+            <div class="stat-minimal">
+                <div class="stat-value-minimal">0</div>
+                <div class="stat-label-minimal">Reviews</div>
+            </div>
+            <div class="stat-minimal">
+                <div class="stat-value-minimal">Verified</div>
+                <div class="stat-label-minimal">Status</div>
+            </div>
         </div>
-    <?php endif; ?>
 
-    <?php if (!empty($success_messages)): ?>
-        <?php foreach ($success_messages as $message): ?>
-            <div class="alert-modern alert-success">
-                <i class="bi bi-check-circle me-2"></i><?= esc_html($message) ?>
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
+        <!-- Tab Navigation -->
+        <div class="tabs-minimal">
+            <button class="tab-minimal active" data-tab="profile">
+                <i class="bi bi-person"></i>
+                <span>Profile</span>
+            </button>
+            <button class="tab-minimal" data-tab="password">
+                <i class="bi bi-lock"></i>
+                <span>Password</span>
+            </button>
+            <button class="tab-minimal" data-tab="orders">
+                <i class="bi bi-clock-history"></i>
+                <span>Orders</span>
+                <?php if (!empty($recent_orders)): ?>
+                    <span class="tab-badge-minimal"><?= count($recent_orders) ?></span>
+                <?php endif; ?>
+            </button>
+        </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="bi bi-box-seam"></i>
-            </div>
-            <div class="stat-number"><?= $total_orders ?></div>
-            <div class="stat-label">Total Orders</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="bi bi-heart"></i>
-            </div>
-            <div class="stat-number">0</div>
-            <div class="stat-label">Wishlist Items</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="bi bi-star"></i>
-            </div>
-            <div class="stat-number">0</div>
-            <div class="stat-label">Reviews</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="bi bi-shield-check"></i>
-            </div>
-            <div class="stat-number">Verified</div>
-            <div class="stat-label">Account Status</div>
-        </div>
-    </div>
-
-    <!-- Tab Navigation -->
-    <div class="profile-tabs">
-        <button class="tab-btn active" data-tab="profile">
-            <i class="bi bi-person-circle"></i>
-            <span>Profile Information</span>
-        </button>
-        <button class="tab-btn" data-tab="password">
-            <i class="bi bi-shield-lock"></i>
-            <span>Change Password</span>
-        </button>
-        <button class="tab-btn" data-tab="orders">
-            <i class="bi bi-clock-history"></i>
-            <span>Recent Orders</span>
-            <?php if (!empty($recent_orders)): ?>
-                <span class="tab-badge"><?= count($recent_orders) ?></span>
-            <?php endif; ?>
-        </button>
-    </div>
-
-    <!-- Tab Content Container -->
-    <div class="tab-content-container">
-        <!-- Profile Information Tab -->
-        <div class="tab-content active" id="profile-tab">
-            <div class="modern-card">
-                <div class="card-header-modern">
-                    <h3>
-                        <div class="icon">
-                            <i class="bi bi-person"></i>
-                        </div>
-                        Profile Information
-                    </h3>
-                </div>
-                <div class="card-body-modern">
-                    <form method="post" id="profileForm">
+        <!-- Tab Content -->
+        <div class="tab-content-wrapper-minimal">
+            <!-- Profile Information Tab -->
+            <div class="tab-content-minimal active" id="profile-tab">
+                <div class="card-minimal">
+                    <h2 class="card-title-minimal">Profile Information</h2>
+                    <form method="post" id="profileForm" class="form-minimal">
                         <?= csrf_input() ?>
                         <input type="hidden" name="update_profile" value="1">
 
-                        <div class="form-group-modern">
-                            <label for="username" class="form-label-modern">Full Name</label>
-                            <input type="text" id="username" name="username" class="form-control-modern"
+                        <div class="form-field-minimal">
+                            <label for="username">Full Name</label>
+                            <input type="text" id="username" name="username" 
                                 value="<?= esc_html($user['username']) ?>" required>
                         </div>
 
-                        <div class="form-group-modern">
-                            <label for="email" class="form-label-modern">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control-modern"
+                        <div class="form-field-minimal">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" 
                                 value="<?= esc_html($user['email']) ?>" required>
                         </div>
 
-                        <div class="form-group-modern">
-                            <label for="phone" class="form-label-modern">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control-modern"
+                        <div class="form-field-minimal">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" 
                                 value="<?= esc_html($user['phone']) ?>" required>
                         </div>
 
-                        <div class="form-group-modern">
-                            <label for="address" class="form-label-modern">Full Address</label>
-                            <textarea id="address" name="address" class="form-control-modern" rows="3" required><?= esc_html($user['address']) ?></textarea>
+                        <div class="form-field-minimal">
+                            <label for="address">Full Address</label>
+                            <textarea id="address" name="address" rows="3" required><?= esc_html($user['address']) ?></textarea>
                         </div>
 
-                        <button type="submit" class="btn-modern" id="profileSubmitBtn">
-                            <i class="bi bi-check-lg"></i>
+                        <button type="submit" class="btn-primary-minimal" id="profileSubmitBtn">
                             Update Profile
                         </button>
                     </form>
                 </div>
             </div>
-        </div>
 
-        <!-- Change Password Tab -->
-        <div class="tab-content" id="password-tab">
-            <div class="modern-card">
-                <div class="card-header-modern">
-                    <h3>
-                        <div class="icon">
-                            <i class="bi bi-lock"></i>
-                        </div>
-                        Change Password
-                    </h3>
-                </div>
-                <div class="card-body-modern">
-                    <form method="post" id="passwordForm">
+            <!-- Change Password Tab -->
+            <div class="tab-content-minimal" id="password-tab">
+                <div class="card-minimal">
+                    <h2 class="card-title-minimal">Change Password</h2>
+                    <form method="post" id="passwordForm" class="form-minimal">
                         <?= csrf_input() ?>
                         <input type="hidden" name="change_password" value="1">
 
-                        <div class="form-group-modern">
-                            <label for="current_password" class="form-label-modern">Current Password</label>
-                            <input type="password" id="current_password" name="current_password" class="form-control-modern" required>
+                        <div class="form-field-minimal">
+                            <label for="current_password">Current Password</label>
+                            <input type="password" id="current_password" name="current_password" required>
                         </div>
 
-                        <div class="form-group-modern">
-                            <label for="new_password" class="form-label-modern">New Password</label>
-                            <input type="password" id="new_password" name="new_password" class="form-control-modern" required>
-                            <small class="text-muted">Must be at least 8 characters long</small>
+                        <div class="form-field-minimal">
+                            <label for="new_password">New Password</label>
+                            <input type="password" id="new_password" name="new_password" required>
+                            <small>Must be at least 8 characters long</small>
                         </div>
 
-                        <div class="form-group-modern">
-                            <label for="confirm_password" class="form-label-modern">Confirm New Password</label>
-                            <input type="password" id="confirm_password" name="confirm_password" class="form-control-modern" required>
+                        <div class="form-field-minimal">
+                            <label for="confirm_password">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" required>
                         </div>
 
-                        <button type="submit" class="btn-modern btn-danger-modern" id="passwordSubmitBtn">
-                            <i class="bi bi-shield-lock"></i>
+                        <button type="submit" class="btn-primary-minimal" id="passwordSubmitBtn">
                             Change Password
                         </button>
                     </form>
                 </div>
             </div>
-        </div>
 
-        <!-- Recent Orders Tab -->
-        <div class="tab-content" id="orders-tab">
-            <div class="modern-card">
-                <div class="card-header-modern">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <h3>
-                            <div class="icon">
-                                <i class="bi bi-clock-history"></i>
-                            </div>
-                            Recent Orders
-                        </h3>
+            <!-- Recent Orders Tab -->
+            <div class="tab-content-minimal" id="orders-tab">
+                <div class="card-minimal">
+                    <div class="card-header-minimal">
+                        <h2 class="card-title-minimal">Recent Orders</h2>
                         <?php if (!empty($recent_orders)): ?>
-                            <span class="badge bg-primary"><?= count($recent_orders) ?></span>
+                            <span class="badge-minimal"><?= count($recent_orders) ?></span>
                         <?php endif; ?>
                     </div>
-                </div>
-                <div class="card-body-modern">
+                    
                     <?php if (empty($recent_orders)): ?>
-                        <div class="empty-state-orders">
-                            <div class="empty-icon">
-                                <i class="bi bi-cart-x"></i>
-                            </div>
-                            <h5>No Orders Yet</h5>
-                            <p class="text-muted mb-3">You haven't placed any orders yet. Start exploring our products!</p>
-                            <a href="index" class="btn-modern">
-                                <i class="bi bi-shop me-2"></i>
+                        <div class="empty-state-minimal">
+                            <i class="bi bi-cart-x"></i>
+                            <h3>No Orders Yet</h3>
+                            <p>You haven't placed any orders yet. Start exploring our products!</p>
+                            <a href="index" class="btn-primary-minimal">
                                 Start Shopping
                             </a>
                         </div>
                     <?php else: ?>
-                        <div class="orders-timeline">
-                            <?php foreach ($recent_orders as $index => $order): ?>
-                                <div class="order-card <?= $index === 0 ? 'latest' : '' ?>">
-                                    <div class="order-header">
-                                        <div class="order-main-info">
-                                            <div class="order-id-badge">
-                                                <i class="bi bi-receipt me-2"></i>
-                                                Order #<?= esc_html($order['id']) ?>
-                                            </div>
-                                            <div class="order-date-time">
-                                                <i class="bi bi-calendar3 me-1"></i>
-                                                <?= format_date($order['created_at'], 'M d, Y') ?>
-                                                <span class="time-ago">• <?= format_date($order['created_at'], 'g:i A') ?></span>
-                                            </div>
+                        <div class="orders-list-minimal">
+                            <?php foreach ($recent_orders as $order): ?>
+                                <div class="order-item-minimal">
+                                    <div class="order-header-minimal">
+                                        <div>
+                                            <div class="order-id-minimal">Order #<?= esc_html($order['id']) ?></div>
+                                            <div class="order-date-minimal"><?= format_date($order['created_at'], 'M d, Y') ?></div>
                                         </div>
-                                        <div class="order-actions">
-                                            <span class="status-badge-modern status-<?= strtolower($order['status']) ?>">
-                                                <?php
-                                                $status_icons = [
-                                                    'completed' => 'check-circle-fill',
-                                                    'pending' => 'clock-fill',
-                                                    'cancelled' => 'x-circle-fill'
-                                                ];
-                                                $status = strtolower($order['status']);
-                                                ?>
-                                                <i class="bi bi-<?= $status_icons[$status] ?? 'clock-fill' ?> me-1"></i>
-                                                <?= esc_html(ucfirst($order['status'])) ?>
-                                            </span>
-                                        </div>
+                                        <span class="status-minimal status-<?= strtolower($order['status']) ?>">
+                                            <?= esc_html(ucfirst($order['status'])) ?>
+                                        </span>
                                     </div>
-
-                                    <div class="order-body">
-                                        <div class="order-details-grid">
-                                            <div class="detail-item">
-                                                <span class="detail-label">Total Amount</span>
-                                                <span class="detail-value price-highlight"><?= formatPrice($order['total_amount']) ?></span>
+                                    <div class="order-body-minimal">
+                                        <div class="order-details-minimal">
+                                            <div>
+                                                <span class="detail-label-minimal">Total</span>
+                                                <span class="detail-value-minimal"><?= formatPrice($order['total_amount']) ?></span>
                                             </div>
-                                            <div class="detail-item">
-                                                <span class="detail-label">Payment Method</span>
-                                                <span class="detail-value">
-                                                    <i class="bi bi-credit-card me-1"></i>
-                                                    <?= esc_html($order['payment_method'] ?? 'Cash on Delivery') ?>
-                                                </span>
+                                            <div>
+                                                <span class="detail-label-minimal">Payment</span>
+                                                <span class="detail-value-minimal"><?= esc_html($order['payment_method'] ?? 'Cash on Delivery') ?></span>
                                             </div>
                                         </div>
-
-                                        <div class="order-footer">
-                                            <div class="order-progress">
-                                                <?php
-                                                $progress = match (strtolower($order['status'])) {
-                                                    'pending' => 25,
-                                                    'processing' => 50,
-                                                    'shipped' => 75,
-                                                    'completed' => 100,
-                                                    'cancelled' => 0,
-                                                    default => 25
-                                                };
-                                                $progress_color = match (strtolower($order['status'])) {
-                                                    'completed' => 'success',
-                                                    'cancelled' => 'danger',
-                                                    default => 'primary'
-                                                };
-                                                ?>
-                                                <div class="progress-bar-container">
-                                                    <div class="progress-bar bg-<?= $progress_color ?>" style="width: <?= $progress ?>%"></div>
-                                                </div>
-                                                <small class="progress-text">
-                                                    <?= strtolower($order['status']) === 'cancelled' ? 'Order Cancelled' : $progress . '% Complete' ?>
-                                                </small>
-                                            </div>
-
-                                            <div class="quick-actions">
-                                                <a href="order-details?id=<?= $order['id'] ?>" class="btn-action-sm btn-view">
-                                                    <i class="bi bi-eye"></i>
-                                                    <span>View</span>
-                                                </a>
-
-                                                <?php if (strtolower($order['status']) === 'pending'): ?>
-                                                    <button class="btn-action-sm btn-cancel" onclick="cancelOrder(<?= $order['id'] ?>)">
-                                                        <i class="bi bi-x-circle"></i>
-                                                        <span>Cancel</span>
-                                                    </button>
-                                                <?php endif; ?>
-                                            </div>
+                                        <div class="order-actions-minimal">
+                                            <a href="order-details?id=<?= $order['id'] ?>" class="btn-link-minimal">
+                                                View Details
+                                            </a>
+                                            <?php if (strtolower($order['status']) === 'pending'): ?>
+                                                <button class="btn-link-minimal btn-danger-link" onclick="cancelOrder(<?= $order['id'] ?>)">
+                                                    Cancel
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
-
-                        <div class="orders-footer">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <div class="orders-summary">
-                                        <small class="text-muted">
-                                            Showing <?= count($recent_orders) ?> of <?= $total_orders ?> total orders
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 text-md-end">
-                                    <a href="orders" class="btn-modern">
-                                        <i class="bi bi-list-ul me-2"></i>
-                                        View All Orders
-                                    </a>
-                                </div>
-                            </div>
+                        
+                        <div class="orders-footer-minimal">
+                            <p>Showing <?= count($recent_orders) ?> of <?= $total_orders ?> orders</p>
+                            <a href="orders" class="btn-link-minimal">
+                                View All Orders →
+                            </a>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -492,8 +385,8 @@ include 'includes/header.php';
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Tab switching functionality
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
+        const tabBtns = document.querySelectorAll('.tab-minimal');
+        const tabContents = document.querySelectorAll('.tab-content-minimal');
 
         tabBtns.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -505,7 +398,10 @@ include 'includes/header.php';
 
                 // Add active class to clicked tab and corresponding content
                 this.classList.add('active');
-                document.getElementById(targetTab + '-tab').classList.add('active');
+                const targetContent = document.getElementById(targetTab + '-tab');
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
 
                 // Save the active tab to localStorage for persistence
                 localStorage.setItem('activeProfileTab', targetTab);
@@ -515,7 +411,7 @@ include 'includes/header.php';
         // Restore the active tab from localStorage
         const savedTab = localStorage.getItem('activeProfileTab');
         if (savedTab) {
-            const savedTabBtn = document.querySelector(`[data-tab="${savedTab}"]`);
+            const savedTabBtn = document.querySelector(`.tab-minimal[data-tab="${savedTab}"]`);
             const savedTabContent = document.getElementById(savedTab + '-tab');
 
             if (savedTabBtn && savedTabContent) {

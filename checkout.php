@@ -131,7 +131,7 @@ include 'includes/header.php';
 <!-- Modern Checkout Styles -->
 <style>
     .checkout-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+        background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
         color: white;
         padding: 3rem 0;
         position: relative;
@@ -157,6 +157,7 @@ include 'includes/header.php';
     .checkout-container {
         padding: 2rem 0;
         min-height: 60vh;
+        background: #fff8ed;
     }
 
     .checkout-card {
@@ -164,67 +165,92 @@ include 'includes/header.php';
         border-radius: 20px;
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: var(--shadow-lg);
-        border: 1px solid var(--border-color);
-        transition: var(--transition);
+        box-shadow: 0 8px 24px rgba(211, 174, 119, 0.1);
+        border: 2px solid rgba(211, 174, 119, 0.15);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .checkout-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--color-gold), var(--color-gold-dark));
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .checkout-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(211, 174, 119, 0.15);
+        border-color: var(--color-gold);
+    }
+
+    .checkout-card:hover::before {
+        opacity: 1;
     }
 
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         font-weight: 700;
-        color: var(--dark-color);
+        color: var(--color-gold-dark);
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 3px solid var(--primary-color);
+        border-bottom: 3px solid var(--color-gold);
         position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
     }
 
-    .section-title::before {
-        content: '';
-        position: absolute;
-        bottom: -3px;
-        left: 0;
-        width: 60px;
-        height: 3px;
-        background: var(--primary-hover);
+    .section-title i {
+        font-size: 1.5rem;
+        color: var(--color-gold);
     }
 
     .custom-form-control {
-        border: 2px solid var(--border-color);
+        border: 2px solid rgba(211, 174, 119, 0.3);
         border-radius: 12px;
-        padding: 0.875rem 1rem;
-        transition: var(--transition);
+        padding: 1rem 1.25rem;
+        transition: all 0.3s ease;
         font-size: 1rem;
-        background: var(--secondary-color);
+        background: #fffdf6;
+        color: #1a1a1a;
     }
 
     .custom-form-control:focus {
-        border-color: var(--primary-color);
+        border-color: var(--color-gold);
         background: white;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        box-shadow: 0 0 0 4px rgba(211, 174, 119, 0.15);
         outline: none;
     }
 
     .custom-form-label {
         font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 0.5rem;
+        color: var(--color-gold-dark);
+        margin-bottom: 0.75rem;
         font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .custom-form-label i {
+        color: var(--color-gold);
     }
 
     .shipping-location-box,
     .payment-method-box {
-        border: 2px solid var(--border-color);
-        border-radius: 15px;
-        padding: 1.25rem;
+        border: 2px solid rgba(211, 174, 119, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
         cursor: pointer;
-        transition: var(--transition);
-        background: white;
+        transition: all 0.3s ease;
+        background: #fffdf6;
         position: relative;
         overflow: hidden;
     }
@@ -237,8 +263,8 @@ include 'includes/header.php';
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
-        transition: var(--transition);
+        background: linear-gradient(90deg, transparent, rgba(211, 174, 119, 0.08), transparent);
+        transition: all 0.5s ease;
     }
 
     .shipping-location-box:hover::before,
@@ -248,24 +274,25 @@ include 'includes/header.php';
 
     .shipping-location-box:hover,
     .payment-method-box:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
+        border-color: var(--color-gold);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(211, 174, 119, 0.15);
+        background: white;
     }
 
     .shipping-location-box.active,
     .payment-method-box.active {
-        border-color: var(--primary-color);
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(99, 102, 241, 0.02));
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        transform: translateY(-2px);
+        border-color: var(--color-gold);
+        background: linear-gradient(135deg, rgba(211, 174, 119, 0.1), rgba(211, 174, 119, 0.05));
+        box-shadow: 0 0 0 4px rgba(211, 174, 119, 0.15);
+        transform: translateY(-3px);
     }
 
     .payment-details {
         display: none;
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        border: 2px solid var(--primary-color);
-        border-radius: 15px;
+        background: linear-gradient(135deg, #fffdf6, #fff8ed);
+        border: 2px solid var(--color-gold);
+        border-radius: 16px;
         margin-top: 1.5rem;
         padding: 1.5rem;
         position: relative;
@@ -278,7 +305,7 @@ include 'includes/header.php';
         left: 20px;
         width: 20px;
         height: 20px;
-        background: var(--primary-color);
+        background: var(--color-gold);
         transform: rotate(45deg);
     }
 
@@ -307,23 +334,23 @@ include 'includes/header.php';
     }
 
     .payment-number-display {
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
         color: white;
-        padding: 1rem;
+        padding: 1.25rem;
         border-radius: 12px;
         font-size: 1.25rem;
         font-weight: 700;
         text-align: center;
-        border: 3px solid var(--primary-hover);
-        box-shadow: var(--shadow-md);
+        border: 3px solid var(--color-gold-light);
+        box-shadow: 0 4px 16px rgba(211, 174, 119, 0.3);
     }
 
     .order-summary-card {
-        background: white;
+        background: linear-gradient(135deg, #fffdf6 0%, white 100%);
         border-radius: 20px;
         padding: 2rem;
-        box-shadow: var(--shadow-lg);
-        border: 1px solid var(--border-color);
+        box-shadow: 0 8px 24px rgba(211, 174, 119, 0.12);
+        border: 2px solid rgba(211, 174, 119, 0.2);
         position: sticky;
         top: 100px;
     }
@@ -333,35 +360,41 @@ include 'includes/header.php';
         align-items: center;
         gap: 1rem;
         padding: 1rem;
-        background: var(--secondary-color);
+        background: #fffdf6;
         border-radius: 12px;
         margin-bottom: 1rem;
-        border: 1px solid var(--border-color);
+        border: 1px solid rgba(211, 174, 119, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .cart-item-mini:hover {
+        border-color: var(--color-gold);
+        box-shadow: 0 4px 12px rgba(211, 174, 119, 0.1);
     }
 
     .cart-item-mini img {
         width: 60px;
         height: 60px;
         object-fit: cover;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        border: 2px solid rgba(211, 174, 119, 0.2);
     }
 
     .cart-item-details h6 {
         font-weight: 600;
-        color: var(--dark-color);
+        color: #1a1a1a;
         margin: 0 0 0.25rem 0;
         font-size: 0.95rem;
     }
 
     .cart-item-details small {
-        color: var(--light-text);
+        color: #64748b;
         font-size: 0.85rem;
     }
 
     .cart-item-price {
         font-weight: 700;
-        color: var(--primary-color);
+        color: var(--color-gold-dark);
         font-size: 1rem;
     }
 
@@ -370,23 +403,25 @@ include 'includes/header.php';
         justify-content: space-between;
         align-items: center;
         padding: 0.75rem 0;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid rgba(211, 174, 119, 0.2);
+        font-size: 1rem;
     }
 
     .summary-row:last-child {
         border-bottom: none;
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+        background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
         color: white;
-        padding: 1rem;
+        padding: 1.25rem;
         border-radius: 12px;
         margin-top: 1rem;
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         font-weight: 700;
+        box-shadow: 0 4px 16px rgba(211, 174, 119, 0.3);
     }
 
     .place-order-btn {
         width: 100%;
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+        background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
         color: white;
         border: none;
         padding: 1.25rem 2rem;
@@ -394,9 +429,10 @@ include 'includes/header.php';
         font-weight: 700;
         font-size: 1.1rem;
         margin-top: 1.5rem;
-        transition: var(--transition);
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 4px 16px rgba(211, 174, 119, 0.3);
     }
 
     .place-order-btn::before {
@@ -407,7 +443,7 @@ include 'includes/header.php';
         width: 100%;
         height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: var(--transition);
+        transition: all 0.5s ease;
     }
 
     .place-order-btn:hover::before {
@@ -416,7 +452,8 @@ include 'includes/header.php';
 
     .place-order-btn:hover {
         transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 8px 24px rgba(211, 174, 119, 0.4);
+        background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
     }
 
     .progress-steps {
@@ -434,37 +471,42 @@ include 'includes/header.php';
     }
 
     .step-circle {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
-        background: var(--border-color);
-        color: var(--light-text);
+        background: rgba(211, 174, 119, 0.2);
+        color: var(--color-gold-dark);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
-        transition: var(--transition);
+        font-weight: 700;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(211, 174, 119, 0.3);
     }
 
     .step.active .step-circle {
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark));
         color: white;
+        border-color: var(--color-gold-dark);
+        box-shadow: 0 4px 12px rgba(211, 174, 119, 0.3);
     }
 
     .step.completed .step-circle {
-        background: #10b981;
+        background: linear-gradient(135deg, #10b981, #059669);
         color: white;
+        border-color: #059669;
     }
 
     .step-line {
         width: 60px;
-        height: 2px;
-        background: var(--border-color);
+        height: 3px;
+        background: rgba(211, 174, 119, 0.3);
         margin: 0 1rem;
+        border-radius: 2px;
     }
 
     .step.completed .step-line {
-        background: #10b981;
+        background: linear-gradient(90deg, #10b981, #059669);
     }
 
     .alert-custom {
@@ -496,6 +538,23 @@ include 'includes/header.php';
 
     .breadcrumb-custom .breadcrumb-item.active {
         color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Custom Badge Styles */
+    .badge.bg-primary {
+        background: linear-gradient(135deg, var(--color-gold), var(--color-gold-dark)) !important;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .badge.bg-secondary {
+        background: linear-gradient(135deg, #64748b, #475569) !important;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
     }
 
     /* Form Validation Styles */

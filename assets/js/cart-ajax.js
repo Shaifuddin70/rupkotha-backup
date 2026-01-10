@@ -8,7 +8,22 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const badges = document.querySelectorAll('.cart-badge');
+                    let badges = document.querySelectorAll('.cart-badge');
+                    
+                    // If no badges exist, create them
+                    if (badges.length === 0) {
+                        const cartLinks = document.querySelectorAll('a[href="cart"], a[href*="cart"]');
+                        cartLinks.forEach(link => {
+                            if (link.querySelector('.cart-badge') === null) {
+                                const badge = document.createElement('span');
+                                badge.className = 'cart-badge';
+                                link.classList.add('position-relative');
+                                link.appendChild(badge);
+                            }
+                        });
+                        badges = document.querySelectorAll('.cart-badge');
+                    }
+                    
                     badges.forEach(badge => {
                         badge.textContent = data.count;
                         badge.style.display = data.count > 0 ? 'flex' : 'none';

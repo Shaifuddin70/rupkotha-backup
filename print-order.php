@@ -1,321 +1,515 @@
 <?php
-// Standalone printable invoice page for customers
+// Print-friendly order invoice page
+
+// STEP 1: Start session and include necessary files FIRST.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once 'includes/db.php';
+require_once 'includes/functions.php';
 
-require_once __DIR__ . '/includes/db.php';
-require_once __DIR__ . '/includes/functions.php';
-
-// Ensure logged in
+// STEP 2: Authentication and Authorization Checks.
+// Redirect if not logged in.
 if (!isLoggedIn()) {
-    redirect('login?redirect=orders');
+    redirect('login?redirect=profile');
 }
 
-// Validate order id and ownership
-$orderId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-if (!$orderId) {
-    redirect('orders');
+// Get Order ID from URL and validate it.
+$order_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$order_id) {
+    $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Invalid order ID.'];
+    redirect('profile');
 }
 
-$userId = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 
-// Fetch settings (company info)
-$settings_stmt = $pdo->query("SELECT * FROM settings LIMIT 1");
-$settings = $settings_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-$companyName = $settings['company_name'] ?? 'Rupkotha';
-$companyLogo = !empty($settings['logo']) ? 'admin/assets/uploads/' . esc_html($settings['logo']) : 'assets/images/logo.jpg';
+// --- DATA FETCHING ---
 
-// Fetch order and verify owner
+// 1. Fetch the main order details and verify ownership.
 $order_stmt = $pdo->prepare(
-    "SELECT o.*, u.username, u.email, u.phone, u.address
+    "SELECT o.*, u.username, u.email, u.phone, u.address 
      FROM orders o
      JOIN users u ON o.user_id = u.id
      WHERE o.id = :order_id AND o.user_id = :user_id"
 );
-$order_stmt->execute([':order_id' => $orderId, ':user_id' => $userId]);
+$order_stmt->execute([':order_id' => $order_id, ':user_id' => $user_id]);
 $order = $order_stmt->fetch(PDO::FETCH_ASSOC);
 
+// If order doesn't exist or doesn't belong to the user, redirect them.
 if (!$order) {
-    redirect('orders');
+    $_SESSION['flash_message'] = ['type' => 'danger', 'message' => 'Order not found or you do not have permission to view it.'];
+    redirect('profile');
 }
 
-// Fetch order items
-$items_stmt = $pdo->prepare(
-    "SELECT oi.quantity, oi.price, p.name, p.image
+// 2. Fetch the items associated with this order.
+$order_items_stmt = $pdo->prepare(
+    "SELECT oi.quantity, oi.price, p.name, p.image 
      FROM order_items oi
      JOIN products p ON oi.product_id = p.id
      WHERE oi.order_id = :order_id"
 );
-$items_stmt->execute([':order_id' => $orderId]);
-$items = $items_stmt->fetchAll(PDO::FETCH_ASSOC);
+$order_items_stmt->execute([':order_id' => $order_id]);
+$order_items = $order_items_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Calculate subtotal from items
 $subtotal = 0;
-foreach ($items as $it) {
-    $subtotal += (float)$it['price'] * (int)$it['quantity'];
+foreach ($order_items as $item) {
+    $subtotal += $item['price'] * $item['quantity'];
 }
-$shipping = (float)$order['total_amount'] - $subtotal;
+$shipping_cost = $order['total_amount'] - $subtotal;
 
+// Get company settings for invoice header
+$settings_stmt = $pdo->query("SELECT * FROM settings LIMIT 1");
+$settings = $settings_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+$companyName = $settings['company_name'] ?? 'Rupkotha';
+$companyLogo = !empty($settings['logo']) ? 'admin/assets/uploads/' . esc_html($settings['logo']) : 'assets/images/default-logo.png';
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice #<?= esc_html($order['id']) ?> - <?= esc_html($companyName) ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Order #<?= esc_html($order['id']) ?> - <?= esc_html($companyName) ?></title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        :root {
-            --border: #d1d5db;
-            --text: #111827;
-        }
-
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-            color: var(--text);
-            background: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: white;
+            padding: 2rem;
+            line-height: 1.6;
         }
 
         .invoice-container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 24px;
+            background: white;
         }
 
         .invoice-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .company-info {
+            flex: 1;
         }
 
-        .brand img {
-            height: 48px;
-            width: auto;
+        .company-logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
         }
 
-        .title {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 800;
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
         }
 
-        .meta {
-            margin-top: 4px;
-            font-size: 14px;
+        .invoice-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
         }
 
-        .grid {
+        .invoice-meta {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .order-info {
+            text-align: right;
+        }
+
+        .order-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #bea163;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-date {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #92400e;
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: #991b1b;
+        }
+
+        .invoice-sections {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
-        .card {
-            border: 1px solid var(--border);
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .section-content {
+            font-size: 0.95rem;
+            color: #1a1a1a;
+        }
+
+        .section-content p {
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content strong {
+            color: #1a1a1a;
+        }
+
+        .items-section {
+            margin-bottom: 2rem;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .items-table thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .items-table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+        }
+
+        .items-table td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .items-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .item-product {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
             border-radius: 8px;
-            padding: 16px;
+            border: 1px solid #e2e8f0;
         }
 
-        .card h3 {
-            margin: 0 0 12px;
-            font-size: 16px;
+        .item-name {
+            font-weight: 600;
+            color: #1a1a1a;
         }
 
-        .row {
+        .item-price,
+        .item-quantity,
+        .item-total {
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+
+        .item-total {
+            font-weight: 700;
+            color: #bea163;
+        }
+
+        .totals-section {
+            margin-left: auto;
+            max-width: 300px;
+        }
+
+        .total-row {
             display: flex;
             justify-content: space-between;
-            margin: 6px 0;
-            font-size: 14px;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
         }
 
-        .label {
-            color: #374151;
+        .total-row:last-child {
+            border-bottom: none;
         }
 
-        .value {
+        .total-row.grand-total {
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .total-row.grand-total .total-value {
+            color: #bea163;
+            font-size: 1.25rem;
+        }
+
+        .total-label {
+            color: #64748b;
+        }
+
+        .total-value {
+            color: #1a1a1a;
             font-weight: 600;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-        }
-
-        thead th {
-            text-align: left;
-            border-bottom: 2px solid var(--border);
-            padding: 10px 8px;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: .03em;
-        }
-
-        tbody td {
-            border-bottom: 1px solid var(--border);
-            padding: 10px 8px;
-            font-size: 14px;
-            vertical-align: top;
-        }
-
-        .totals {
-            margin-top: 12px;
-            width: 100%;
-            max-width: 400px;
-            margin-left: auto;
-        }
-
-        .totals .row {
-            margin: 4px 0;
-        }
-
-        .grand {
-            font-size: 18px;
-            border-top: 2px solid var(--border);
-            padding-top: 8px;
-            margin-top: 6px;
-        }
-
-        .footer {
+        .invoice-footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
             text-align: center;
-            font-size: 12px;
-            margin-top: 24px;
-            color: #6b7280;
+            font-size: 0.875rem;
+            color: #64748b;
         }
 
         @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
+            body {
+                padding: 0;
+            }
+
+            .invoice-container {
+                max-width: 100%;
             }
 
             @page {
-                size: auto;
-                margin: 12mm;
+                size: A4;
+                margin: 1.5cm;
             }
 
             .no-print {
                 display: none !important;
             }
+        }
 
-            html,
-            body {
-                height: auto !important;
-                overflow: visible !important;
+        @media screen {
+            .print-button {
+                position: fixed;
+                top: 2rem;
+                right: 2rem;
+                padding: 0.75rem 1.5rem;
+                background: #bea163;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(190, 161, 99, 0.3);
+                z-index: 1000;
             }
-        }
 
-        .actions {
-            text-align: right;
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            display: inline-block;
-            background: #111827;
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .btn:hover {
-            opacity: .9;
+            .print-button:hover {
+                background: #a68a4f;
+            }
         }
     </style>
 </head>
-
 <body>
+    <button class="print-button no-print" onclick="window.print()">
+        <i class="bi bi-printer"></i> Print Invoice
+    </button>
+
     <div class="invoice-container">
-        <div class="actions no-print">
-            <a href="javascript:window.print()" class="btn">Print</a>
+        <!-- Invoice Header -->
+        <div class="invoice-header">
+            <div class="company-info">
+                <?php if (file_exists($companyLogo)): ?>
+                    <img src="<?= esc_html($companyLogo) ?>" alt="<?= esc_html($companyName) ?>" class="company-logo">
+                <?php endif; ?>
+                <div class="company-name"><?= esc_html($companyName) ?></div>
+                <div class="invoice-title">Invoice</div>
+            </div>
+            <div class="order-info">
+                <div class="order-number">Order #<?= esc_html($order['id']) ?></div>
+                <div class="order-date"><?= format_date($order['created_at'], 'F d, Y') ?></div>
+                <span class="status-badge status-<?= strtolower($order['status']) ?>">
+                    <?= esc_html($order['status']) ?>
+                </span>
+            </div>
         </div>
 
-        <div class="invoice-header">
-            <div class="brand">
-                <img src="<?= $companyLogo ?>" alt="<?= esc_html($companyName) ?>" />
-                <div>
-                    <h1 class="title">INVOICE</h1>
-                    <div class="meta">Order #<?= esc_html($order['id']) ?> • <?= format_date($order['created_at']) ?></div>
+        <!-- Customer & Shipping Info -->
+        <div class="invoice-sections">
+            <div>
+                <div class="section-title">Bill To</div>
+                <div class="section-content">
+                    <p><strong><?= esc_html($order['username']) ?></strong></p>
+                    <p><?= esc_html($order['email']) ?></p>
+                    <p><?= esc_html($order['phone']) ?></p>
                 </div>
             </div>
-            <div style="text-align:right; font-size:14px;">
-                <div><strong>Status:</strong> <?= esc_html($order['status']) ?></div>
-                <div><strong>Method:</strong> <?= ucfirst(esc_html($order['payment_method'])) ?></div>
+            <div>
+                <div class="section-title">Ship To</div>
+                <div class="section-content">
+                    <p><strong><?= esc_html($order['username']) ?></strong></p>
+                    <p><?= esc_html($order['address']) ?></p>
+                    <p><?= esc_html($order['phone']) ?></p>
+                </div>
             </div>
         </div>
 
-        <div class="grid">
-            <div class="card">
-                <h3>Sold To</h3>
-                <div class="row"><span class="label">Name</span><span class="value"><?= esc_html($order['username']) ?></span></div>
-                <div class="row"><span class="label">Email</span><span class="value"><?= esc_html($order['email']) ?></span></div>
-                <div class="row"><span class="label">Phone</span><span class="value"><?= esc_html($order['phone']) ?></span></div>
-            </div>
-            <div class="card">
-                <h3>Ship To</h3>
-                <div class="row"><span class="label">Address</span><span class="value" style="max-width: 60%; text-align:right;"><?= esc_html($order['address']) ?></span></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>Items</h3>
-            <table>
+        <!-- Order Items -->
+        <div class="items-section">
+            <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width:45%;">Product</th>
-                        <th style="width:15%;">Unit Price</th>
-                        <th style="width:10%;">Qty</th>
-                        <th style="width:15%; text-align:right;">Total</th>
+                        <th>Product</th>
+                        <th style="text-align: right;">Price</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: right;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($items as $it): ?>
+                    <?php foreach ($order_items as $item): ?>
                         <tr>
-                            <td><?= esc_html($it['name']) ?></td>
-                            <td><?= formatPrice($it['price']) ?></td>
-                            <td><?= (int)$it['quantity'] ?></td>
-                            <td style="text-align:right; font-weight:600;"><?= formatPrice($it['price'] * $it['quantity']) ?></td>
+                            <td>
+                                <div class="item-product">
+                                    <img src="admin/assets/uploads/<?= esc_html($item['image']) ?>"
+                                        alt="<?= esc_html($item['name']) ?>"
+                                        class="item-image">
+                                    <span class="item-name"><?= esc_html($item['name']) ?></span>
+                                </div>
+                            </td>
+                            <td style="text-align: right;" class="item-price"><?= formatPrice($item['price']) ?></td>
+                            <td style="text-align: center;" class="item-quantity"><?= esc_html($item['quantity']) ?></td>
+                            <td style="text-align: right;" class="item-total"><?= formatPrice($item['price'] * $item['quantity']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
 
-            <div class="totals">
-                <div class="row"><span class="label">Subtotal</span><span class="value"><?= formatPrice($subtotal) ?></span></div>
-                <div class="row"><span class="label">Shipping</span><span class="value"><?= formatPrice($shipping) ?></span></div>
-                <div class="row grand"><span class="label">Grand Total</span><span class="value"><?= formatPrice($order['total_amount']) ?></span></div>
+        <!-- Totals -->
+        <div class="totals-section">
+            <div class="total-row">
+                <span class="total-label">Subtotal</span>
+                <span class="total-value"><?= formatPrice($subtotal) ?></span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">Shipping</span>
+                <span class="total-value"><?= formatPrice($shipping_cost) ?></span>
+            </div>
+            <div class="total-row grand-total">
+                <span class="total-label">Total</span>
+                <span class="total-value"><?= formatPrice($order['total_amount']) ?></span>
             </div>
         </div>
 
-        <div class="footer">
-            <p>Thank you for your purchase!</p>
-            <p>This invoice was generated on <?= date('F j, Y \a\t g:i A') ?>.</p>
+        <!-- Footer -->
+        <div class="invoice-footer">
+            <p>Thank you for your business!</p>
+            <p>This is a computer-generated invoice. No signature required.</p>
         </div>
     </div>
 
     <script>
-        // Auto-open print in a new tab
-        window.addEventListener('load', function() {
-            window.print();
+        // Auto-print when page loads
+        window.onload = function() {
+            // Small delay to ensure page is fully loaded
+            setTimeout(function() {
+                window.print();
+            }, 250);
+        };
+
+        // Close the window/tab when print dialog is closed
+        // This works by detecting when the print dialog is closed
+        let beforePrint = false;
+        
+        window.addEventListener('beforeprint', function() {
+            beforePrint = true;
+        });
+
+        window.addEventListener('afterprint', function() {
+            if (beforePrint) {
+                // Close the window/tab after print dialog is closed
+                window.close();
+                
+                // Fallback: if window.close() doesn't work (some browsers block it),
+                // try to redirect back or show a message
+                setTimeout(function() {
+                    if (!document.hidden) {
+                        // If window is still open, try to close it
+                        window.close();
+                    }
+                }, 100);
+            }
+        });
+
+        // Alternative method: Listen for focus events after print
+        let printInProgress = false;
+        
+        window.addEventListener('beforeprint', function() {
+            printInProgress = true;
+        });
+
+        window.addEventListener('afterprint', function() {
+            printInProgress = false;
+            // Close after a short delay to ensure print is complete
+            setTimeout(function() {
+                window.close();
+            }, 500);
+        });
+
+        // Handle cases where afterprint might not fire
+        window.addEventListener('focus', function() {
+            if (printInProgress) {
+                setTimeout(function() {
+                    window.close();
+                }, 1000);
+            }
         });
     </script>
 </body>
-
 </html>

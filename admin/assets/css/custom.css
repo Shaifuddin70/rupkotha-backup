@@ -576,7 +576,10 @@ oder-detaisl */
 }
 
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-gradient: linear-gradient(135deg, #bea163 0%, #a68a4f 100%);
+    --primary-color: #bea163;
+    --primary-light: #d4b885;
+    --primary-dark: #a68a4f;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
@@ -926,7 +929,10 @@ oder-detaisl */
    Categories Page Styles (migrated from categories.php)
    ============================== */
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-gradient: linear-gradient(135deg, #bea163 0%, #a68a4f 100%);
+    --primary-color: #bea163;
+    --primary-light: #d4b885;
+    --primary-dark: #a68a4f;
     --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);

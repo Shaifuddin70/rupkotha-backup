@@ -16,9 +16,19 @@
   --color-bg-secondary: #ECECFD;
   --color-bg-sidebar: #FFFFFF;
   --color-border-hr: #E2E8F0;
-  --color-hover-primary: #695CFE;
+  --color-hover-primary: #bea163;
   --color-hover-secondary: #e2e2fb;
   --color-shadow: rgba(0, 0, 0, 0.05);
+  
+  /* Primary color and variations */
+  --primary-color: #bea163;
+  --primary-light: #d4b885;
+  --primary-dark: #a68a4f;
+  --color-gold: #bea163;
+  --color-gold-light: #d4b885;
+  --color-gold-dark: #a68a4f;
+  --gold-gradient: linear-gradient(135deg, #bea163, #a68a4f);
+  --gold-gradient-light: linear-gradient(135deg, #d4b885, #bea163);
 }
 
 body.dark-theme {
@@ -251,7 +261,7 @@ body.dark-theme {
 }
 
 body.dark-theme .theme-toggle-track {
-  background: #695CFE;
+  background: #bea163;
 }
 
 .theme-toggle-track .theme-toggle-indicator {
