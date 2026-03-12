@@ -110,17 +110,15 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <?php if (empty($products)): ?>
                     <div class="col-12">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">
-                                <i class="bi bi-search"></i>
-                            </div>
-                            <h3>No Products Found</h3>
-                            <p>We couldn't find any products in this category.</p>
-                            <a href="all-products.php" class="add-to-cart-btn d-inline-flex">
-                                <i class="bi bi-arrow-left me-2"></i>View All Products
+                        <div class="empty-state-category">
+                            <span class="empty-state-category-icon" aria-hidden="true"><i class="bi bi-inbox"></i></span>
+                            <h3>No products in this category</h3>
+                            <p>This category doesn't have any products yet. Browse all products to find what you need.</p>
+                            <a href="all-products" class="empty-state-category-btn">
+                                <i class="bi bi-grid-3x3-gap me-2"></i>View All Products
                             </a>
                         </div>
                     </div>

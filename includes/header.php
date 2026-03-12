@@ -83,7 +83,7 @@ if (!empty($_SESSION['cart'])) {
                     <img src="<?= esc_html($companyLogo) ?>" alt="<?= esc_html($companyName) ?> Logo" class="brand-logo">
                 </a>
 
-                <!-- Mobile: User & Cart Icons (shown only on mobile) -->
+                <!-- Mobile: icons + menu (hamburger at top right) -->
                 <div class="d-flex align-items-center d-lg-none ms-auto">
                     <?php if (isLoggedIn()): ?>
                         <a class="nav-icon-btn me-2" href="profile">
@@ -95,18 +95,21 @@ if (!empty($_SESSION['cart'])) {
                         </a>
                     <?php endif; ?>
 
-                    <a class="nav-icon-btn me-3 position-relative" href="cart">
+                    <a class="nav-icon-btn me-2 position-relative" href="cart">
                         <i class="bi bi-bag fs-4"></i>
                         <span class="cart-badge" style="display: <?= $cart_items_count > 0 ? 'flex' : 'none' ?>;"><?= $cart_items_count > 0 ? $cart_items_count : '' ?></span>
                     </a>
 
-                    <button class="mobile-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="bi bi-list fs-4"></i>
-                    </button>
+                    <label class="hamburger mobile-menu-btn" for="hamburger-cb" aria-label="Toggle navigation" role="button" tabindex="0">
+                        <input type="checkbox" id="hamburger-cb" aria-controls="mainNavbar" autocomplete="off">
+                        <svg viewBox="0 0 32 32">
+                            <path class="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"></path>
+                            <path class="line" d="M7 16 27 16"></path>
+                        </svg>
+                    </label>
                 </div>
 
-                <!-- Navbar Content -->
+                <!-- Navbar Content (desktop: in same row; mobile: drawer) -->
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <!-- Navigation Links (Desktop - Centered) -->
                     <ul class="navbar-nav mx-auto d-none d-lg-flex align-items-center">
@@ -192,7 +195,7 @@ if (!empty($_SESSION['cart'])) {
                             <div class="dropdown user-dropdown">
                                 <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-person-circle me-2"></i>
-                                    <?= esc_html($_SESSION['user_name'] ?? 'User') ?>
+                                    <?= esc_html(explode(' ', $_SESSION['user_name'] ?? 'User')[0]) ?>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
                                     <li><a class="dropdown-item" href="profile">
@@ -224,6 +227,7 @@ if (!empty($_SESSION['cart'])) {
                 </div>
             </div>
         </nav>
+        <div class="nav-drawer-overlay" id="navDrawerOverlay" aria-hidden="true"></div>
     </header>
     <!-- End of Header -->
 
@@ -236,6 +240,83 @@ if (!empty($_SESSION['cart'])) {
             } else {
                 header.classList.remove('scrolled');
             }
+        });
+        // Hamburger checkbox: sync with Bootstrap collapse; header height for drawer
+        document.addEventListener('DOMContentLoaded', function() {
+            function setHeaderHeight() {
+                var h = document.querySelector('.custom-header');
+                if (h) document.documentElement.style.setProperty('--header-height', h.offsetHeight + 'px');
+            }
+            setHeaderHeight();
+            window.addEventListener('resize', setHeaderHeight);
+
+            var cb = document.getElementById('hamburger-cb');
+            var collapseEl = document.getElementById('mainNavbar');
+            if (!cb || !collapseEl) return;
+            var bsCollapse = typeof bootstrap !== 'undefined' && bootstrap.Collapse ? bootstrap.Collapse.getOrCreateInstance(collapseEl) : null;
+            function setDrawerOpen(open) {
+                if (open) {
+                    collapseEl.classList.add('nav-drawer-open');
+                    var o = document.getElementById('navDrawerOverlay');
+                    if (o) { o.classList.add('show'); o.setAttribute('aria-hidden', 'false'); }
+                } else {
+                    collapseEl.classList.remove('nav-drawer-open');
+                    var o = document.getElementById('navDrawerOverlay');
+                    if (o) { o.classList.remove('show'); o.setAttribute('aria-hidden', 'true'); }
+                }
+            }
+            cb.addEventListener('change', function() {
+                setDrawerOpen(cb.checked);
+                if (bsCollapse) {
+                    if (cb.checked) bsCollapse.show(); else bsCollapse.hide();
+                }
+            });
+            collapseEl.addEventListener('show.bs.collapse', function() {
+                cb.checked = true;
+                setDrawerOpen(true);
+            });
+            collapseEl.addEventListener('hidden.bs.collapse', function() {
+                cb.checked = false;
+                setDrawerOpen(false);
+            });
+            var overlay = document.getElementById('navDrawerOverlay');
+            if (overlay && bsCollapse) {
+                overlay.addEventListener('click', function() { bsCollapse.hide(); });
+            }
+            // Ensure closed state on load (drawer is closed by CSS default; sync checkbox/overlay/Bootstrap)
+            function forceMenuClosed() {
+                cb.checked = false;
+                collapseEl.classList.remove('nav-drawer-open');
+                if (bsCollapse) bsCollapse.hide();
+                var o = document.getElementById('navDrawerOverlay');
+                if (o) { o.classList.remove('show'); o.setAttribute('aria-hidden', 'true'); }
+            }
+            forceMenuClosed();
+        });
+
+        // Categories dropdown: open on hover (desktop only)
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth < 992) return;
+            var dropdowns = document.querySelectorAll('.navbar-nav .nav-item.dropdown');
+            dropdowns.forEach(function(el) {
+                var toggle = el.querySelector('[data-bs-toggle="dropdown"]');
+                var menu = el.querySelector('.dropdown-menu');
+                if (!toggle || !menu) return;
+                var bsDropdown = typeof bootstrap !== 'undefined' && bootstrap.Dropdown ? bootstrap.Dropdown.getOrCreateInstance(toggle) : null;
+                if (!bsDropdown) return;
+                var hideTimer = null;
+                function scheduleHide() {
+                    hideTimer = setTimeout(function() { bsDropdown.hide(); }, 120);
+                }
+                function cancelHide() {
+                    if (hideTimer) clearTimeout(hideTimer);
+                    hideTimer = null;
+                }
+                el.addEventListener('mouseenter', function() { cancelHide(); bsDropdown.show(); });
+                el.addEventListener('mouseleave', function() { scheduleHide(); });
+                menu.addEventListener('mouseenter', cancelHide);
+                menu.addEventListener('mouseleave', scheduleHide);
+            });
         });
     </script>
 

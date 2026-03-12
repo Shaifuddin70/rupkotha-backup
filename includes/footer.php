@@ -4,10 +4,9 @@ if (!isset($settings)) {
     $settings_stmt = $pdo->query("SELECT * FROM settings LIMIT 1");
     $settings = $settings_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 }
-if (!isset($categories)) {
-    $categories_stmt = $pdo->query("SELECT id, name FROM categories ORDER BY name LIMIT 5");
-    $categories = $categories_stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+$footer_categories_stmt = $pdo->query("SELECT id, name FROM categories ORDER BY name LIMIT 4");
+$footer_categories = $footer_categories_stmt->fetchAll(PDO::FETCH_ASSOC);
+$total_categories = (int) $pdo->query("SELECT COUNT(id) FROM categories")->fetchColumn();
 ?>
 
 <!-- ======================= FOOTER SECTION ======================= -->
@@ -54,11 +53,11 @@ if (!isset($categories)) {
                             Categories
                         </h4>
                         <ul class="footer-links">
-                            <?php foreach ($categories as $cat): ?>
+                            <?php foreach ($footer_categories as $cat): ?>
                                 <li><a href="category?id=<?= $cat['id'] ?>"><i class="bi bi-arrow-right"></i><?= esc_html($cat['name']) ?></a></li>
                             <?php endforeach; ?>
-                            <?php if (count($categories) < 5): ?>
-                                <li><a href="all-products"><i class="bi bi-plus-circle"></i>View All</a></li>
+                            <?php if ($total_categories > 4): ?>
+                                <li><a href="all-products"><i class="bi bi-plus-circle"></i>and more</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>

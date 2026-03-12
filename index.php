@@ -200,7 +200,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- New Arrivals Section -->
         <section id="new-arrivals" class="section-custom">
             <h2 class="section-title text-center">New Arrivals</h2>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <?php foreach ($new_arrivals as $product): ?>
                     <div class="col">
                         <div class="custom-product-card">
@@ -250,7 +250,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if (!empty($top_selling_products)): ?>
             <section class="section-custom">
                 <h2 class="section-title text-center">Top Selling Products</h2>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
                     <?php foreach ($top_selling_products as $product): ?>
                         <div class="col">
                             <div class="custom-product-card">
@@ -299,13 +299,16 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- All Products Section -->
         <section class="section-custom">
-            <h2 class="section-title text-center">Our Products</h2>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <h2 class="section-title mb-0">Our Products</h2>
+                <a href="all-products" class="btn btn-outline-primary add-to-cart-btn">View All</a>
+            </div>
             <?php if (empty($products)): ?>
                 <div class="text-center">
                     <p class="text-muted fs-5">No products found.</p>
                 </div>
             <?php else: ?>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
                     <?php foreach ($products as $product): ?>
                         <div class="col">
                             <div class="custom-product-card">
@@ -349,7 +352,6 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <a class="btn see-more-btn" href="/all-products">See More Products</a>
             <?php endif; ?>
         </section>
     </div>

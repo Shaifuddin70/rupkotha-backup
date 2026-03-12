@@ -177,7 +177,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <!-- Products Grid -->
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4 fade-in" id="productsGrid">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 fade-in" id="productsGrid">
                 <?php if (empty($products)): ?>
                     <div class="col-12">
                         <div class="empty-state">
@@ -193,7 +193,7 @@ $products = $products_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 <?php else: ?>
                     <?php foreach ($products as $product): ?>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col">
                             <div class="custom-product-card">
                                 <div class="product-image-container">
                                     <?php
