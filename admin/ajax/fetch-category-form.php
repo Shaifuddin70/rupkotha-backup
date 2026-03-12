@@ -1,7 +1,7 @@
 <?php
 // admin/ajax/fetch-category-form.php
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../includes/db.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
 session_start();
 if (!isset($_SESSION['admin_id'])) {

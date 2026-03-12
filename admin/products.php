@@ -171,7 +171,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <table id="productsTable" class="table table-modern">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Sl.</th>
                         <th>Image</th>
                         <th>Product Details</th>
                         <th>Category</th>
@@ -182,10 +182,10 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <?php foreach ($products as $prod): ?>
+                    <?php foreach ($products as $index => $prod): ?>
                         <tr id="product-row-<?= $prod['id'] ?>">
-                            <td data-label="ID">
-                                <span class="fw-bold">#<?= esc_html($prod['id']) ?></span>
+                            <td data-label="Sl.">
+                                <span class="fw-bold"><?= $offset + $index + 1 ?></span>
                             </td>
                             <td data-label="Image">
                                 <img src="assets/uploads/<?= esc_html($prod['image'] ?? 'default.png') ?>"

@@ -8,7 +8,7 @@ if (isset($_SESSION['admin_id'])) {
     exit;
 }
 
-require_once 'includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 require_once 'includes/functions.php'; // Using the new functions file
 
 $error = '';

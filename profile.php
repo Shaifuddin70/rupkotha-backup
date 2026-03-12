@@ -252,19 +252,19 @@ include 'includes/header.php';
 
                         <div class="form-field-minimal">
                             <label for="username">Full Name</label>
-                            <input type="text" id="username" name="username" 
+                            <input type="text" id="username" name="username"
                                 value="<?= esc_html($user['username']) ?>" required>
                         </div>
 
                         <div class="form-field-minimal">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" 
+                            <input type="email" id="email" name="email"
                                 value="<?= esc_html($user['email']) ?>" required>
                         </div>
 
                         <div class="form-field-minimal">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" 
+                            <input type="tel" id="phone" name="phone"
                                 value="<?= esc_html($user['phone']) ?>" required>
                         </div>
 
@@ -320,7 +320,7 @@ include 'includes/header.php';
                             <span class="badge-minimal"><?= count($recent_orders) ?></span>
                         <?php endif; ?>
                     </div>
-                    
+
                     <?php if (empty($recent_orders)): ?>
                         <div class="empty-state-minimal">
                             <i class="bi bi-cart-x"></i>
@@ -368,7 +368,7 @@ include 'includes/header.php';
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                        
+
                         <div class="orders-footer-minimal">
                             <p>Showing <?= count($recent_orders) ?> of <?= $total_orders ?> orders</p>
                             <a href="orders" class="btn-link-minimal">

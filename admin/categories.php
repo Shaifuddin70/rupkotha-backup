@@ -146,7 +146,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY id DESC")->fetchAll
             <table class="table" id="categoriesTable">
                 <thead>
                     <tr>
-                        <th><i class="bi bi-hash me-2"></i>ID</th>
+                        <th><i class="bi bi-hash me-2"></i>Sl.</th>
                         <th><i class="bi bi-tag me-2"></i>Name</th>
                         <th><i class="bi bi-calendar-plus me-2"></i>Created</th>
                         <th><i class="bi bi-calendar-check me-2"></i>Updated</th>
@@ -163,9 +163,9 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY id DESC")->fetchAll
                             </td>
                         </tr>
                     <?php endif; ?>
-                    <?php foreach ($categories as $cat): ?>
+                    <?php foreach ($categories as $index => $cat): ?>
                         <tr id="category-row-<?= $cat['id'] ?>" class="fade-in">
-                            <td><span class="category-id">#<?= str_pad($cat['id'], 3, '0', STR_PAD_LEFT) ?></span></td>
+                            <td><span class="category-id"><?= $index + 1 ?></span></td>
                             <td class="category-name-cell" data-id="<?= $cat['id'] ?>">
                                 <span class="category-name"><?= esc_html($cat['name']) ?></span>
                             </td>

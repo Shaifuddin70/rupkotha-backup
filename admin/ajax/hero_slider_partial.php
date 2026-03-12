@@ -1,7 +1,7 @@
 <?php
 // ajax/hero_slider_partial.php
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../includes/db.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
 // Pagination
 $limit = 5;
@@ -22,7 +22,7 @@ $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <table class="table table-modern align-middle mb-0">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>Sl.</th>
             <th>Image</th>
             <th>Title</th>
             <th>Product Linked</th>
@@ -40,9 +40,9 @@ $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </td>
             </tr>
         <?php else: ?>
-            <?php foreach ($hero_items as $item): ?>
+            <?php foreach ($hero_items as $index => $item): ?>
                 <tr id="hero-item-row-<?= $item['id'] ?>">
-                    <td><?= esc_html($item['id']) ?></td>
+                    <td><?= $offset + $index + 1 ?></td>
                     <td>
                         <img src="assets/uploads/<?= esc_html($item['image']) ?>" alt="<?= esc_html($item['title']) ?>" class="product-image">
                     </td>
@@ -53,9 +53,7 @@ $hero_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <input class="status-toggle" type="checkbox" data-id="<?= $item['id'] ?>" <?= $item['is_active'] ? 'checked' : '' ?>>
                             <span class="slider"></span>
                         </label>
-                        <span class="badge badge-modern <?= $item['is_active'] ? 'badge-status' : 'badge-deleted' ?>">
-                            <?= $item['is_active'] ? 'Active' : 'Inactive' ?>
-                        </span>
+                        <span class="badge badge-modern <?= $item['is_active'] ? 'badge-status' : 'badge-deleted' ?>"></span>
                     </td>
                     <td>
                         <div class="action-buttons">

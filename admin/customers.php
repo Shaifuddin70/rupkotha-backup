@@ -36,7 +36,7 @@ $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <table id="customersTable" class="table table-modern">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Sl.</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
@@ -54,9 +54,9 @@ $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                     </tr>
                 <?php else: ?>
-                    <?php foreach ($customers as $customer): ?>
+                    <?php foreach ($customers as $index => $customer): ?>
                         <tr>
-                            <td><?= esc_html($customer['id']) ?></td>
+                            <td><?= $offset + $index + 1 ?></td>
                             <td><?= esc_html($customer['username']) ?></td>
                             <td><?= esc_html($customer['email']) ?></td>
                             <td><?= esc_html($customer['phone'] ?? 'N/A') ?></td>

@@ -65,11 +65,81 @@ $subtotal = 0;
 foreach ($order_items as $item) {
     $subtotal += $item['price'] * $item['quantity'];
 }
+$settings_row = $pdo->query("SELECT company_name FROM settings LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+$company_name = $settings_row['company_name'] ?? 'Rupkotha';
 ?>
 
 
+<div class="admin-order-details-page">
+<!-- ========== PRINT-ONLY INVOICE (template layout, shown only when printing) ========== -->
+<div class="invoice-print-document">
+    <header class="invoice-print-header">
+        <div class="invoice-print-brand">
+            <strong><?= esc_html(strtoupper($company_name)) ?></strong><br>
+            <span class="invoice-print-brand-sub">company</span>
+        </div>
+        <h1 class="invoice-print-title">INVOICE</h1>
+    </header>
+
+    <div class="invoice-print-info-box">
+        <div class="invoice-print-col invoice-print-issued-to">
+            <strong>ISSUED TO:</strong><br>
+            <?= esc_html($order['username']) ?><br>
+            <?= esc_html($order['email']) ?><br>
+            <?= esc_html($order['phone']) ?><br>
+            <?= esc_html($order['address']) ?>
+        </div>
+        <div class="invoice-print-col invoice-print-meta">
+            <strong>INVOICE NO:</strong> <?= esc_html($order['id']) ?><br>
+            <strong>DATE:</strong> <?= format_date($order['created_at'], 'd.m.Y') ?><br>
+            <strong>STATUS:</strong> <?= esc_html($order['status']) ?>
+        </div>
+    </div>
+
+    <div class="invoice-print-payment">
+        <strong>PAYMENT INFO:</strong><br>
+        <?= ucfirst(esc_html($order['payment_method'])) ?>
+        <?php if (!empty($order['payment_trx_id'])): ?><br>Transaction ID: <?= esc_html($order['payment_trx_id']) ?><?php endif; ?>
+        <?php if (!empty($order['payment_sender_no'])): ?><br>Sender: <?= esc_html($order['payment_sender_no']) ?><?php endif; ?>
+    </div>
+
+    <table class="invoice-print-table">
+        <thead>
+            <tr>
+                <th>DESCRIPTION</th>
+                <th>RATE</th>
+                <th>QTY</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($order_items as $item): ?>
+            <tr>
+                <td><?= esc_html($item['name']) ?></td>
+                <td><?= formatPrice($item['price']) ?></td>
+                <td><?= esc_html($item['quantity']) ?></td>
+                <td><?= formatPrice($item['price'] * $item['quantity']) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="invoice-print-summary">
+        <p><strong>SUBTOTAL</strong> <span><?= formatPrice($subtotal) ?></span></p>
+        <p>Shipping <span><?= formatPrice($order['shipping_fee']) ?></span></p>
+        <p class="invoice-print-total"><strong>TOTAL</strong> <span><?= formatPrice($order['total_amount']) ?></span></p>
+    </div>
+
+    <footer class="invoice-print-footer">
+        <strong>THANK YOU</strong><br>
+        <span class="invoice-print-footer-note">This is a computer-generated invoice. Printed on <?= date('F j, Y \a\t g:i A') ?>.</span>
+    </footer>
+</div>
+
+<!-- ========== SCREEN CONTENT (hidden when printing) ========== -->
+<div class="invoice-screen-content">
 <div class="custom-container">
-    <!-- Header Section -->
+    <!-- Header Section (hidden when printing) -->
     <div class="custom-header no-print">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
             <div>
@@ -101,8 +171,8 @@ foreach ($order_items as $item) {
     </div>
 
     <!-- Print Header (visible only when printing) -->
-    <div style="display: none;" class="print-only">
-        <div class="print-header">
+    <div style="display: none;" class="print-only print-header">
+        <div>
             <h1>INVOICE</h1>
             <h2>Order #<?= esc_html($order['id']) ?></h2>
             <p>Date: <?= format_date($order['created_at']) ?></p>
@@ -218,8 +288,8 @@ foreach ($order_items as $item) {
             </div>
         </div>
 
-        <!-- Right Column - Invoice -->
-        <div class="grid-item">
+        <!-- Right Column - Invoice (only this card prints) -->
+        <div class="grid-item invoice-print-card">
             <div class="custom-card">
                 <div class="card-header-custom">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -253,9 +323,9 @@ foreach ($order_items as $item) {
                                                 <?php if (!empty($item['image'])): ?>
                                                     <img src="assets/uploads/<?= esc_html($item['image']) ?>"
                                                         alt="<?= esc_html($item['name']) ?>"
-                                                        class="product-image">
+                                                        class="product-image no-print-image">
                                                 <?php else: ?>
-                                                    <div class="product-image" style="background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                                                    <div class="product-image no-print-image" style="background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
                                                         <i class="bi bi-image" style="color: #94a3b8;"></i>
                                                     </div>
                                                 <?php endif; ?>
@@ -281,8 +351,8 @@ foreach ($order_items as $item) {
                         </table>
                     </div>
 
-                    <!-- Order Summary -->
-                    <div class="no-print">
+                    <!-- Order Summary (visible on screen and in print) -->
+                    <div class="order-summary-block">
                         <h4>Order Summary</h4>
                         <div class="summary-row">
                             <span>Subtotal (<?= count($order_items) ?> items)</span>
@@ -323,13 +393,15 @@ foreach ($order_items as $item) {
     </div>
 
     <!-- Print Footer -->
-    <div style="display: none;" class="print-only">
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 12px; ">
+    <div style="display: none;" class="print-only print-footer">
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 12px;">
             <p>Thank you for your business!</p>
             <p>This is a computer-generated invoice. No signature required.</p>
             <p>Printed on: <?= date('F j, Y \a\t g:i A') ?></p>
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <?php require_once 'includes/footer.php'; ?>

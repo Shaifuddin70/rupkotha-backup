@@ -2,8 +2,8 @@
 // ajax/delete-product.php
 
 // Use __DIR__ to build reliable paths that will not fail.
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../../includes/db.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
 // We'll return JSON responses
 header('Content-Type: application/json');

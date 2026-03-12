@@ -93,7 +93,6 @@ $products = $pdo->query("SELECT id, name FROM products ORDER BY name")->fetchAll
                         <input type="checkbox" name="is_active" checked>
                         <span class="slider"></span>
                     </label>
-                    <span>Active</span>
                 </div>
                 <div class="col-md-3 d-flex align-items-end justify-content-end">
                     <button type="submit" class="btn btn-primary-modern btn-modern" name="add_slider_item">

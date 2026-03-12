@@ -1,6 +1,6 @@
 <?php
 // admin/ajax/toggle_product_status.php
-require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../../includes/db.php';
 
 header('Content-Type: application/json');
 

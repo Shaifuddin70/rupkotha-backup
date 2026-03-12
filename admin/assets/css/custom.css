@@ -17,14 +17,13 @@ body {
     border-radius: 20px;
     border: none;
     color: white;
-    background-color: #a95df4;
+    background: var(--primary-gradient);
 }
 
 .custom-btn:hover {
-    background-color: #6910f3;
+    background: linear-gradient(135deg, #a68a4f 0%, #8f7540 100%);
     cursor: pointer;
     transition-duration: 0.4s;
-
 }
 
 /*input{*/
@@ -111,7 +110,7 @@ td>img {
 }
 
 .nav-pills .nav-link.active {
-    background-color: #0d6efd;
+    background: var(--primary-gradient);
     box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
 }
 
@@ -121,7 +120,7 @@ td>img {
 
 .nav-pills .nav-link.active .badge {
     background-color: #fff !important;
-    color: #0d6efd !important;
+    color: #a68a4f !important;
 }
 
 /* --- Responsive Styles --- */
@@ -187,10 +186,10 @@ td>img {
 /* 
 oder-detaisl */
 
-/* custom UI Styles */
+/* custom UI Styles - aligned with admin gold theme (#bea163) */
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --success-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-gradient: linear-gradient(135deg, #bea163 0%, #a68a4f 100%);
+    --success-gradient: linear-gradient(135deg, #bea163 0%, #a68a4f 100%);
     --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     --hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     --border-radius: 16px;
@@ -265,14 +264,15 @@ oder-detaisl */
 }
 
 .btn-outline {
-    background: white;
-    color: #475569;
-    border: 2px solid #e2e8f0;
+    background: var(--primary-gradient);
+    color: white;
+    border: 2px solid var(--primary-dark);
 }
 
 .btn-outline:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    border-color: var(--primary-dark);
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
@@ -285,7 +285,46 @@ oder-detaisl */
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 15px 35px rgba(190, 161, 99, 0.4);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(190, 161, 99, 0.2) 0%, rgba(166, 138, 79, 0.35) 100%);
+    color: white;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    border-color: var(--primary-dark);
+    color: white;
+}
+
+/* Bootstrap button overrides - admin gold theme */
+.btn-warning {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 12px rgba(190, 161, 99, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #a68a4f 0%, #8f7540 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #8f7540 0%, #7a6535 100%);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 12px rgba(166, 138, 79, 0.45);
 }
 
 /* custom Cards */
@@ -452,8 +491,8 @@ oder-detaisl */
 
 .form-select-custom:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(190, 161, 99, 0.2);
 }
 
 .btn-update {
@@ -489,7 +528,8 @@ oder-detaisl */
     #layoutSidenav_nav,
     .sb-sidenav,
     .no-print,
-    .status-update-section {
+    .status-update-section,
+    .sidebar {
         display: none !important;
     }
 
@@ -510,7 +550,6 @@ oder-detaisl */
 
     .custom-header {
         box-shadow: none !important;
-
         border: 1px solid #ddd !important;
         margin-bottom: 20px !important;
         page-break-after: avoid;
@@ -545,6 +584,225 @@ oder-detaisl */
     .grid-item {
         width: 100% !important;
         margin-bottom: 15px !important;
+    }
+
+    /* Admin Order Details: print only the invoice card */
+    .admin-order-details-page .custom-header {
+        display: none !important;
+    }
+    .admin-order-details-page .grid-layout .grid-item:not(.invoice-print-card) {
+        display: none !important;
+    }
+    .admin-order-details-page .grid-layout {
+        display: block !important;
+    }
+    .admin-order-details-page .grid-item.invoice-print-card {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+    .admin-order-details-page .custom-container {
+        max-width: 100% !important;
+        padding: 0.5in !important;
+    }
+    .admin-order-details-page .print-only {
+        display: block !important;
+    }
+    .admin-order-details-page .print-only.print-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #333;
+    }
+    .admin-order-details-page .print-only.print-footer {
+        margin-top: 1.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid #000;
+        font-size: 11px;
+        color: #000 !important;
+    }
+
+    /* Admin Order Details: show only the fresh print layout, hide screen content */
+    .admin-order-details-page .invoice-screen-content {
+        display: none !important;
+    }
+    .admin-order-details-page .invoice-print-document {
+        display: block !important;
+    }
+}
+
+/* Print-only invoice: hidden on screen */
+.invoice-print-document {
+    display: none !important;
+}
+
+/* Invoice print layout: template style (only when printing) */
+@media print {
+    .invoice-print-document {
+        display: block !important;
+        max-width: 100%;
+        padding: 0.5in;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 11px;
+        color: #000 !important;
+        background: #fff !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .invoice-print-document,
+    .invoice-print-document * {
+        color: #000 !important;
+    }
+    .invoice-print-document .invoice-print-brand-sub,
+    .invoice-print-document .invoice-print-footer-note {
+        color: #333 !important;
+    }
+    .admin-order-details-page {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: #fff !important;
+    }
+    .admin-order-details-page .admin-container,
+    .admin-container .main-content {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .invoice-print-document * {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    .invoice-print-document .invoice-print-table th,
+    .invoice-print-document .invoice-print-table td {
+        border: none !important;
+        border-bottom: 1px solid #000 !important;
+    }
+    .invoice-print-document .invoice-print-table thead tr {
+        border-bottom: 1px solid #000 !important;
+    }
+
+    /* Header: company left, INVOICE right */
+    .invoice-print-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+    .invoice-print-brand {
+        font-size: 14px;
+        color: #000;
+    }
+    .invoice-print-brand-sub {
+        font-size: 10px;
+        color: #666;
+        font-weight: normal;
+    }
+    .invoice-print-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+        letter-spacing: 0.02em;
+    }
+
+    /* Light gray info box: Issued To | Invoice no, Date, Status */
+    .invoice-print-info-box {
+        display: flex;
+        justify-content: space-between;
+        background: #f5f5f5;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+    }
+    .invoice-print-col {
+        font-size: 11px;
+        color: #000;
+        line-height: 1.5;
+    }
+    .invoice-print-meta {
+        text-align: right;
+    }
+
+    /* Payment info */
+    .invoice-print-payment {
+        margin-bottom: 20px;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+    .invoice-print-payment strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    /* Table: thin line under header, DESCRIPTION | RATE | QTY | TOTAL */
+    .invoice-print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 0 12px 0;
+        font-size: 11px;
+    }
+    .invoice-print-table thead th {
+        padding: 10px 8px;
+        text-align: left;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.03em;
+    }
+    .invoice-print-table thead th:nth-child(2),
+    .invoice-print-table thead th:nth-child(3),
+    .invoice-print-table thead th:nth-child(4) {
+        text-align: right;
+    }
+    .invoice-print-table td {
+        padding: 8px;
+        color: #000 !important;
+    }
+    .invoice-print-table tbody td {
+        color: #000 !important;
+    }
+    .invoice-print-table th {
+        color: #000 !important;
+    }
+    .invoice-print-table td:nth-child(2),
+    .invoice-print-table td:nth-child(3),
+    .invoice-print-table td:nth-child(4) {
+        text-align: right;
+    }
+
+    /* Summary: right-aligned below table */
+    .invoice-print-summary {
+        margin-left: auto;
+        width: 220px;
+        padding-top: 12px;
+        border-top: 1px solid #000 !important;
+    }
+    .invoice-print-summary p {
+        display: flex;
+        justify-content: space-between;
+        margin: 4px 0;
+        font-size: 11px;
+    }
+    .invoice-print-summary p.invoice-print-total {
+        margin-top: 8px;
+        font-size: 12px;
+    }
+    .invoice-print-summary span {
+        margin-left: 12px;
+    }
+
+    /* Footer: THANK YOU */
+    .invoice-print-footer {
+        margin-top: 32px;
+        padding-top: 16px;
+        border-top: 1px solid #000 !important;
+        font-size: 11px;
+    }
+    .invoice-print-footer strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+    .invoice-print-footer-note {
+        font-size: 9px;
+        color: #666;
     }
 }
 
@@ -1041,19 +1299,19 @@ body {
 }
 
 .btn-add-category {
-    background: var(--success-gradient);
+    background: var(--primary-gradient);
     border: none;
     border-radius: 12px;
     padding: 0.75rem 1.5rem;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 5px 15px rgba(190, 161, 99, 0.3);
     color: white;
 }
 
 .btn-add-category:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+    box-shadow: 0 10px 25px rgba(190, 161, 99, 0.4);
     color: white;
 }
 
@@ -1080,7 +1338,7 @@ body {
 }
 
 .table tbody tr:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(190, 161, 99, 0.08) 0%, rgba(166, 138, 79, 0.05) 100%);
     transform: scale(1.01);
 }
 
@@ -1112,26 +1370,26 @@ body {
 }
 
 .btn-edit {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: var(--primary-gradient);
     border: none;
     color: white;
 }
 
 .btn-edit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+    box-shadow: 0 5px 15px rgba(190, 161, 99, 0.4);
     color: white;
 }
 
 .btn-delete {
-    background: var(--danger-gradient);
+    background: linear-gradient(135deg, #a68a4f 0%, #8f7540 100%);
     border: none;
     color: white;
 }
 
 .btn-delete:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(250, 112, 154, 0.4);
+    box-shadow: 0 5px 15px rgba(166, 138, 79, 0.45);
     color: white;
 }
 
@@ -1168,8 +1426,8 @@ body {
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(190, 161, 99, 0.25);
 }
 
 .modal-footer {
@@ -1247,12 +1505,12 @@ body {
 }
 
 /* ==============================
-   Products Page Styles (migrated from products.php)
+   Products Page Styles (migrated from products.php) - gold theme
    ============================== */
 :root {
-    --primary-color: #6366f1;
-    --primary-light: #818cf8;
-    --primary-dark: #4f46e5;
+    --primary-color: #bea163;
+    --primary-light: #d4b885;
+    --primary-dark: #a68a4f;
     --secondary-color: #f1f5f9;
     --success-color: #10b981;
     --danger-color: #ef4444;
@@ -1401,7 +1659,7 @@ body {
 
 .btn-primary-modern {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
-    color: white;
+    color: white !important;
     box-shadow: var(--shadow-md);
 }
 
@@ -1409,18 +1667,27 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    color: white !important;
+}
+
+/* Add New Product & Slider Add Item buttons - ensure gold theme */
+button.btn-primary-modern[data-bs-toggle="modal"][data-bs-target="#addProductModal"],
+button.btn-primary-modern[name="add_slider_item"],
+button.btn-primary-modern[name="add_product"] {
+    background: linear-gradient(135deg, #bea163 0%, #d4b885 100%);
+    color: white !important;
 }
 
 .btn-outline-modern {
-    background: white;
+    background: var(--secondary-color);
     border: 2px solid var(--border-color);
-    color: var(--dark-color);
+    color: white;
 }
 
 .btn-outline-modern:hover {
-    background: var(--secondary-color);
+    background: var(--primary-dark);
     border-color: var(--primary-color);
-    color: var(--primary-color);
+    color: white;
     transform: translateY(-1px);
 }
 
@@ -1479,7 +1746,17 @@ body {
     letter-spacing: 0.05em;
 }
 
-
+/* Payment and other table badges: dark text in light mode, light in dark mode */
+.table .badge-modern,
+.badge-modern.badge-category {
+    color: var(--dark-color) !important;
+    background: rgba(0, 0, 0, 0.06);
+}
+body.dark-theme .table .badge-modern,
+body.dark-theme .badge-modern.badge-category {
+    color: var(--color-text-primary) !important;
+    background: rgba(255, 255, 255, 0.1);
+}
 
 .badge-status {
     background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
@@ -1512,44 +1789,64 @@ body {
 }
 
 .btn-edit {
-    background: linear-gradient(135deg, #bfdbfe 0%, #bfdbfe 100%);
-    color: #1d4ed8;
+    background: var(--primary-gradient);
+    color: white;
 }
 
 .btn-edit:hover {
-    background: linear-gradient(135deg, #93c5fd 0%, #93c5fd 100%);
-    color: #1e40af;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(190, 161, 99, 0.4);
 }
 
 .btn-images {
-    background: linear-gradient(135deg, #30d191 0%, #30d191 100%);
-    color: #059669;
+    background: var(--primary-gradient);
+    color: white;
 }
 
 .btn-images:hover {
-    background: linear-gradient(135deg, #6ee7b7 0%, #6ee7b7 100%);
-    color: #047857;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(190, 161, 99, 0.4);
 }
 
 .btn-delete {
-    background: linear-gradient(135deg, #fca5a5 0%, #fca5a5 100%);
-    color: #dc2626;
+    background: linear-gradient(135deg, #a68a4f 0%, #8f7540 100%);
+    color: white;
 }
 
 .btn-delete:hover {
-    background: linear-gradient(135deg, #f87171 0%, #f87171 100%);
-    color: #b91c1c;
+    background: linear-gradient(135deg, #8f7540 0%, #7a6535 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(166, 138, 79, 0.45);
 }
 
 .btn-restore {
-    background: linear-gradient(135deg, #fde68a 0%, #fde68a 100%);
-    color: #d97706;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    color: white;
 }
 
 .btn-restore:hover {
-    background: linear-gradient(135deg, #fcd34d 0%, #fcd34d 100%);
-    color: #b45309;
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+    color: white;
 }
+
+/* Ensure all admin buttons use white text by default */
+.btn,
+.btn-modern,
+.btn-action,
+.btn-add-category,
+.btn-primary-modern,
+.btn-outline-modern,
+.btn-outline-primary,
+.btn-outline,
+.btn-edit,
+.btn-delete,
+.btn-images,
+.btn-restore {
+    color: white !important;
+}
+
 
 .toggle-switch {
     position: relative;
@@ -1571,7 +1868,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: #ccc;
+    background: #cbd5e1;
     transition: 0.4s;
     border-radius: 24px;
 }
@@ -1590,7 +1887,7 @@ body {
 }
 
 input:checked+.slider {
-    background: var(--success-color);
+    background: var(--primary-color);
 }
 
 input:checked+.slider:before {
@@ -1659,7 +1956,7 @@ input:checked+.slider:before {
 
 .form-control-modern:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(190, 161, 99, 0.2);
 }
 
 .form-label-modern {
@@ -1701,9 +1998,26 @@ input:checked+.slider:before {
 }
 
 .filter-tab.active {
-    background: var(--primary-color);
-    color: white;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white !important;
     box-shadow: var(--shadow-md);
+}
+
+.filter-tab:hover:not(.active) {
+    background: rgba(190, 161, 99, 0.12);
+    color: var(--primary-dark);
+}
+
+/* Order tab badges: visible count on inactive tabs */
+.filter-tab .badge,
+.filter-tab .badge-modern {
+    color: var(--dark-color) !important;
+    background: rgba(0, 0, 0, 0.08);
+}
+.filter-tab.active .badge,
+.filter-tab.active .badge-modern {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .price-display {
@@ -1778,8 +2092,14 @@ input:checked+.slider:before {
 
 /* ==============================
    Dark Theme Optimizations
-   Applies to Categories, Products, and Hero Slider pages
+   Applies to Categories, Products, Orders, and Hero Slider pages
+   Light mode: dark text on light backgrounds.
+   Dark mode: light text on dark backgrounds.
    ============================== */
+body.dark-theme {
+    color: var(--color-text-primary);
+}
+
 body.dark-theme .page-header {
     background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
 }
@@ -1853,10 +2173,39 @@ body.dark-theme .filter-tab {
     color: var(--color-text-primary);
 }
 
+/* Order tab badges in dark mode: light text so counter is visible */
+body.dark-theme .filter-tab .badge,
+body.dark-theme .filter-tab .badge-modern {
+    color: var(--color-text-primary) !important;
+    background: rgba(255, 255, 255, 0.12);
+}
+body.dark-theme .filter-tab.active .badge,
+body.dark-theme .filter-tab.active .badge-modern {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.25);
+}
+
 body.dark-theme .page-link-modern {
     background: var(--color-bg-sidebar);
     color: var(--color-text-primary);
     text-decoration: none;
+}
+
+/* Empty state and responsive table labels in dark mode */
+body.dark-theme .empty-state {
+    color: var(--color-text-placeholder);
+}
+body.dark-theme .table-modern tbody td:before {
+    color: var(--color-text-primary);
+}
+
+/* Price/cost text in tables (dark mode) */
+body.dark-theme .price-display .selling-price,
+body.dark-theme .cost-price {
+    color: var(--color-text-primary);
+}
+body.dark-theme .selling-price {
+    color: #86efac;
 }
 
 /* ==============================
@@ -1877,10 +2226,10 @@ body.dark-theme .page-link-modern {
    Mobile: Responsive breakpoints and touch-friendly elements
    ============================== */
 
-/* Settings Root Variables */
+/* Settings Root Variables - aligned with admin gold theme */
 :root {
-    --settings-primary: #6366f1;
-    --settings-primary-hover: #5b5dd8;
+    --settings-primary: #bea163;
+    --settings-primary-hover: #a68a4f;
     --settings-secondary: #f8fafc;
     --settings-dark: #0f172a;
     --settings-text: #334155;
@@ -1958,7 +2307,7 @@ body.dark-theme .page-link-modern {
 
 .settings-nav .nav-link:hover {
     color: var(--settings-primary);
-    background: rgba(99, 102, 241, 0.05);
+    background: rgba(190, 161, 99, 0.1);
 }
 
 .settings-nav .nav-link.active {
@@ -2051,7 +2400,7 @@ body.dark-theme .page-link-modern {
 .modern-form-control:focus {
     border-color: var(--settings-primary);
     background: var(--color-bg-sidebar);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 4px rgba(190, 161, 99, 0.2);
     outline: none;
 }
 
@@ -2111,12 +2460,12 @@ body.dark-theme .page-link-modern {
 
 .file-upload-area:hover {
     border-color: var(--settings-primary);
-    background: rgba(99, 102, 241, 0.05);
+    background: rgba(190, 161, 99, 0.08);
 }
 
 .file-upload-area.dragover {
     border-color: var(--settings-primary);
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(190, 161, 99, 0.12);
 }
 
 /* Payment Methods */
@@ -2179,7 +2528,7 @@ body.dark-theme .page-link-modern {
 
 .settings-save-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 8px 25px rgba(190, 161, 99, 0.35);
 }
 
 /* Alert Messages */
@@ -2227,15 +2576,15 @@ body.dark-theme .settings-header {
 }
 
 body.dark-theme .settings-nav .nav-link:hover {
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(190, 161, 99, 0.15);
 }
 
 body.dark-theme .file-upload-area:hover {
-    background: rgba(99, 102, 241, 0.08);
+    background: rgba(190, 161, 99, 0.1);
 }
 
 body.dark-theme .file-upload-area.dragover {
-    background: rgba(99, 102, 241, 0.15);
+    background: rgba(190, 161, 99, 0.2);
 }
 
 body.dark-theme .payment-method-card:hover {

@@ -75,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to the homepage after successful registration
             // This now works because no HTML has been sent yet.
             redirect('index');
-
         } catch (PDOException $e) {
             $errors[] = "A database error occurred. Please try again later.";
         }

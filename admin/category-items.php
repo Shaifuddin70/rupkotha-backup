@@ -31,16 +31,16 @@ $products = $stmt->fetchAll();
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Product ID</th>
+            <th>Sl.</th>
             <th>Name</th>
             <th>Price</th>
             <th>Created At</th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($products as $prod): ?>
+        <?php foreach ($products as $index => $prod): ?>
             <tr>
-                <td><?= $prod['id'] ?></td>
+                <td><?= $index + 1 ?></td>
                 <td><img src="assets/uploads/<?= $prod['image'] ?>" alt="" width="60"></td>
                 <td><?= htmlspecialchars($prod['name']) ?></td>
                 <td><?= $prod['price'] ?></td>

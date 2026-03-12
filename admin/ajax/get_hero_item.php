@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // STEP 2: Use __DIR__ to create a reliable path to the database file
-require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../../includes/db.php';
 
 // Set the content type to JSON so the browser knows what to expect
 header('Content-Type: application/json');
@@ -57,7 +57,6 @@ if ($id) {
 
         <div class="form-check form-switch">
             <input type="checkbox" name="is_active" class="form-check-input" role="switch" <?= ($item['is_active']) ? 'checked' : '' ?>>
-            <label class="form-check-label">Active</label>
         </div>
         <?php
         // Get the captured HTML and prepare the success response

@@ -78,7 +78,7 @@ if (!isset($categories)) {
                         </ul>
                     </div>
 
-             
+
                 </div>
             </div>
         </div>

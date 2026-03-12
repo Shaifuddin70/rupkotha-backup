@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ? cell.querySelector(".badge, .badge-modern")
             : null;
           if (badge) {
-            badge.textContent = newStatus ? "Active" : "Inactive";
+            badge.textContent = "";
             // Switch between modern badge styles
             badge.classList.toggle("badge-status", newStatus === 1);
             badge.classList.toggle("badge-deleted", newStatus === 0);
